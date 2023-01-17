@@ -29,6 +29,7 @@
 
 - 클래스명 정리된 사이트 : https://tailwindcss.com/docs/container
 - 설치 참고 사이트 : https://tailwindcss.com/docs/guides/create-react-app
+- 컴포넌트 사용시 설치 : `npm install @headlessui/react @heroicons/react`
 
 # 색상/폰트
 

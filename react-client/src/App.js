@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./css/App.css";
 import "./css/index.css";
 import Nav from "./comp/Nav";
+
 function App() {
   return (
     <div className="App">
