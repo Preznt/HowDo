@@ -11,7 +11,7 @@
 ## 모듈
 
 - 폴더이름 modules
-- 파일이름 PascalCase
+- 파일이름 snake_case
 - 함수는 camelCase
 
 ## state
