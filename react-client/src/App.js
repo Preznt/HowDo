@@ -1,8 +1,8 @@
 import logo from "./logo.svg";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./css/App.css";
-import "./css/index.css";
 import Nav from "./comp/Nav";
-
+import MainPage from "./comp/MainPage";
 function App() {
   return (
     <div className="App">
@@ -10,6 +10,11 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
       </header>
       <Nav />
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
