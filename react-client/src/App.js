@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./css/App.css";
 import Nav from "./comp/Nav";
 import MainPage from "./comp/MainPage";
+import MainBar from "./comp/MainBar";
 function App() {
   return (
     <div className="App">
@@ -12,6 +13,7 @@ function App() {
       <Nav />
       <Router>
         <Routes>
+          <Route path="/" element={<MainBar />} />
           <Route path="/" element={<MainPage />} />
         </Routes>
       </Router>

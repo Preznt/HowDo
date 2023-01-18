@@ -7,8 +7,11 @@ module.exports = {
       margin: {
         df: "441.5px",
       },
+      width: {
+        fullx2: "200vw",
+      },
     },
   },
   variants: {},
-  plugins: [],
+  plugins: [require("tw-elements/dist/plugin")],
 };
