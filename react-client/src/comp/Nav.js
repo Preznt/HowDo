@@ -1,12 +1,27 @@
 const Nav = () => {
   return (
-    <div className="container ml-df">
-      <ul className="container flex self-center">
-        <li className="m-5 text-black-700">커뮤니티</li>
-        <li className="m-5 text-black-700">크리에이터</li>
-        <li className="m-5 text-black-700 ml-auto">로그인</li>
-        <li className="m-5 text-black-700">회원가입</li>
-      </ul>
+    <div className="m-auto container flex">
+      <a className="m-2.5" href="/">
+        Home
+      </a>
+      <a className="m-2.5" href="/bbs">
+        게시판
+      </a>
+      <a className="m-2.5" href="/contents">
+        노하우
+      </a>
+      <a className="m-2.5" href="/creater">
+        크리에이터
+      </a>
+      <a className="m-2.5 ml-auto" href="/login">
+        로그인
+      </a>
+      <a className="m-2.5" href="/logout">
+        로그아웃
+      </a>
+      <a className="m-2.5" href="/regist">
+        회원가입
+      </a>
     </div>
   );
 };
