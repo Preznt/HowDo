@@ -1,18 +1,11 @@
 import { Link } from "react-router-dom";
-import "../image/images.png";
 
 const Nav = () => {
-  const borderStyle = {
-    padding: "0",
-    borderBottomWidth: "2px",
-    height: "45px",
-    borderColor: "black",
-    marginTop: "8px",
-  };
   return (
-    <div className="m-auto container flex bg-blue-600 ">
+    <div className="container flex flex-col w-20 bg-blue-600 h-full">
       <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/">
-        Home
+        <img src="./image/images.png" width="50px" height="30px" />
+        <h3>Home</h3>
       </Link>
       <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/bbs">
         게시판
@@ -25,14 +18,11 @@ const Nav = () => {
       </Link>
       <Link
         className="m-2.5 p-2 ring-4 ring-white hover:bg-white"
+        height="50px"
         to="/creater"
       >
         크리에이터
       </Link>
-      <label className="ml-auto w-14 bg-white rounded-full">
-        <img src="../image/images.png" alt="searchImage"></img>
-      </label>
-      <input className="bg-white outline-none" style={borderStyle} />
       <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/login">
         로그인
       </Link>
