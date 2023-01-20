@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import "../image/images.png";
+
 const Nav = () => {
   const borderStyle = {
     padding: "0",
@@ -9,34 +11,37 @@ const Nav = () => {
   };
   return (
     <div className="m-auto container flex bg-blue-600 ">
-      <a className="m-2.5 p-2 ring-4 ring-white hover:bg-white" href="/">
+      <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/">
         Home
-      </a>
-      <a className="m-2.5 p-2 ring-4 ring-white hover:bg-white" href="/bbs">
+      </Link>
+      <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/bbs">
         게시판
-      </a>
-      <a
+      </Link>
+      <Link
         className="m-2.5 p-2 ring-4 ring-white hover:bg-white"
-        href="/contents"
+        to="/contents"
       >
         노하우
-      </a>
-      <a className="m-2.5 p-2 ring-4 ring-white hover:bg-white" href="/creater">
+      </Link>
+      <Link
+        className="m-2.5 p-2 ring-4 ring-white hover:bg-white"
+        to="/creater"
+      >
         크리에이터
-      </a>
+      </Link>
       <label className="ml-auto w-14 bg-white rounded-full">
         <img src="../image/images.png" alt="searchImage"></img>
       </label>
       <input className="bg-white outline-none" style={borderStyle} />
-      <a className="m-2.5 p-2 ring-4 ring-white hover:bg-white" href="/login">
+      <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/login">
         로그인
-      </a>
-      <a className="m-2.5 p-2 ring-4 ring-white hover:bg-white" href="/logout">
+      </Link>
+      <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/logout">
         로그아웃
-      </a>
-      <a className="m-2.5 p-2 ring-4 ring-white hover:bg-white" href="/regist">
+      </Link>
+      <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/regist">
         회원가입
-      </a>
+      </Link>
     </div>
   );
 };
