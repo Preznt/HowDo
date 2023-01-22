@@ -3,7 +3,8 @@
 // 카테고리 => 토픽 테이블 구조는?
 
 import { useEffect, useState } from "react";
-import Editor from "./EditorModule";
+// react build 전까지 에디터 보류
+// import Editor from "./EditorModule";
 
 const Write = () => {
   const catList = [
@@ -75,11 +76,11 @@ const Write = () => {
         value={postData.b_title}
         onChange={onChangeHandler}
       />
-      <Editor
+      {/* <Editor
         className="b_content"
         name="b_content"
-        handler={onChangeContentHandler}
-      />
+        onChangeHandler={onChangeContentHandler}
+      /> */}
       <button id="submit" type="button">
         등록
       </button>

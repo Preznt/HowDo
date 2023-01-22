@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS board_content(
 	b_code	VARCHAR(256),
 	username	VARCHAR(256)	NOT NULL,	
 	b_title	VARCHAR(256)	NOT NULL,	
-	b_detail	TEXT,	
+	b_content	TEXT,	
 	b_category	VARCHAR(125)	NOT NULL,	
 	b_date	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%Y-%m-%d")),
 	b_time	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%H:%i:&S")),
