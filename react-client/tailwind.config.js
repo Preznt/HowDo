@@ -10,6 +10,9 @@ module.exports = {
       width: {
         fullx2: "200vw",
       },
+      height: {
+        800: "800px",
+      },
     },
   },
   variants: {},
