@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Nav_dynamic from "./Nav_dynamic";
+import NavDynamic from "./NavDynamic";
 
 const Nav_row = () => {
   const [nOpen, setNOpen] = useState(false);
@@ -18,19 +18,25 @@ const Nav_row = () => {
   };
 
   return (
-    <div className="flex bg-blue-900 relative">
+    <div className="flex bg-blue-900 relative ">
       <div
         className="flex w-12 h-8 m-3 mr-0 bg-inherit content-center justify-center cursor-pointer"
         onClick={openClickHandler}
       >
-        <img src="./image/burger.png" width="40px" height="50px" />
+        <img
+          src="./image/burger.png"
+          width="40px"
+          height="50px"
+          alt="burgermenu"
+        />
       </div>
       <div className="flex m-auto">
         <input
           className="bg-white outline-none rounded-full p-12"
           style={borderStyle}
+          id="search"
         />
-        <label className="mt-3 bg-white h-8 rounded-full">
+        <label className="mt-3 bg-white h-8 rounded-full" for="search">
           <img
             src="./image/images.png"
             alt="searchImage"
@@ -40,7 +46,7 @@ const Nav_row = () => {
           ></img>
         </label>
       </div>
-      <Nav_dynamic nOpen={nOpen} />
+      <NavDynamic nOpen={nOpen} />
     </div>
   );
 };

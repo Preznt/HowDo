@@ -1,28 +1,24 @@
 import "../css/Nav.css";
 const Nav_dynamic = ({ nOpen }) => {
-  console.log(nOpen);
+  // console.log(nOpen);
   return (
     <div
       className={
         nOpen
-          ? "container translate-x-20 ease-in-out z-50 top-0 left-0 "
-          : "absolute container top-0 left-0 z_1"
+          ? "absolute w-48 z-50 top-14 -left-24 transition-all duration-700 translate-x-20 bg-black text-white h-screen"
+          : "absolute top-14 -left-24 z_1"
       }
     >
       <div>
-        <img />
         <div>1번 메뉴</div>
       </div>
       <div>
-        <img />
         <div>2번 메뉴</div>
       </div>
       <div>
-        <img />
         <div>3번 메뉴</div>
       </div>
       <div>
-        <img />
         <div>4번 메뉴</div>
       </div>
     </div>

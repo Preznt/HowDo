@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 const Nav = () => {
   return (
-    <div className="container flex flex-col w-20 bg-blue-600 h-full">
+    <div className="flex flex-col w-20 bg-blue-600 h-full">
       <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/">
-        <img src="./image/images.png" width="50px" height="30px" />
+        <img src="./image/images.png" width="50px" height="30px" alt="home" />
         <h3>Home</h3>
       </Link>
       <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/bbs">
