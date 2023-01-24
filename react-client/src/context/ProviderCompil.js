@@ -5,9 +5,9 @@ import { VideoContentContextProvider } from "./VideoContentContextProvide";
 const Provider = ({ children }) => {
   return (
     <UserContextProvider>
-      <TransferContextProvider>
-        <VideoContentContextProvider>{children}</VideoContentContextProvider>
-      </TransferContextProvider>
+      <VideoContentContextProvider>
+        <TransferContextProvider>{children}</TransferContextProvider>
+      </VideoContentContextProvider>
     </UserContextProvider>
   );
 };

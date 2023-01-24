@@ -19,8 +19,8 @@ export const VideoContentContextProvider = ({ children }) => {
   };
 
   return (
-    <VideoContentContext.Privoder value={props}>
+    <VideoContentContext.Provider value={props}>
       {children}
-    </VideoContentContext.Privoder>
+    </VideoContentContext.Provider>
   );
 };
