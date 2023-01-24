@@ -1,18 +1,17 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
+import { useUserContext } from "../../context/UserContextProvider";
 const Join = () => {
+  const { joinUser, setJoinUser, exeJoin } = useUserContext();
+
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
+
+    setJoinUser({ ...joinUser, [name]: value });
+  };
+
+  const onClickHandler = () => {
+    exeJoin();
+  };
+
   return (
     <div className="w-3/5 m-auto">
       <div className="hidden sm:block" aria-hidden="true">
@@ -34,7 +33,7 @@ const Join = () => {
             </div>
           </div>
           <div className="mt-5 md:col-span-2 md:mt-0">
-            <form method="POST">
+            <div>
               <div className="overflow-hidden shadow sm:rounded-md">
                 <div className="bg-white px-4 py-5 sm:p-6">
                   <div className="col-span-6 sm:col-span-3">
@@ -48,6 +47,7 @@ const Join = () => {
                       type="email"
                       name="username"
                       id="username"
+                      onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                   </div>
@@ -63,6 +63,7 @@ const Join = () => {
                       type="text"
                       name="nickname"
                       id="nickname"
+                      onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                   </div>
@@ -78,6 +79,7 @@ const Join = () => {
                       type="password"
                       name="password"
                       id="password"
+                      onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                   </div>
@@ -93,6 +95,7 @@ const Join = () => {
                       type="password"
                       name="re_password"
                       id="re_password"
+                      onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                   </div>
@@ -108,6 +111,7 @@ const Join = () => {
                       type="month"
                       name="birthdate"
                       id="birthdate"
+                      onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                   </div>
@@ -115,13 +119,13 @@ const Join = () => {
               </div>
               <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                 <button
-                  type="submit"
+                  onClick={onClickHandler}
                   className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   가입하기
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

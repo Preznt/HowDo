@@ -2,8 +2,8 @@ import express from "express";
 const router = express.Router();
 
 /* GET users listing. */
-router.get("/", async (req, res, next) => {
-  res.send("respond with a resource");
+router.post("/join", async (req, res, next) => {
+  console.log(req.body);
 });
 
 export default router;
