@@ -2,12 +2,12 @@
 // 아니면 매번 댓글 개수 count?
 // 카테고리 => 토픽 테이블 구조는?
 
-import Editor from "ckeditor5-custom-build/build/ckeditor";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { useEffect, useState } from "react";
+// react build 전까지 에디터 보류
+// import Editor from "./EditorModule";
 
-const CommuWrite = () => {
-  const topicList = [
+const Write = () => {
+  const catList = [
     { eng: "hobbies", kor: "취미" },
     { eng: "learning", kor: "학습" },
     { eng: "life", kor: "생활" },
@@ -16,16 +16,18 @@ const CommuWrite = () => {
 
   const initPost = () => {
     const postData = {
-      postid: "",
-      topic: "",
+      b_code: "",
       username: "",
-      title: "",
-      content: "",
-      createdDate: "",
-      updatedDate: "",
-      deletedDate: "",
-      votes: 0,
-      views: 0,
+      b_title: "",
+      b_content: "",
+      b_category: "",
+      b_date: "",
+      b_time: "",
+      b_update: "",
+      b_delete: "",
+      b_views: "",
+      b_upvote: "",
+      b_group: "",
     };
     return postData;
   };
@@ -38,7 +40,7 @@ const CommuWrite = () => {
 
   const onChangeContentHandler = (e, editor) => {
     const data = editor.getData();
-    setPostData({ ...postData, content: data });
+    setPostData({ ...postData, [e.target.name]: data });
   };
 
   useEffect(() => {
@@ -46,17 +48,17 @@ const CommuWrite = () => {
   }, [postData]);
 
   // topicList 배열을 이용하여 checkbox 요소 동적 추가
-  const checkboxList = topicList.map((topic) => {
+  const checkboxList = catList.map((cat) => {
     return (
-      <div className="topic-item" key={topic.eng}>
+      <div className="cat-check" key={cat.eng}>
         <input
           type="radio"
-          id={topic.eng}
-          value={topic.eng}
-          name="topic"
+          id={cat.eng}
+          value={cat.eng}
+          name="b_category"
           onChange={onChangeHandler}
         />
-        <label htmlFor={topic.eng}>{topic.kor}</label>
+        <label htmlFor={cat.eng}>{cat.kor}</label>
       </div>
     );
   });
@@ -68,27 +70,17 @@ const CommuWrite = () => {
         {checkboxList}
       </div>
       <input
-        className="title"
-        name="title"
+        className="b_title"
+        name="b_title"
         placeholder="제목"
-        value={postData.title}
+        value={postData.b_title}
         onChange={onChangeHandler}
       />
-      <CKEditor
-        className="content"
-        editor={Editor}
-        config={Editor.defaultConfig}
-        data="<p></p>"
-        onReady={(editor) => {}}
-        onChange={onChangeContentHandler}
-        onBlur={(event, editor) => {
-          console.log("Blur.", editor);
-        }}
-        onFocus={(event, editor) => {
-          console.log("Focus.", editor);
-        }}
-      />
-
+      {/* <Editor
+        className="b_content"
+        name="b_content"
+        onChangeHandler={onChangeContentHandler}
+      /> */}
       <button id="submit" type="button">
         등록
       </button>
@@ -96,4 +88,4 @@ const CommuWrite = () => {
   );
 };
 
-export default CommuWrite;
+export default Write;
