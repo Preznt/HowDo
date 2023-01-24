@@ -30,7 +30,7 @@ const Nav_row = () => {
           alt="burgermenu"
         />
       </div>
-      <div className="flex m-auto">
+      <div className="flex ml-auto">
         <input
           className="bg-white outline-none rounded-full p-12"
           style={borderStyle}
@@ -46,6 +46,9 @@ const Nav_row = () => {
           ></img>
         </label>
       </div>
+      <div className="ml-auto mt-3 bg-white h-8">로그인</div>
+      <div className="mt-3 bg-white h-8 ">회원가입</div>
+      <div className="mt-3 bg-white h-8 ">로그아웃</div>
       <NavDynamic nOpen={nOpen} />
     </div>
   );
