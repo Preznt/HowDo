@@ -4,13 +4,13 @@ import { RouterProvider } from "react-router-dom";
 import "./css/index.css";
 import "tw-elements";
 import router from "./nav/Navigation";
-import { TransferContextProvider } from "./context/TransferContextProvider";
+import Provider from "./context/ProviderCompil";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <TransferContextProvider>
+    <Provider>
       <RouterProvider router={router} />
-    </TransferContextProvider>
+    </Provider>
   </React.StrictMode>
 );

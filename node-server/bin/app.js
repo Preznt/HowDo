@@ -18,6 +18,32 @@ import logger from "morgan";
 // MySQL Sequelize
 import DB from "../models/index.js";
 
+// session용 3rd party
+import session from "express-session";
+import sessionSequelize from "connect-session-sequelize";
+
+const SessionStore = sessionSequelize(session.Store);
+// session 클래스 설정
+const sessionStore = new SessionStore({
+  db: DB.sequelize,
+  expiration: 1000 * 60 * 5,
+  checkExpirationInterval: 1000 * 60 * 10,
+});
+// app.use 로 세션 설정
+
+app.use(
+  session({
+    key: "ProjectHowDo",
+    secret: "ProjectHowDo",
+    resave: false,
+    saveUninitialized: false,
+    store: sessionStore,
+    cookie: {
+      maxAge: 1000 * 60 * 5,
+    },
+  })
+);
+
 // sample router modules
 import indexRouter from "../routes/index.js";
 import usersRouter from "../routes/users.js";
