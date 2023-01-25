@@ -1,5 +1,5 @@
 import Sequelize from "sequelize";
-export default (sequelize) => {
+export default (sequelize, DataTypes) => {
   return sequelize.define(
     "attach",
     {
@@ -13,9 +13,11 @@ export default (sequelize) => {
         allowNull: true,
       },
       a_date: {
-        type: Sequelize.DataTypes.DATE,
+        type: Sequelize.DataTypes.STRING(10),
         allowNull: true,
-        defaultValue: Sequelize.Sequelize.literal("CURRENT_TIMESTAMP"),
+        defaultValue: Sequelize.Sequelize.literal(
+          "(date_format(now(),_utf8mb4'%Y-%m-%d'))"
+        ),
       },
       a_original_name: {
         type: Sequelize.DataTypes.STRING(256),

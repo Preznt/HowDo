@@ -5,30 +5,30 @@ USE howdo;
 -- 사용자정보
 CREATE TABLE IF NOT EXISTS user(
 	username	VARCHAR(256),
-	password	VARCHAR(256)	NOT NULL,	
+	password	VARCHAR(256),
 	profile_image	VARCHAR(256),		
 	nickname	VARCHAR(20)	NOT NULL	UNIQUE,
 	birthdate	VARCHAR(256),		
-	level	INT,		
-	credit	INT,		
+	level	INT,	
+	credit	INT,	
 	delete_date	VARCHAR(256),		
-	price	INT,		
+	price	INT,	
 	PRIMARY KEY(username)	
 );
 
 -- 이미지
 CREATE TABLE IF NOT EXISTS image(
 	i_code	VARCHAR(256),
-	username	VARCHAR(256)	NOT NULL,
-	i_src	VARCHAR(256)	NOT NULL,
-	i_title	VARCHAR(256)	NOT NULL,
-	i_detail	TEXT,	
+	username	VARCHAR(256)	NOT NULL,	
+	i_src	VARCHAR(256)	NOT NULL,	
+	i_title	VARCHAR(256)	NOT NULL,	
+	i_detail	TEXT,		
 	i_category	VARCHAR(50),	
 	i_views	BIGINT,	
 	i_price	INT,	
-	i_create_date	datetime	DEFAULT CURRENT_TIMESTAMP,	
-	i_update_date	datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,	
-	i_delete_date	VARCHAR(125),	
+	i_reg_date	datetime	DEFAULT CURRENT_TIMESTAMP,
+	i_start_date	datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	i_delete_date	VARCHAR(125),		
 	PRIMARY KEY(i_code)
 );
 
@@ -78,29 +78,31 @@ CREATE TABLE IF NOT EXISTS purchase(
 -- 게시글
 CREATE TABLE IF NOT EXISTS board_content(
 	b_code	VARCHAR(256),
-	username	VARCHAR(256),
-	b_title	VARCHAR(256),	
-	b_detail	TEXT,	
-	b_category	VARCHAR(125),		
-	b_create_date	 datetime	DEFAULT CURRENT_TIMESTAMP,
-	b_update_date	 datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
-	b_delete_date	VARCHAR(125),		
+	username	VARCHAR(256)	NOT NULL,	
+	b_title	VARCHAR(256)	NOT NULL,	
+	b_content	TEXT,	
+	b_category	VARCHAR(125)	NOT NULL,	
+	b_date	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%Y-%m-%d")),
+	b_time	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%H:%i:&S")),
+	b_update	DATETIME	NOT NULL	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	b_delete	VARCHAR(10),		
 	b_views	BIGINT		DEFAULT 0,
 	b_upvote	BIGINT		DEFAULT 0,
-	b_group	VARCHAR(125),
+	b_group	VARCHAR(125),		
 	PRIMARY KEY(b_code)
 );
 
 -- 댓글
 CREATE TABLE IF NOT EXISTS reply(
 	r_code	VARCHAR(256),
-	b_code	VARCHAR(256),
-	username	VARCHAR(256),
-	r_content	VARCHAR(256),		
-	r_create_date	datetime	DEFAULT CURRENT_TIMESTAMP,		
-	r_update_date	datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
-	r_delete_date	VARCHAR(125),		
-	r_parent_code	VARCHAR(256),
+	b_code	VARCHAR(256),	
+	username	VARCHAR(256),	
+	r_content	VARCHAR(256),	
+	r_date	VARCHAR(10)		DEFAULT(DATE_FORMAT(NOW(), "%Y-%m-%d")),
+	r_time	VARCHAR(10)		DEFAULT(DATE_FORMAT(NOW(), "%H:%i:&S")),
+	r_update	DATETIME	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	r_delete	VARCHAR(10),
+	r_parent_code	VARCHAR(256),	
 	PRIMARY KEY(r_code)
 );
 
@@ -114,12 +116,12 @@ CREATE TABLE IF NOT EXISTS reply(
 -- 첨부파일
 CREATE TABLE IF NOT EXISTS attach(
 	a_code	VARCHAR(256),
-	b_code	VARCHAR(256),
-	a_date	datetime	DEFAULT CURRENT_TIMESTAMP,
+	b_code	VARCHAR(256),	
+	a_date	VARCHAR(10)		DEFAULT(DATE_FORMAT(NOW(), "%Y-%m-%d")),
 	a_original_name	VARCHAR(256),
-	a_save_name	VARCHAR(256),			
-	a_ext	VARCHAR(10),		
-	PRIMARY KEY(a_code)	
+	a_save_name	VARCHAR(256),
+	a_ext	VARCHAR(10),
+	PRIMARY KEY(a_code)		
 );
 
 DROP TABLE view_history;
@@ -129,6 +131,7 @@ username	VARCHAR(256),
 v_code	VARCHAR(256),
 i_code	VARCHAR(256),
 h_date	datetime						DEFAULT CURRENT_TIMESTAMP
+	
 );
 
 

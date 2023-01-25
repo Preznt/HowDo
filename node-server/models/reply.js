@@ -1,5 +1,5 @@
 import Sequelize from "sequelize";
-export default (sequelize) => {
+export default (sequelize, DataTypes) => {
   return sequelize.define(
     "reply",
     {
@@ -20,18 +20,27 @@ export default (sequelize) => {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
       },
-      r_create_date: {
+      r_date: {
+        type: Sequelize.DataTypes.STRING(10),
+        allowNull: true,
+        defaultValue: Sequelize.Sequelize.literal(
+          "(date_format(now(),_utf8mb4'%Y-%m-%d'))"
+        ),
+      },
+      r_time: {
+        type: Sequelize.DataTypes.STRING(10),
+        allowNull: true,
+        defaultValue: Sequelize.Sequelize.literal(
+          "(date_format(now(),_utf8mb4'%H:%i:%S'))"
+        ),
+      },
+      r_update: {
         type: Sequelize.DataTypes.DATE,
         allowNull: true,
         defaultValue: Sequelize.Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      r_update_date: {
-        type: Sequelize.DataTypes.DATE,
-        allowNull: true,
-        defaultValue: Sequelize.Sequelize.literal("CURRENT_TIMESTAMP"),
-      },
-      r_delete_date: {
-        type: Sequelize.DataTypes.STRING(125),
+      r_delete: {
+        type: Sequelize.DataTypes.STRING(10),
         allowNull: true,
       },
       r_parent_code: {

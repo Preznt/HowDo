@@ -1,25 +1,17 @@
 import Sequelize from "sequelize";
-export default (sequelize) => {
+export default (sequelize, DataTypes) => {
   return sequelize.define(
     "upvote",
     {
-      username: {
-        type: Sequelize.DataTypes.STRING(256),
-        allowNull: false,
-        primaryKey: true,
-        references: {
-          model: "user",
-          key: "username",
-        },
-      },
       b_code: {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: false,
         primaryKey: true,
-        references: {
-          model: "board_content",
-          key: "b_code",
-        },
+      },
+      username: {
+        type: Sequelize.DataTypes.STRING(256),
+        allowNull: false,
+        primaryKey: true,
       },
     },
     {
@@ -31,12 +23,7 @@ export default (sequelize) => {
           name: "PRIMARY",
           unique: true,
           using: "BTREE",
-          fields: [{ name: "username" }, { name: "b_code" }],
-        },
-        {
-          name: "b_code",
-          using: "BTREE",
-          fields: [{ name: "b_code" }],
+          fields: [{ name: "b_code" }, { name: "username" }],
         },
       ],
     }
