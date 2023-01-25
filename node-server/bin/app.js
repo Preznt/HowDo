@@ -46,7 +46,7 @@ app.use(
 
 // sample router modules
 import indexRouter from "../routes/index.js";
-import usersRouter from "../routes/users.js";
+import userRouter from "../routes/user.js";
 
 // create express framework
 const app = express();
@@ -71,7 +71,7 @@ app.use(express.static(path.join("public")));
 
 // router link enable
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/user", userRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
