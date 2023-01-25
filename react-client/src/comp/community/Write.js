@@ -4,7 +4,9 @@
 
 import { useEffect, useState } from "react";
 // react build 전까지 에디터 보류
-// import Editor from "./EditorModule";
+// import EditorModule from "./EditorModule";
+import { submitPost } from "../service/post.service";
+import { v4 } from "uuid";
 
 const Write = () => {
   const catList = [
@@ -16,18 +18,11 @@ const Write = () => {
 
   const initPost = () => {
     const postData = {
-      b_code: "",
-      username: "",
+      b_code: v4(),
+      username: "polly@gmail.com",
       b_title: "",
       b_content: "",
       b_category: "",
-      b_date: "",
-      b_time: "",
-      b_update: "",
-      b_delete: "",
-      b_views: "",
-      b_upvote: "",
-      b_group: "",
     };
     return postData;
   };
@@ -40,7 +35,11 @@ const Write = () => {
 
   const onChangeContentHandler = (e, editor) => {
     const data = editor.getData();
-    setPostData({ ...postData, [e.target.name]: data });
+    setPostData({ ...postData, b_content: data });
+  };
+
+  const onClickHandler = (e) => {
+    submitPost(postData);
   };
 
   useEffect(() => {
@@ -70,18 +69,14 @@ const Write = () => {
         {checkboxList}
       </div>
       <input
-        className="b_title"
+        className="title"
         name="b_title"
         placeholder="제목"
         value={postData.b_title}
         onChange={onChangeHandler}
       />
-      {/* <Editor
-        className="b_content"
-        name="b_content"
-        onChangeHandler={onChangeContentHandler}
-      /> */}
-      <button id="submit" type="button">
+      {/* <EditorModule handler={onChangeContentHandler} b_code={postData.b_code} /> */}
+      <button id="submit" type="button" onClick={onClickHandler}>
         등록
       </button>
     </form>
