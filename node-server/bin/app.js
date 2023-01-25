@@ -22,6 +22,17 @@ import DB from "../models/index.js";
 import session from "express-session";
 import sessionSequelize from "connect-session-sequelize";
 
+// sample router modules
+import indexRouter from "../routes/index.js";
+import userRouter from "../routes/user.js";
+
+// create express framework
+const app = express();
+
+DB.sequelize.sync({ force: false }).then((dbConn) => {
+  console.log(dbConn.options.host, dbConn.config.database, "DB Connection OK");
+});
+
 const SessionStore = sessionSequelize(session.Store);
 // session 클래스 설정
 const sessionStore = new SessionStore({
@@ -44,17 +55,6 @@ app.use(
   })
 );
 
-// sample router modules
-import indexRouter from "../routes/index.js";
-import userRouter from "../routes/user.js";
-
-// create express framework
-const app = express();
-
-DB.sequelize.sync({ force: true }).then((dbConn) => {
-  console.log(dbConn.options.host, dbConn.config.database, "DB Connection OK");
-});
-
 // Disable the fingerprinting of this web technology.
 app.disable("x-powered-by");
 
@@ -71,7 +71,7 @@ app.use(express.static(path.join("public")));
 
 // router link enable
 app.use("/", indexRouter);
-app.use("/user", userRouter);
+app.use("/regist", userRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
