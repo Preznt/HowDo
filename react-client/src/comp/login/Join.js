@@ -1,6 +1,7 @@
 import { useUserContext } from "../../context/UserContextProvider";
 const Join = () => {
-  const { joinUser, setJoinUser, exeJoin } = useUserContext();
+  const { joinUser, setJoinUser, error, setError, exeJoin, inputRef } =
+    useUserContext();
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -8,8 +9,13 @@ const Join = () => {
     setJoinUser({ ...joinUser, [name]: value });
   };
 
-  const onClickHandler = () => {
-    exeJoin();
+  const onClickHandler = async () => {
+    const result = await exeJoin();
+    setError({ ...result });
+  };
+
+  const submitHandler = (e) => {
+    e.preventDefault();
   };
 
   return (
@@ -20,7 +26,7 @@ const Join = () => {
         </div>
       </div>
 
-      <form className="mt-10 sm:mt-0">
+      <form method="post" onSubmit={submitHandler} className="mt-10 sm:mt-0">
         <div className="md:gap-6">
           <div className="md:col-span-1">
             <div className="px-4 sm:px-0">
@@ -44,12 +50,18 @@ const Join = () => {
                       이메일주소
                     </label>
                     <input
+                      ref={inputRef.usernameRef}
                       type="email"
                       name="username"
                       id="username"
                       onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
+                    {error.CODE === "REQ_USERNAME" ? (
+                      <p className="text-red-500 mb-2">
+                        이메일을 입력해 주세요
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -119,7 +131,6 @@ const Join = () => {
               </div>
               <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                 <button
-                  type="button"
                   onClick={onClickHandler}
                   className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
