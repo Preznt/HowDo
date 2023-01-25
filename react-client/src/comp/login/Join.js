@@ -12,6 +12,7 @@ const Join = () => {
   const onClickHandler = async () => {
     const result = await exeJoin();
     setError({ ...result });
+    console.log(result);
   };
 
   const submitHandler = (e) => {
@@ -61,6 +62,10 @@ const Join = () => {
                       <p className="text-red-500 mb-2">
                         이메일을 입력해 주세요
                       </p>
+                    ) : error.CODE === "OVERLAP_USERNAME" ? (
+                      <p className="text-red-500 mb-2">
+                        이미 가입되어 있는 이메일입니다
+                      </p>
                     ) : null}
                   </div>
 
@@ -78,6 +83,15 @@ const Join = () => {
                       onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
+                    {error.CODE === "REQ_NICKNAME" ? (
+                      <p className="text-red-500 mb-2">
+                        닉네임을 입력해 주세요
+                      </p>
+                    ) : error.CODE === "OVERLAP_NICKNAME" ? (
+                      <p className="text-red-500 mb-2">
+                        이미 존재하는 닉네임입니다
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="col-span-6 sm:col-span-4">
@@ -94,6 +108,11 @@ const Join = () => {
                       onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
+                    {error.CODE === "REQ_PASSWORD" ? (
+                      <p className="text-red-500 mb-2">
+                        비밀번호를 입력해 주세요
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -110,6 +129,15 @@ const Join = () => {
                       onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
+                    {error.CODE === "REQ_RE_PASSWORD" ? (
+                      <p className="text-red-500 mb-2">
+                        비밀번호 확인을 입력해 주세요
+                      </p>
+                    ) : error.CODE === "MATCH_NOT_RE_PASSWORD" ? (
+                      <p className="text-red-500 mb-2">
+                        비밀번호와 비밀번호 확인이 일치하지 않습니다
+                      </p>
+                    ) : null}
                   </div>
 
                   <div className="col-span-6">
@@ -117,7 +145,7 @@ const Join = () => {
                       htmlFor="birthdate"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      생년월일
+                      생년월일(선택)
                     </label>
                     <input
                       type="date"

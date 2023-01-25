@@ -4,7 +4,8 @@ import MainPage from "../comp/mainpage/MainPage";
 import MainBar from "../comp/MainBar";
 import MyPageMain from "../comp/mypage/MyPageMain";
 import Join from "../comp/login/Join";
-import LoginModal from "../comp/login/LoginModal";
+import Login from "../comp/login/Login";
+import LoginModal from "../comp/login/Login";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -12,6 +13,7 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <MainPage /> },
       { path: "/regist", element: <Join /> },
+      { path: "/login", element: <Login /> },
       { path: "/creater", element: <MyPageMain /> },
     ],
   },

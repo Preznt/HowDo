@@ -23,13 +23,6 @@ export const UserContextProvider = ({ children }) => {
 
   const exeJoin = async () => {
     const result = await fetchJoin(joinUser);
-    // if (result?.CODE === "REQ_USERNAME") {
-    //   alert(`${result.MESSAGE}`);
-    //   usernameRef.current.focus();
-    // } else if (result?.CODE === "REQ_USERNAME") {
-    //   alert(`다시 입력`);
-    //   usernameRef.current.focus();
-    // }
     return result;
   };
 

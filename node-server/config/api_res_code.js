@@ -20,7 +20,7 @@ export const USER_JOIN_RES = {
   },
 
   OVERLAP_NICKNAME: {
-    CODE: "REQ_NICKNAME",
+    CODE: "OVERLAP_NICKNAME",
     CODE_NUM: 401,
     MESSAGE: "이미 존재하는 닉네임입니다",
   },

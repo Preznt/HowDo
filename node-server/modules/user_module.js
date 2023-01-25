@@ -13,11 +13,25 @@ export const chkJoin = async (info) => {
     resultUser = await USER.findByPk(username);
   } catch (e) {
     console.log(e);
-    throw new Error(JSON.stringify(JSON.stringify(SYSTEM_RES.SQL_ERROR)));
+    throw new Error(JSON.stringify(SYSTEM_RES.SQL_ERROR));
   }
 
   if (resultUser)
     throw new Error(JSON.stringify(USER_JOIN_RES.OVERLAP_USERNAME));
+
+  // 닉네임
+  if (!nickname) throw new Error(JSON.stringify(USER_JOIN_RES.REQ_NICKNAME));
+
+  let resultNickname;
+  try {
+    resultNickname = await USER.findOne({ where: { nickname: nickname } });
+  } catch (e) {
+    console.log(e);
+    throw new Error(JSON.stringify(SYSTEM_RES.SQL_ERROR));
+  }
+
+  if (resultNickname)
+    throw new Error(JSON.stringify(USER_JOIN_RES.OVERLAP_NICKNAME));
 
   // 비밀번호 및 비밀번호 확인
 
@@ -35,20 +49,6 @@ export const chkJoin = async (info) => {
 
   info.password = encPassword;
 
-  // 닉네임
-  if (!nickname) throw new Error(JSON.stringify(USER_JOIN_RES.REQ_NICKNAME));
-
-  let resultNickname;
-  try {
-    resultNickname = await USER.findOne({ where: { nickname: nickname } });
-  } catch (e) {
-    console.log(e);
-    throw new Error(JSON.stringify(SYSTEM_RES.SQL_ERROR));
-  }
-
-  if (resultNickname)
-    throw new Error(JSON.stringify(USER_JOIN_RES.OVERLAP_NICKNAME));
-
   try {
     const userCount = await USER.count();
     if (!userCount) {
@@ -64,7 +64,7 @@ export const chkJoin = async (info) => {
   try {
     await USER.create(info);
   } catch (e) {
-    console.log("User create", e.message);
+    console.log(e.message);
     throw new Error(JSON.stringify(USER_JOIN_RES.USER_NOT_CREATE));
   }
 };
