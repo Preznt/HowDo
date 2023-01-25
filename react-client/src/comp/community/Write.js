@@ -3,9 +3,9 @@
 // 카테고리 => 토픽 테이블 구조는?
 
 import { useEffect, useState } from "react";
-// react build 전까지 에디터 보류
+// react build 하지 않으면 에디터 오류 발생
 // import EditorModule from "./EditorModule";
-import { submitPost } from "../service/post.service";
+import { submitPost } from "../../service/post.service";
 import { v4 } from "uuid";
 
 const Write = () => {
