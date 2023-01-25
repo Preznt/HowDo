@@ -1,4 +1,4 @@
-import { UserContextProvider } from "./UserContext";
+import { UserContextProvider } from "./UserContextProvider";
 import { TransferContextProvider } from "./TransferContextProvider";
 import { VideoContentContextProvider } from "./VideoContentContextProvide";
 
