@@ -4,8 +4,6 @@ import { RouterProvider } from "react-router-dom";
 import "./css/index.css";
 import "tw-elements";
 import router from "./nav/Navigation";
-import { UserContextProvider } from "./context/UserContextProvider";
-import router from "./nav/Navigation";
 import Provider from "./context/ProviderCompil";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
