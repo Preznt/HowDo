@@ -7,8 +7,9 @@ export const fetchJoin = async (joinUser) => {
     },
   };
 
-  const response = await fetch("/user/join", fetchOption);
+  const response = await fetch("/regist", fetchOption);
   const result = await response.json();
 
+  // console.log(result);
   return result;
 };
