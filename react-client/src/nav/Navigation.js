@@ -13,7 +13,7 @@ const router = createBrowserRouter([
       { path: "", element: <MainPage /> },
       { path: "/user", element: <Join /> },
       { path: "/user/login", element: <Login /> },
-      { path: "/creater", element: <MyPageMain /> },
+      { path: "/mypage", element: <MyPageMain /> },
       { path: "/login", element: <LoginModal /> },
     ],
   },
