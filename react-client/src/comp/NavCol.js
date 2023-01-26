@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useUserContext } from "../context/UserContextProvider";
 
 const NavCol = () => {
   const { setUserSession, userSession, logoutHandler } = useUserContext();
