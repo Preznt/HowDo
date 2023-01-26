@@ -14,6 +14,7 @@ const router = createBrowserRouter([
       { path: "/user", element: <Join /> },
       { path: "/user/login", element: <Login /> },
       { path: "/creater", element: <MyPageMain /> },
+      { path: "/login", element: <LoginModal /> },
     ],
   },
 ]);

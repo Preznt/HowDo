@@ -29,8 +29,15 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/logout", async (req, res) => {
+  req.session.user = undefined;
+  return res.json(null);
+  // console.log(req.session.user);
+});
+
 router.get("/session", (req, res) => {
   const user = req.session?.user;
+  // console.log(user);
   if (!user) return res.json(USER_JOIN_RES.USER_NOT_SESSION);
   return res.json(user);
 });

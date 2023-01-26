@@ -3,18 +3,12 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { fetchLogin } from "../../service/auth.service";
 
 const Login = () => {
-  const { login, setLogin } = useUserContext();
+  const { login, setLogin, userSession, setUserSession, onClickHandler } =
+    useUserContext();
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
     setLogin({ ...login, [name]: value });
-  };
-
-  const onClickHandler = async () => {
-    const result = await fetchLogin(login);
-    // document.location.href = "/";
-    console.log(result);
-    // if (result.CODE === "REQ_USERNAME")
   };
 
   const submitHandler = (e) => {

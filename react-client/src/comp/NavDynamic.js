@@ -10,16 +10,44 @@ const NavDynamic = ({ nOpen }) => {
       }
     >
       <div>
-        <div>1번 메뉴</div>
+        <img
+          className="m-auto cursor-pointer"
+          width="80px"
+          height="80px"
+          src="./image/memo.png"
+          alt="post_upload"
+        ></img>
+        <div className="mb-12">게시글 업로드</div>
       </div>
       <div>
-        <div>2번 메뉴</div>
+        <img
+          className="m-auto cursor-pointer"
+          width="80px"
+          height="80px"
+          src="./image/clapperboard.png"
+          alt="video_upload"
+        ></img>
+        <div className="mb-12">동영상 업로드</div>
       </div>
       <div>
-        <div>3번 메뉴</div>
+        <img
+          className="m-auto cursor-pointer"
+          width="80px"
+          height="80px"
+          src="./image/photo.png"
+          alt="image_upload"
+        ></img>
+        <div className="mb-12">이미지 업로드</div>
       </div>
       <div>
-        <div>4번 메뉴</div>
+        <img
+          className="m-auto cursor-pointer"
+          width="80px"
+          height="80px"
+          src="./image/subscribe.png"
+          alt="subscribe"
+        ></img>
+        <div className="mb-12">구독 관리</div>
       </div>
     </div>
   );

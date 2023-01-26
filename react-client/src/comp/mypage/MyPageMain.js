@@ -10,7 +10,7 @@ const MyPageMain = () => {
         <img alt="profile"></img>
         <div>CreaterName</div>
         <div className="ml-auto">구독</div>
-        <div>즐겨찾기</div>
+        <div>게시글 작성</div>
       </div>
       <CreaterContent />
     </div>
