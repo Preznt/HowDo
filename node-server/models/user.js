@@ -41,6 +41,10 @@ export default (sequelize) => {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: true,
       },
+      title_image: {
+        type: Sequelize.DataTypes.STRING(256),
+        allowNull: true,
+      },
     },
     {
       sequelize,

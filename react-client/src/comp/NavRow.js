@@ -1,8 +1,15 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import NavDynamic from "./NavDynamic";
-
+import { useUserContext } from "../context/UserContextProvider";
+import { UserSession } from "../data/UserSession";
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
+  const { setUserSession } = useUserContext();
+  const onClickHandler = (e) => {
+    setUserSession(new UserSession());
+    document.location.href = "/";
+  };
   const borderStyle = {
     padding: "1rem",
     borderBottomWidth: "2px",
@@ -47,8 +54,12 @@ const NavRow = () => {
         </label>
       </div>
       <div className="ml-auto mt-3 bg-white h-8">로그인</div>
-      <div className="mt-3 bg-white h-8 ">회원가입</div>
-      <div className="mt-3 bg-white h-8 ">로그아웃</div>
+      <Link to="/regist" className="mt-3 bg-white h-8 ">
+        회원가입
+      </Link>
+      <Link onClick={onClickHandler} className="mt-3 bg-white h-8 ">
+        로그아웃
+      </Link>
       <NavDynamic nOpen={nOpen} />
     </div>
   );
