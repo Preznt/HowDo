@@ -3,12 +3,12 @@ import { useState } from "react";
 /**
  * map 을 이용한 컨텐츠 시리즈별 carousel 제작
  */
-const CreaterContent = () => {
+const CreaterContentFavorite = () => {
   const [hover, setHover] = useState(false);
   console.log(hover);
   return (
     <>
-      <span className="p-4 border-b-2 border-black">최근 업로드한 영상</span>
+      <span className="p-4 border-b-2 border-black">인기 업로드 영상</span>
       <div
         className="m-12 flex w-80 h-64 flex-col justify-center items-center transition-all duration-700 hover:h-72 hover:w-96"
         onMouseOver={() => setHover(true)}
@@ -40,4 +40,4 @@ const CreaterContent = () => {
   );
 };
 
-export default CreaterContent;
+export default CreaterContentFavorite;

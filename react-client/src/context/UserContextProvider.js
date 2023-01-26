@@ -3,7 +3,7 @@ import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
 import { fetchUser, fetchLogin } from "../service/auth.service";
-
+// import { useNavigate } from "react-router-dom";
 const UserContext = createContext();
 
 export const useUserContext = () => {
@@ -20,10 +20,20 @@ export const UserContextProvider = ({ children }) => {
   const passwordRef = useRef();
   const rePasswordRef = useRef();
   const inputRef = { usernameRef, nicknameRef, passwordRef, rePasswordRef };
+
+  // const navigate = useNavigate();
   const onClickHandler = async () => {
     const result = await fetchLogin(login);
     setUserSession(result);
     console.log(result);
+  };
+
+  const logoutHandler = (e) => {
+    fetch(`/user/logout`);
+    setUserSession(new UserSession());
+    document.location.href = "/";
+    // navigate("/");
+    console.log(userSession);
   };
   useEffect(() => {
     (async () => {
@@ -48,6 +58,7 @@ export const UserContextProvider = ({ children }) => {
     userSession,
     setUserSession,
     onClickHandler,
+    logoutHandler,
   };
 
   return <UserContext.Provider value={props}>{children}</UserContext.Provider>;
