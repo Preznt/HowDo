@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS image(
 	i_update_date	datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,	
 	i_delete_date	VARCHAR(125),	
 	PRIMARY KEY(i_code)
-);subscribe
+);
 
 -- 영상
 CREATE TABLE IF NOT EXISTS video(
@@ -83,9 +83,10 @@ CREATE TABLE IF NOT EXISTS board_content(
 	b_title	VARCHAR(256),	
 	b_detail	TEXT,	
 	b_category	VARCHAR(125),		
-	b_create_date	 datetime	DEFAULT CURRENT_TIMESTAMP,
-	b_update_date	 datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
-	b_delete_date	VARCHAR(125),		
+	b_date	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%Y-%m-%d")),
+	b_time	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%H:%i:&S")),
+	b_updated	 DATETIME	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
+	b_deleted	VARCHAR(125),		
 	b_views	BIGINT		DEFAULT 0,
 	b_upvote	BIGINT		DEFAULT 0,
 	b_group	VARCHAR(125),
@@ -97,10 +98,11 @@ CREATE TABLE IF NOT EXISTS reply(
 	r_code	VARCHAR(256),
 	b_code	VARCHAR(256),
 	username	VARCHAR(256),
-	r_content	VARCHAR(256),		
-	r_create_date	datetime	DEFAULT CURRENT_TIMESTAMP,		
-	r_update_date	datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
-	r_delete_date	VARCHAR(125),		
+	r_content	VARCHAR(256),	
+	r_date	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%Y-%m-%d")),
+	r_time	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%H:%i:&S")),
+	r_updated	DATETIME	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
+	r_deleted	VARCHAR(125),		
 	r_parent_code	VARCHAR(256),
 	PRIMARY KEY(r_code)
 );
@@ -116,7 +118,7 @@ CREATE TABLE IF NOT EXISTS reply(
 CREATE TABLE IF NOT EXISTS attach(
 	a_code	VARCHAR(256),
 	b_code	VARCHAR(256),
-	a_date	datetime	DEFAULT CURRENT_TIMESTAMP,
+	a_date	DATETIME NOT NULL	DEFAULT CURRENT_TIMESTAMP,
 	a_original_name	VARCHAR(256),
 	a_save_name	VARCHAR(256),			
 	a_ext	VARCHAR(10),		
