@@ -5,15 +5,9 @@ import { useUserContext } from "../context/UserContextProvider";
 import { UserSession } from "../data/UserSession";
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
-  const { setUserSession, userSession, setLogin } = useUserContext();
-  const navigate = useNavigate();
-  const onClickHandler = (e) => {
-    fetch(`/user/logout`);
-    setUserSession(new UserSession());
+  const { userSession, logoutHandler } = useUserContext();
+  
 
-    navigate("/");
-    console.log(userSession);
-  };
   const borderStyle = {
     padding: "1rem",
     borderBottomWidth: "2px",
@@ -29,7 +23,7 @@ const NavRow = () => {
   };
 
   return (
-    <div className="flex bg-blue-900 relative ">
+    <div className="flex bg-blue-900 top-0 left-0 right-0 mb-12 fixed ">
       <div
         className="flex w-12 h-8 m-3 mr-0 bg-inherit content-center justify-center cursor-pointer"
         onClick={openClickHandler}
@@ -61,7 +55,7 @@ const NavRow = () => {
         <div className="ml-auto mt-3 bg-white h-8">로그인</div>
       )}
       {userSession.username ? (
-        <Link className="ml-auto mt-3 m-2 bg-white h-8 ">
+        <Link className="ml-auto mt-3 m-2 bg-white h-8" to="/mypage">
           {userSession.nickname} 님의 페이지
         </Link>
       ) : (
@@ -70,7 +64,7 @@ const NavRow = () => {
         </Link>
       )}
       {userSession.username ? (
-        <div onClick={onClickHandler} className="mt-3 m-2 bg-white h-8 ">
+        <div onClick={logoutHandler} className="mt-3 m-2 bg-white h-8 ">
           {userSession.nickname} 로그아웃
         </div>
       ) : null}

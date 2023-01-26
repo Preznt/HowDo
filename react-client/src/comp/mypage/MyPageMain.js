@@ -1,4 +1,5 @@
 import CreaterContent from "./CreaterContent";
+import CreaterContentFavorite from "./CreaterContentFavorite";
 
 const MyPageMain = () => {
   return (
@@ -13,6 +14,7 @@ const MyPageMain = () => {
         <div>게시글 작성</div>
       </div>
       <CreaterContent />
+      <CreaterContentFavorite />
     </div>
   );
 };
