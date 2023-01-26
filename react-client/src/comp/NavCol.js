@@ -25,11 +25,14 @@ const NavCol = () => {
       </Link>
       <Link
         className="m-2.5 p-2 ring-4 ring-white hover:bg-white"
-        to="/regist/login"
+        to="/user/login"
       >
         로그인
       </Link>
-      <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/regist">
+      <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/logout">
+        로그아웃
+      </Link>
+      <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/user">
         회원가입
       </Link>
     </div>

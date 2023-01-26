@@ -7,7 +7,7 @@ export const fetchJoin = async (joinUser) => {
     },
   };
 
-  const response = await fetch("/regist", fetchOption);
+  const response = await fetch("/user", fetchOption);
   const result = await response.json();
 
   // console.log(result);
@@ -23,7 +23,7 @@ export const fetchLogin = async (loginUser) => {
     },
   };
 
-  const response = await fetch("/regist/login", fetchOption);
+  const response = await fetch("/user/login", fetchOption);
   const result = await response.json();
 
   // console.log(result);
@@ -31,8 +31,9 @@ export const fetchLogin = async (loginUser) => {
 };
 
 export const fetchUser = async () => {
-  const response = await fetch("/regist/session");
+  const response = await fetch("/user/session");
   const result = await response.json();
 
+  // console.log(result);
   return result;
 };
