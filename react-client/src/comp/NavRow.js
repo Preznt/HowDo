@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NavDynamic from "./NavDynamic";
 import { useUserContext } from "../context/UserContextProvider";
@@ -6,7 +6,7 @@ import { UserSession } from "../data/UserSession";
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
   const { userSession, logoutHandler } = useUserContext();
-  
+  const searchRef = useRef();
 
   const borderStyle = {
     padding: "1rem",
@@ -37,11 +37,12 @@ const NavRow = () => {
       </div>
       <div className="flex ml-auto">
         <input
+          ref={searchRef.inputRef}
           className="bg-white outline-none rounded-full p-12"
           style={borderStyle}
           id="search"
         />
-        <label className="mt-3 bg-white h-8 rounded-full" for="search">
+        <label className="mt-3 bg-white h-8 rounded-full" htmlFor="search">
           <img
             src="./image/images.png"
             alt="searchImage"
