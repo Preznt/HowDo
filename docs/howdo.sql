@@ -2,6 +2,7 @@ CREATE DATABASE howdo;
 USE howdo;
 
 DROP TABLE image;
+SELECT * FROM user;
 
 -- 사용자정보
 CREATE TABLE IF NOT EXISTS user(
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS image(
 	i_update_date	datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,	
 	i_delete_date	VARCHAR(125),	
 	PRIMARY KEY(i_code)
-);subscribe
+);
 
 -- 영상
 CREATE TABLE IF NOT EXISTS video(
