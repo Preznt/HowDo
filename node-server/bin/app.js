@@ -24,7 +24,7 @@ import sessionSequelize from "connect-session-sequelize";
 
 // sample router modules
 import indexRouter from "../routes/index.js";
-import userRouter from "../routes/user.js";
+import userRouter from "../routes/regist.js";
 
 // create express framework
 const app = express();

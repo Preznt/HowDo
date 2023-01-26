@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, useRef } from "react";
+import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { User } from "../data/User";
-import { fetchJoin } from "../service/auth.service";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
+import { fetchUser } from "../service/auth.service";
 
 const UserContext = createContext();
 
@@ -21,15 +21,21 @@ export const UserContextProvider = ({ children }) => {
   const rePasswordRef = useRef();
   const inputRef = { usernameRef, nicknameRef, passwordRef, rePasswordRef };
 
-  const exeJoin = async () => {
-    const result = await fetchJoin(joinUser);
-    return result;
-  };
+  useEffect(() => {
+    const userFetch = async () => {
+      const loginUser = await fetchUser();
+      if (loginUser) {
+        setUserSession(loginUser);
+      } else {
+        setUserSession({});
+      }
+    };
+    userFetch();
+  }, []);
 
   const props = {
     joinUser,
     setJoinUser,
-    exeJoin,
     inputRef,
     error,
     setError,

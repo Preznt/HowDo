@@ -51,6 +51,33 @@ export const USER_JOIN_RES = {
     CODE_NUM: 500,
     MESSAGE: "회원가입에 실패했습니다",
   },
+  USER_NOT_SESSION: {
+    CODE: "USER_NOT_SESSION",
+    CODE_NUM: 403,
+    MESSAGE: "로그인 정보 없음",
+  },
+};
+
+export const USER_LOGIN_RES = {
+  MATCH_NOT_USERNAME: {
+    CODE: "MATCH_NOT_USERNAME",
+    CODE_NUM: 400,
+    SUB_CODE: "USERNAME",
+    MESSAGE: "가입되지 않은 아이디 입니다",
+  },
+
+  MATCH_NOT_PASSWORD: {
+    CODE: "MATCH_NOT_PASSWORD",
+    CODE_NUM: 400,
+    SUB_CODE: "PASSWORD",
+    MESSAGE: "비밀번호가 일치하지 않습니다.",
+  },
+
+  USER_NOT_LOGIN: {
+    CODE: "USER_NOT_LOGIN",
+    CODE_NUM: 500,
+    MESSAGE: "로그인에 실패했습니다",
+  },
 };
 
 export const SYSTEM_RES = {

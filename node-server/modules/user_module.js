@@ -1,5 +1,9 @@
 import DB from "../models/index.js";
-import { USER_JOIN_RES, SYSTEM_RES } from "../config/api_res_code.js";
+import {
+  USER_JOIN_RES,
+  SYSTEM_RES,
+  USER_LOGIN_RES,
+} from "../config/api_res_code.js";
 import crypto from "crypto";
 const USER = DB.models.user;
 
@@ -67,4 +71,32 @@ export const chkJoin = async (info) => {
     console.log(e.message);
     throw new Error(JSON.stringify(USER_JOIN_RES.USER_NOT_CREATE));
   }
+};
+
+export const chkLogin = async (info) => {
+  const { id, password } = info;
+
+  if (!id) throw new Error(JSON.stringify(USER_JOIN_RES.REQ_USERNAME));
+  let resultUser = {};
+  try {
+    resultUser = await USER.findByPk(id);
+  } catch (e) {
+    console.log(e.message);
+    throw new Error(JSON.stringify(SYSTEM_RES.SQL_ERROR));
+  }
+
+  if (!resultUser)
+    throw new Error(JSON.stringify(USER_LOGIN_RES.MATCH_NOT_USERNAME));
+
+  if (!password) throw new Error(JSON.stringify(USER_JOIN_RES.REQ_PASSWORD));
+
+  const encPassword = crypto
+    .createHash("sha512")
+    .update(password)
+    .digest("base64");
+
+  if (encPassword !== resultUser.password)
+    throw new Error(JSON.stringify(USER_LOGIN_RES.MATCH_NOT_PASSWORD));
+
+  return resultUser;
 };
