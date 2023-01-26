@@ -15,6 +15,9 @@ export const UserContextProvider = ({ children }) => {
   const [login, setLogin] = useState(new Login());
   const [error, setError] = useState({});
   const [userSession, setUserSession] = useState(new UserSession());
+  const [modal, setModal] = useState({
+    open: false,
+  });
   const usernameRef = useRef();
   const nicknameRef = useRef();
   const passwordRef = useRef();
@@ -27,6 +30,10 @@ export const UserContextProvider = ({ children }) => {
     setUserSession(result);
     console.log(result);
   };
+  // 모달창 열고 닫는 함수
+  const modalHandler = () => {
+    setModal({ ...modal, open: !modal.open });
+  };
 
   const logoutHandler = (e) => {
     fetch(`/user/logout`);
@@ -35,6 +42,7 @@ export const UserContextProvider = ({ children }) => {
     // navigate("/");
     console.log(userSession);
   };
+
   useEffect(() => {
     (async () => {
       const loginUser = await fetchUser();
@@ -59,6 +67,9 @@ export const UserContextProvider = ({ children }) => {
     setUserSession,
     onClickHandler,
     logoutHandler,
+    modal,
+    setModal,
+    modalHandler,
   };
 
   return <UserContext.Provider value={props}>{children}</UserContext.Provider>;
