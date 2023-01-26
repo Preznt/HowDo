@@ -1,7 +1,7 @@
 import { useState } from "react";
 import NavDynamic from "./NavDynamic";
 
-const Nav_row = () => {
+const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
   const borderStyle = {
     padding: "1rem",
@@ -54,4 +54,4 @@ const Nav_row = () => {
   );
 };
 
-export default Nav_row;
+export default NavRow;
