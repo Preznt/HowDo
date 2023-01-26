@@ -1,14 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavDynamic from "./NavDynamic";
 import { useUserContext } from "../context/UserContextProvider";
 import { UserSession } from "../data/UserSession";
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
-  const { setUserSession } = useUserContext();
+  const { setUserSession, userSession, setLogin } = useUserContext();
+  const navigate = useNavigate();
   const onClickHandler = (e) => {
+    fetch(`/user/logout`);
     setUserSession(new UserSession());
-    document.location.href = "/";
+
+    navigate("/");
+    console.log(userSession);
   };
   const borderStyle = {
     padding: "1rem",
@@ -53,13 +57,23 @@ const NavRow = () => {
           ></img>
         </label>
       </div>
-      <div className="ml-auto mt-3 bg-white h-8">로그인</div>
-      <Link to="/regist" className="mt-3 bg-white h-8 ">
-        회원가입
-      </Link>
-      <Link onClick={onClickHandler} className="mt-3 bg-white h-8 ">
-        로그아웃
-      </Link>
+      {userSession.username ? null : (
+        <div className="ml-auto mt-3 bg-white h-8">로그인</div>
+      )}
+      {userSession.username ? (
+        <Link className="ml-auto mt-3 m-2 bg-white h-8 ">
+          {userSession.nickname} 님의 페이지
+        </Link>
+      ) : (
+        <Link to="/regist" className="mt-3 bg-white h-8 ">
+          회원가입
+        </Link>
+      )}
+      {userSession.username ? (
+        <div onClick={onClickHandler} className="mt-3 m-2 bg-white h-8 ">
+          {userSession.nickname} 로그아웃
+        </div>
+      ) : null}
       <NavDynamic nOpen={nOpen} />
     </div>
   );

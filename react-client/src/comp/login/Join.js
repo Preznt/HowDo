@@ -12,6 +12,7 @@ const Join = () => {
   const onClickHandler = async () => {
     const result = await fetchJoin(joinUser);
     setError({ ...result });
+    document.location.href = "/";
     console.log(result);
   };
 

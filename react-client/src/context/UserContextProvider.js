@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
-import { fetchUser } from "../service/auth.service";
+import { fetchUser, fetchLogin } from "../service/auth.service";
 
 const UserContext = createContext();
 
@@ -20,17 +20,21 @@ export const UserContextProvider = ({ children }) => {
   const passwordRef = useRef();
   const rePasswordRef = useRef();
   const inputRef = { usernameRef, nicknameRef, passwordRef, rePasswordRef };
-
+  const onClickHandler = async () => {
+    const result = await fetchLogin(login);
+    setUserSession(result);
+    console.log(userSession);
+  };
   useEffect(() => {
-    const userFetch = async () => {
+    (async () => {
       const loginUser = await fetchUser();
       if (loginUser) {
         setUserSession(loginUser);
       } else {
-        setUserSession({});
+        setUserSession(new UserSession());
       }
-    };
-    userFetch();
+    })();
+    console.log(userSession);
   }, []);
 
   const props = {
@@ -43,6 +47,7 @@ export const UserContextProvider = ({ children }) => {
     setLogin,
     userSession,
     setUserSession,
+    onClickHandler,
   };
 
   return <UserContext.Provider value={props}>{children}</UserContext.Provider>;
