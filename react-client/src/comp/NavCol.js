@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useUserContext } from "../context/UserContextProvider";
 const NavCol = () => {
-  const { setUserSession, userSession, logoutHandler } = useUserContext();
+  const { userSession, logoutHandler } = useUserContext();
   return (
     <div className="flex flex-col w-20 bg-orange-400 h-full">
       <Link className="m-2.5 p-2 ring-4 ring-white hover:bg-white" to="/">
