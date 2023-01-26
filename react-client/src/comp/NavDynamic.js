@@ -1,5 +1,5 @@
 import "../css/Nav.css";
-const Nav_dynamic = ({ nOpen }) => {
+const NavDynamic = ({ nOpen }) => {
   // console.log(nOpen);
   return (
     <div
@@ -24,4 +24,4 @@ const Nav_dynamic = ({ nOpen }) => {
     </div>
   );
 };
-export default Nav_dynamic;
+export default NavDynamic;
