@@ -23,7 +23,7 @@ export const UserContextProvider = ({ children }) => {
   const onClickHandler = async () => {
     const result = await fetchLogin(login);
     setUserSession(result);
-    console.log(userSession);
+    console.log(result);
   };
   useEffect(() => {
     (async () => {
