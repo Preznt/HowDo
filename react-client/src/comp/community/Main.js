@@ -1,5 +1,4 @@
 // 커뮤니티 초기 화면
-import { ClipboardDocumentListIcon } from "@heroicons/react/20/solid";
 import Rank from "./Rank";
 
 const Main = () => {
@@ -14,8 +13,10 @@ const Main = () => {
   const MainItem = () => {
     return catList.map((cat) => {
       return (
-        <section className="main-item" key={cat.eng}>
-          <div>{cat.kor}</div>
+        <section className="main-item p-5" key={cat.eng}>
+          <div className="main-item-title mb-2.5 p-2 text-left text-lg font-bold border-b border-#d1d5db">
+            {cat.kor}
+          </div>
           <Rank />
         </section>
       );
@@ -23,7 +24,7 @@ const Main = () => {
   };
 
   return (
-    <main className="cat-main">
+    <main className="cat-main container mx-auto">
       <MainItem />
     </main>
   );
