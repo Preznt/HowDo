@@ -3,7 +3,7 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { fetchLogin } from "../../service/auth.service";
 
 const Login = () => {
-  const { login, setLogin, userSession, setUserSession } = useUserContext();
+  const { login, setLogin } = useUserContext();
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -11,9 +11,10 @@ const Login = () => {
   };
 
   const onClickHandler = async () => {
-    await fetchLogin(login);
-    // setUserSession();
-    // console.log(userSession);
+    const result = await fetchLogin(login);
+    // document.location.href = "/";
+    console.log(result);
+    // if (result.CODE === "REQ_USERNAME")
   };
 
   const submitHandler = (e) => {

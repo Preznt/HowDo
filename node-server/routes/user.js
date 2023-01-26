@@ -7,7 +7,6 @@ router.post("/", async (req, res, next) => {
   console.log(req.body);
   try {
     await chkJoin(req.body);
-    return res.redirect("/");
   } catch (error) {
     console.log(error.message);
     const e = JSON.parse(error?.message);
@@ -32,7 +31,6 @@ router.post("/login", async (req, res) => {
 
 router.get("/session", (req, res) => {
   const user = req.session?.user;
-  console.log(user);
   if (!user) return res.json(USER_JOIN_RES.USER_NOT_SESSION);
   return res.json(user);
 });
