@@ -3,7 +3,7 @@ import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
 import { fetchUser, fetchLogin } from "../service/auth.service";
-// import { useNavigate } from "react-router-dom";
+
 const UserContext = createContext();
 
 export const useUserContext = () => {
@@ -24,7 +24,6 @@ export const UserContextProvider = ({ children }) => {
   const rePasswordRef = useRef();
   const inputRef = { usernameRef, nicknameRef, passwordRef, rePasswordRef };
 
-  // const navigate = useNavigate();
   const onClickHandler = async () => {
     const result = await fetchLogin(login);
     setUserSession(result);
@@ -33,13 +32,14 @@ export const UserContextProvider = ({ children }) => {
   // 모달창 열고 닫는 함수
   const modalHandler = () => {
     setModal({ ...modal, open: !modal.open });
+    document.location.href = "/";
+    console.log(userSession);
   };
 
   const logoutHandler = (e) => {
     fetch(`/user/logout`);
     setUserSession(new UserSession());
     document.location.href = "/";
-    // navigate("/");
     console.log(userSession);
   };
 

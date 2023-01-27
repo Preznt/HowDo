@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NavDynamic from "./NavDynamic";
 import { useUserContext } from "../context/UserContextProvider";
-import { UserSession } from "../data/UserSession";
+import { useVideoContentContext } from "../context/VideoContentContextProvide";
+
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
   const { userSession, logoutHandler } = useUserContext();
-  
+  const { setVideoContentList } = useVideoContentContext();
+  const searchRef = useRef();
+  const navigate = useNavigate();
 
   const borderStyle = {
     padding: "1rem",
@@ -21,6 +24,8 @@ const NavRow = () => {
     setNOpen(!nOpen);
     console.log(nOpen);
   };
+
+  
 
   return (
     <div className="flex bg-blue-900 top-0 left-0 right-0 mb-12 fixed ">
@@ -37,11 +42,12 @@ const NavRow = () => {
       </div>
       <div className="flex ml-auto">
         <input
+          ref={searchRef.inputRef}
           className="bg-white outline-none rounded-full p-12"
           style={borderStyle}
           id="search"
         />
-        <label className="mt-3 bg-white h-8 rounded-full" for="search">
+        <label className="mt-3 bg-white h-8 rounded-full" htmlFor="search">
           <img
             src="./image/images.png"
             alt="searchImage"
