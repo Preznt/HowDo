@@ -9,35 +9,26 @@ const Rank = ({ data }) => {
   const RankItem = () => {
     return data.map((item) => {
       keyRef.current++;
-      // const content = item?.b_content;
-      // let imgSrc = "";
-      // if (content) {
-      //   const imgStartIdx = content.indexOf("![](");
-      //   if (imgStartIdx > -1) {
-      //     const imgLastIdx = item?.b_content.indexOf(")", imgStartIdx);
-      //     imgSrc = item?.b_content.slice(imgStartIdx + 4, imgLastIdx);
-      //   }
-      // }
-
       return (
-        <div className="rank-item p-2" key={keyRef.current}>
-          <div>
-            <img src={`/static/uploads/${item["attachs.thumb"]}`} />
+        <div
+          className="rank-item grid grid-cols-2 grid-rows-2 p-2"
+          key={keyRef.current}
+        >
+          {/* 나중에 nickname으로 수정 */}
+          <div className="text-left">{item.username}</div>
+          <div className="w-full text-right">
+            <span className="text-gray-400">{item.r_count || "0"}</span>
+            <span className="text-gray-400">{item.b_upvote}</span>
           </div>
-          <div className="w-full text-center">
-            <span className="font-bold">{item.b_title}</span>
-            <span className="text-gray-400"> [{item.count}]</span>
-          </div>
-          <div className="h-24 overflow-hidden text-ellipsis">
-            {item.b_content}
-          </div>
+          <div className="text-left font-bold">{item.b_title}</div>
+          <div className="text-right">{item.b_category}</div>
         </div>
       );
     });
   };
 
   return (
-    <section className="commu-rank grid grid-cols-5 grid-rows-none">
+    <section className="commu-rank grid grid-cols-none grid-rows-5">
       <RankItem />
     </section>
   );

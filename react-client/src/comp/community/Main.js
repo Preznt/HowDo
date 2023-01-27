@@ -1,17 +1,17 @@
 // 커뮤니티 초기 화면
 import Rank from "./Rank";
-import { getMainPosts } from "../service/post.service";
+import { getMainPosts } from "../../service/post.service";
 import { useLayoutEffect, useState } from "react";
 
 const Main = () => {
   const [rankData, setRankData] = useState([]);
 
   useLayoutEffect(() => {
-    const fetch = async () => {
+    (async () => {
       const result = await getMainPosts();
       if (result) setRankData([...result.data]);
-    };
-    fetch();
+      return null;
+    })();
   }, []);
 
   console.log(rankData);

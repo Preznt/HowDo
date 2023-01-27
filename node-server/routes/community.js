@@ -12,82 +12,88 @@ const router = express.Router();
 
 const catList = [
   {
-    code: "C1",
+    group: "C1",
     eng: "general",
     kor: "일반",
     sub: [
-      { eng: "notice", kor: "공지", code: "C1" },
-      { eng: "free", kor: "자유게시판", code: "C1" },
+      { eng: "notice", kor: "공지", group: "C1", category: "C11" },
+      { eng: "free", kor: "자유게시판", group: "C1", category: "C12" },
     ],
   },
   {
-    code: "C2",
+    group: "C2",
     eng: "hobbies",
     kor: "취미",
     sub: [
-      { eng: "animals", kor: "동물", code: "C2" },
-      { eng: "plants", kor: "식물", code: "C2" },
+      { eng: "animals", kor: "동물", group: "C2", category: "C21" },
+      { eng: "plants", kor: "식물", group: "C2", category: "C22" },
     ],
   },
   {
-    code: "C3",
+    group: "C3",
     eng: "learning",
     kor: "학습",
     sub: [
-      { eng: "programming", kor: "프로그래밍", code: "C3" },
-      { eng: "modeling", kor: "모델링", code: "C3" },
+      { eng: "programming", kor: "프로그래밍", group: "C3", category: "C31" },
+      { eng: "modeling", kor: "모델링", group: "C3", category: "C32" },
     ],
   },
   {
-    code: "C4",
+    group: "C4",
     eng: "lifestyle",
     kor: "생활",
     sub: [
-      { eng: "health", kor: "건강", code: "C4" },
-      { eng: "fashion", kor: "패션", code: "C4" },
+      { eng: "health", kor: "건강", group: "C4", category: "C41" },
+      { eng: "fashion", kor: "패션", group: "C4", category: "C42" },
     ],
   },
   {
-    code: "C5",
+    group: "C5",
     eng: "issue",
     kor: "이슈",
     sub: [
-      { eng: "politics", kor: "정치", code: "C5" },
-      { eng: "entertainment", kor: "연예", code: "C5" },
+      { eng: "politics", kor: "정치", group: "C5", category: "C51" },
+      { eng: "entertainment", kor: "연예", group: "C5", category: "C52" },
     ],
   },
 ];
 
-router.get("/all", async (req, res) => {
+// community Main fetch
+router.get("/posts/get", async (req, res) => {
   try {
     // BOARD-ATTACH 관계 설정할 경우 에디터에 이미지를 등록할 때
     // 게시글보다 첨부파일이 먼저 등록되므로 INSERT 되지 않는 문제 발생
     let data = [];
     for (let cat of catList) {
       let items = {};
-      items.code = `${cat.code}`;
+      items.code = `${cat.group}`;
       items.name = `${cat.kor}`;
       items.posts = await BOARD.findAll({
-        where: { b_group: `${cat.code}` },
+        where: { b_group: `${cat.group}` },
         limit: 5,
         subQuery: false,
-        order: [["b_upvote", "DESC"]],
-        raw: true,
-        include: [
-          {
-            model: ATTACH,
-            as: "attachs",
-            attributes: [["a_save_name", "thumb"]],
-            order: [["a_date", "DESC"]],
-          },
+        order: [
+          ["b_upvote", "DESC"],
+          ["b_date", "DESC"],
         ],
-        group: "b_code",
+        raw: true,
       });
       data.push(items);
     }
 
     console.log(data);
     return res.status(200).send({ catList, data });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// community Detail fetch
+router.get("/post/:bCode/get", async (req, res) => {
+  try {
+    const bCode = req.params?.bCode;
+    const postData = await BOARD.findByPk(bCode);
+    return res.status(200).send(postData);
   } catch (err) {
     console.error(err);
   }
