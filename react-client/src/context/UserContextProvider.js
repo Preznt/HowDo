@@ -3,7 +3,6 @@ import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
 import { fetchUser, fetchLogin } from "../service/auth.service";
-import { Navigate } from "react-router-dom";
 
 const UserContext = createContext();
 

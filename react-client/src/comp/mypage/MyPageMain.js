@@ -2,21 +2,13 @@ import { useEffect } from "react";
 import CreaterContent from "./CreaterContent";
 import CreaterContentFavorite from "./CreaterContentFavorite";
 import { useUserContext } from "../../context/UserContextProvider";
-import { useVideoContentContext } from "../../context/VideoContentContextProvide";
-const MyPageMain = () => {
-  const { userSession } = useUserContext();
-  const { setVideoContentList, videoContentList } = useVideoContentContext();
-  console.log(userSession.username);
 
-  useEffect(() => {
-    const fetchdata = async () => {
-      const response = await fetch(`/mypage/${userSession.username}`);
-      const result = await response.json();
-      console.log(result);
-      setVideoContentList(result);
-    };
-    fetchdata();
-  }, []);
+const MyPageMain = () => {
+  const { userSession, setUserSession } = useUserContext();
+  
+  //  console.log(userSession.username);
+
+  
 
   return (
     <div>
