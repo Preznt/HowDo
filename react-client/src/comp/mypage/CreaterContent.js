@@ -1,35 +1,52 @@
 import ReactPlayer from "react-player";
 import { useState } from "react";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
+import Slider from "react-slick";
 /**
  * map 을 이용한 컨텐츠 시리즈별 carousel 제작
  */
 const CreaterContent = () => {
-  const { videoContentList } = useVideoContentContext();
-  const [hover, setHover] = useState(false);
+  const { videoContentList, setVideoContentList } = useVideoContentContext();
 
-  const videoView = videoContentList.map((item) => {
+  const setHover = (v_code, toggle) => {
+    setVideoContentList([
+      ...videoContentList.map((item) => {
+        if (item.v_code === v_code) return { ...item, v_hover: toggle };
+        else return item;
+      }),
+    ]);
+    console.log(videoContentList);
+  };
+  const onMouseOverHandler = (v_code) => {
+    setHover(v_code, true);
+  };
+  const onMouseOutHandler = (v_code) => {
+    setHover(v_code, false);
+  };
+
+  const settings = {
+    className: "center flex",
+    dots: true,
+    lazyLoad: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+  const videoView = videoContentList?.map((item) => {
     return (
       <div
-        className="m-12 flex w-80 h-64 flex-col justify-center items-center transition-all duration-700 hover:h-72 hover:w-96"
-        onMouseOver={() => setHover(true)}
-        onMouseOut={() => setHover(false)}
+        className="m-12 flex w-80 h-64 flex-col justify-center items-center transition-all duration-700 hover:h-72 hover:w-96 hover:ml-4 hover:mr-4 hover:mb-4"
+        onMouseOver={() => onMouseOverHandler(item.v_code)}
+        onMouseOut={() => onMouseOutHandler(item.v_code)}
+        key={item.v_code}
       >
-        {hover ? (
-          <ReactPlayer
-            width="100%"
-            url={item.v_src}
-            playing={true}
-            muted={true}
-          />
-        ) : (
-          <ReactPlayer
-            width="100%"
-            url={item.v_src}
-            playing={false}
-            muted={false}
-          />
-        )}
+        <ReactPlayer
+          width="100%"
+          url={item.v_src}
+          playing={item.v_hover}
+          muted={item.v_hover}
+        />
         ;
         <div>
           <img alt="profile"></img>
@@ -44,7 +61,7 @@ const CreaterContent = () => {
   return (
     <>
       <span className="p-4 border-b-2 border-black">최근 업로드한 영상</span>
-      {videoView}
+      <div className="flex">{videoView}</div>
     </>
   );
 };
