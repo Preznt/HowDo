@@ -1,32 +1,55 @@
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { useUserContext } from "../../context/UserContextProvider";
+import { payReady } from "../../service/auth.service";
 
-const Purchase = (props) => {
-  const { modal } = props;
-
+const Purchase = () => {
+  const { modal, modalHandler } = useUserContext();
   return (
-    <div className="relative">
+    <div>
       <div
         className={
-          modal.open ? "fixed w-1/3 top-1/3 left-1/3 bg-white" : "hidden"
+          modal.open
+            ? "background fixed top-0 left-0 h-full w-full bg-zinc-800 opacity-40"
+            : ""
+        }
+        onClick={modalHandler}
+      ></div>
+      <div
+        className={
+          modal.open
+            ? "fixed w-1/3 top-32 left-1/3 bg-white rounded-2xl"
+            : "hidden"
         }
       >
-        <div className="flex justify-between border-2 bar">
-          <h3>구독</h3>
-          <div className="h-5 w-5 ">
+        <div className="flex justify-between items-center bar">
+          <h1 className="p-3 ">구독</h1>
+          <div className="h-7 w-7 mr-2 cursor-pointer" onClick={modalHandler}>
             <XMarkIcon />
           </div>
         </div>
         <div className="content">
-          <div>
-            <h1>구독하기</h1>
+          <div className="flex justify-around items-center bg-stone-200">
+            <img
+              className="inline-block w-40 rounded-full p-6"
+              src="https://yt3.ggpht.com/Uk6ujyzSetiuHYpEaEPzscAjGx_a4Vd2j3zQ-z_ciFySagb23eiD2-YzRxr18xK1bMedCNhxEg=s256-c-k-c0x00ffffff-no-rj"
+            />
+            <div>
+              <h1 className="text-2xl m-2">김메주와 고양이들</h1>
+              <p>구독혜택 이용해보기</p>
+            </div>
           </div>
           <div>
-            <h2>가격/월</h2>
-            <button className="p-2 rounded-full text-white bg-sky-600">
-              구독하기
-            </button>
-            <p>
+            <div className="flex items-center justify-end m-4">
+              <h2>₩3,000/월</h2>
+              <button
+                className="p-2 ml-5 rounded-full text-white bg-sky-600 "
+                onClick={payReady}
+              >
+                구독하기
+              </button>
+            </div>
+            <h1>멤버십 혜택</h1>
+            <p className="m-4">
               국가는 과학기술의 혁신과 정보 및 인력의 개발을 통하여 국민경제의
               발전에 노력하여야 한다. 국가안전보장회의는 대통령이 주재한다.
               헌법재판소는 법률에 저촉되지 아니하는 범위안에서 심판에 관한 절차,

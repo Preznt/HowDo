@@ -3,7 +3,7 @@ import CreaterContentFavorite from "./CreaterContentFavorite";
 import { useUserContext } from "../../context/UserContextProvider";
 import Purchase from "../purchase/Purchase";
 const MyPageMain = () => {
-  const { userSession, modal, modalHandler } = useUserContext();
+  const { userSession, modalHandler } = useUserContext();
 
   return (
     <div>
@@ -20,7 +20,7 @@ const MyPageMain = () => {
       </div>
       <CreaterContent />
       <CreaterContentFavorite />
-      <Purchase modal={modal} />
+      <Purchase />
     </div>
   );
 };
