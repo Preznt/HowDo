@@ -26,7 +26,7 @@ import sessionSequelize from "connect-session-sequelize";
 import indexRouter from "../routes/index.js";
 import userRouter from "../routes/user.js";
 import communityRouter from "../routes/community.js";
-
+import createrAPI from "../routes/createrAPI.js";
 // create express framework
 const app = express();
 
@@ -74,7 +74,7 @@ app.use(express.static(path.join("public")));
 app.use("/", indexRouter);
 app.use("/user", userRouter);
 app.use("/community", communityRouter);
-
+app.use("/mypage", createrAPI);
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   next(createError(404));
