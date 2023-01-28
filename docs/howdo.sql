@@ -2,6 +2,7 @@ CREATE DATABASE howdo;
 USE howdo;
 
 DROP TABLE image;
+SELECT * FROM user;
 
 -- 사용자정보
 CREATE TABLE IF NOT EXISTS user(

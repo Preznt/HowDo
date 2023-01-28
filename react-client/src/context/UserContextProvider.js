@@ -1,8 +1,8 @@
-import { createContext, useContext, useState, useRef } from "react";
+import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { User } from "../data/User";
-import { fetchJoin } from "../service/auth.service";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
+import { fetchUser, fetchLogin } from "../service/auth.service";
 
 const UserContext = createContext();
 
@@ -21,22 +21,34 @@ export const UserContextProvider = ({ children }) => {
   const rePasswordRef = useRef();
   const inputRef = { usernameRef, nicknameRef, passwordRef, rePasswordRef };
 
-  const exeJoin = async () => {
-    const result = await fetchJoin(joinUser);
-    // if (result?.CODE === "REQ_USERNAME") {
-    //   alert(`${result.MESSAGE}`);
-    //   usernameRef.current.focus();
-    // } else if (result?.CODE === "REQ_USERNAME") {
-    //   alert(`다시 입력`);
-    //   usernameRef.current.focus();
-    // }
-    return result;
+  const onClickHandler = async () => {
+    const result = await fetchLogin(login);
+    setUserSession(result);
+    document.location.href = "/";
+    console.log(userSession);
   };
+
+  const logoutHandler = (e) => {
+    fetch(`/user/logout`);
+    setUserSession(new UserSession());
+    document.location.href = "/";
+    console.log(userSession);
+  };
+  useEffect(() => {
+    (async () => {
+      const loginUser = await fetchUser();
+      if (loginUser) {
+        setUserSession(loginUser);
+      } else {
+        setUserSession(new UserSession());
+      }
+    })();
+    console.log(userSession);
+  }, []);
 
   const props = {
     joinUser,
     setJoinUser,
-    exeJoin,
     inputRef,
     error,
     setError,
@@ -44,6 +56,8 @@ export const UserContextProvider = ({ children }) => {
     setLogin,
     userSession,
     setUserSession,
+    onClickHandler,
+    logoutHandler,
   };
 
   return <UserContext.Provider value={props}>{children}</UserContext.Provider>;
