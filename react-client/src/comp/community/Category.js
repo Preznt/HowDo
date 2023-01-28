@@ -1,4 +1,4 @@
-// 각 topic별 페이지
+// 각 게시판별 페이지
 // .../community/category/catA
 import Rank from "./Rank";
 import List from "./List";

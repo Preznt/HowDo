@@ -1,7 +1,11 @@
 // 게시글 상세보기
 import List from "./List";
+import Reply from "./Reply";
+import "../../css/community/Detail.css";
 import { useState, useLayoutEffect } from "react";
 import { getDetailPost } from "../../service/post.service";
+
+// html tag -> entity -> tag 로 변환하는 과정 필요
 
 const Detail = () => {
   const [postData, setPostData] = useState({});
@@ -9,7 +13,7 @@ const Detail = () => {
   useLayoutEffect(() => {
     (async () => {
       // 임시 게시글 코드
-      const bCode = "11766ff3-5cb2-49b1-9a69-22e1a4cff8d8";
+      const bCode = "a7236b4e-aa4d-4db9-a9db-7e7012eea8a9";
       const result = await getDetailPost(bCode);
       if (result) setPostData({ ...result });
       return null;
@@ -40,6 +44,7 @@ const Detail = () => {
           <button>수정</button>
           <button>삭제</button>
         </div>
+        <Reply />
       </main>
       <List />
     </>
