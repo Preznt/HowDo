@@ -1,61 +1,34 @@
 import { useRef } from "react";
 // 추천수(또는 조회수) 랭킹 : Main 과 Category 에 포함
 
-const Rank = (props) => {
+const Rank = ({ data }) => {
   const keyRef = useRef(0);
 
   // b_content 불러올 때 markdown 은 replace 해야
-  const sampleData = [
-    {
-      b_title: "제목1",
-      count: 5,
-      b_content:
-        "국가는 건전한 소비행위를 계도하고 생산품의 품질향상을 촉구하기 위한 소비자보호운동을 법률이 정하는 바에 의하여 보장한다. 모든 국민은 인간다운 생활을 할 권리를 가진다. 모든 국민의 재산권은 보장된다. 그 내용과 한계는 법률로 정한다. 대통령은 법률이 정하는 바에 의하여 사면·감형 또는 복권을 명할 수 있다. 국가는 재해를 예방하고 그 위험으로부터 국민을 보호하기 위하여 노력하여야 한다. 사면·감형 및 복권에 관한 사항은 법률로 정한다. 모든 국민은 법률이 정하는 바에 의하여 국가기관에 문서로 청원할 권리를 가진다. 국회는 법률에 저촉되지 아니하는 범위안에서 의사와 내부규율에 관한 규칙을 제정할 수 있다.",
-    },
-    {
-      b_title: "제목2",
-      count: 2,
-      b_content:
-        "국가는 건전한 소비행위를 계도하고 생산품의 품질향상을 촉구하기 위한 소비자보호운동을 법률이 정하는 바에 의하여 보장한다. 모든 국민은 인간다운 생활을 할 권리를 가진다. 모든 국민의 재산권은 보장된다. 그 내용과 한계는 법률로 정한다. 대통령은 법률이 정하는 바에 의하여 사면·감형 또는 복권을 명할 수 있다. 국가는 재해를 예방하고 그 위험으로부터 국민을 보호하기 위하여 노력하여야 한다. 사면·감형 및 복권에 관한 사항은 법률로 정한다. 모든 국민은 법률이 정하는 바에 의하여 국가기관에 문서로 청원할 권리를 가진다. 국회는 법률에 저촉되지 아니하는 범위안에서 의사와 내부규율에 관한 규칙을 제정할 수 있다.",
-    },
-    {
-      b_title: "제목3",
-      count: 10,
-      b_content:
-        "국가는 건전한 소비행위를 계도하고 생산품의 품질향상을 촉구하기 위한 소비자보호운동을 법률이 정하는 바에 의하여 보장한다. 모든 국민은 인간다운 생활을 할 권리를 가진다. 모든 국민의 재산권은 보장된다. 그 내용과 한계는 법률로 정한다. 대통령은 법률이 정하는 바에 의하여 사면·감형 또는 복권을 명할 수 있다. 국가는 재해를 예방하고 그 위험으로부터 국민을 보호하기 위하여 노력하여야 한다. 사면·감형 및 복권에 관한 사항은 법률로 정한다. 모든 국민은 법률이 정하는 바에 의하여 국가기관에 문서로 청원할 권리를 가진다. 국회는 법률에 저촉되지 아니하는 범위안에서 의사와 내부규율에 관한 규칙을 제정할 수 있다.",
-    },
-    {
-      b_title: "제목4",
-      count: 7,
-      b_content:
-        "국가는 건전한 소비행위를 계도하고 생산품의 품질향상을 촉구하기 위한 소비자보호운동을 법률이 정하는 바에 의하여 보장한다. 모든 국민은 인간다운 생활을 할 권리를 가진다. 모든 국민의 재산권은 보장된다. 그 내용과 한계는 법률로 정한다. 대통령은 법률이 정하는 바에 의하여 사면·감형 또는 복권을 명할 수 있다. 국가는 재해를 예방하고 그 위험으로부터 국민을 보호하기 위하여 노력하여야 한다. 사면·감형 및 복권에 관한 사항은 법률로 정한다. 모든 국민은 법률이 정하는 바에 의하여 국가기관에 문서로 청원할 권리를 가진다. 국회는 법률에 저촉되지 아니하는 범위안에서 의사와 내부규율에 관한 규칙을 제정할 수 있다.",
-    },
-    {
-      b_title: "제목5",
-      count: 8,
-      b_content:
-        "국가는 건전한 소비행위를 계도하고 생산품의 품질향상을 촉구하기 위한 소비자보호운동을 법률이 정하는 바에 의하여 보장한다. 모든 국민은 인간다운 생활을 할 권리를 가진다. 모든 국민의 재산권은 보장된다. 그 내용과 한계는 법률로 정한다. 대통령은 법률이 정하는 바에 의하여 사면·감형 또는 복권을 명할 수 있다. 국가는 재해를 예방하고 그 위험으로부터 국민을 보호하기 위하여 노력하여야 한다. 사면·감형 및 복권에 관한 사항은 법률로 정한다. 모든 국민은 법률이 정하는 바에 의하여 국가기관에 문서로 청원할 권리를 가진다. 국회는 법률에 저촉되지 아니하는 범위안에서 의사와 내부규율에 관한 규칙을 제정할 수 있다.",
-    },
-  ];
 
   const RankItem = () => {
-    return sampleData.map((data) => {
+    return data.map((item) => {
       keyRef.current++;
       return (
-        <div className="rank-item p-2" key={keyRef.current}>
-          <img className="w-full" />
-          <div>{data.b_title}</div>
-          <div>{data.count}</div>
-          <div className="h-20 overflow-hidden text-ellipsis">
-            {data.b_content}
+        <div
+          className="rank-item grid grid-cols-2 grid-rows-2 p-2"
+          key={keyRef.current}
+        >
+          {/* 나중에 nickname으로 수정 */}
+          <div className="text-left">{item.username}</div>
+          <div className="w-full text-right">
+            <span className="text-gray-400">{item.r_count || "0"}</span>
+            <span className="text-gray-400">{item.b_upvote}</span>
           </div>
+          <div className="text-left font-bold">{item.b_title}</div>
+          <div className="text-right">{item.b_category}</div>
         </div>
       );
     });
   };
 
   return (
-    <section className="commu-rank grid grid-cols-5 grid-rows-none">
+    <section className="commu-rank grid grid-cols-none grid-rows-5">
       <RankItem />
     </section>
   );

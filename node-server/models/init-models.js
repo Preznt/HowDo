@@ -92,8 +92,11 @@ const initModels = (sequelize) => {
     foreignKey: "username",
   });
 
-  board_content.hasMany(attach, { foreignKey: "b_code" });
-  attach.belongsTo(board_content, { foreignKey: "b_code" });
+  // board_content.hasMany(attach, { as: "attachs", foreignKey: "b_code" });
+  // attach.belongsTo(board_content, {
+  //   as: "rel_post",
+  //   foreignKey: "b_code",
+  // });
 
   board_content.hasMany(reply, { foreignKey: "b_code" });
   reply.belongsTo(board_content, { foreignKey: "b_code" });
