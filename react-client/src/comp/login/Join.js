@@ -1,7 +1,7 @@
 import { useUserContext } from "../../context/UserContextProvider";
+import { fetchJoin } from "../../service/auth.service";
 const Join = () => {
-  const { joinUser, setJoinUser, error, setError, exeJoin, inputRef } =
-    useUserContext();
+  const { joinUser, setJoinUser, error, setError, inputRef } = useUserContext();
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -10,8 +10,9 @@ const Join = () => {
   };
 
   const onClickHandler = async () => {
-    const result = await exeJoin();
+    const result = await fetchJoin(joinUser);
     setError({ ...result });
+    document.location.href = "/";
     console.log(result);
   };
 
