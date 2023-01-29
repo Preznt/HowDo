@@ -2,10 +2,9 @@ import { useEffect } from "react";
 import CreaterContent from "./CreaterContent";
 import CreaterContentFavorite from "./CreaterContentFavorite";
 import { useUserContext } from "../../context/UserContextProvider";
-import Purchase from "../purchase/Purchase";
 
 const MyPageMain = () => {
-  const { userSession, setUserSession, modalHandler } = useUserContext();
+  const { userSession, setUserSession } = useUserContext();
 
   //  console.log(userSession.username);
 
@@ -30,7 +29,6 @@ const MyPageMain = () => {
       </div>
       <CreaterContent />
       <CreaterContentFavorite />
-      <Purchase />
     </div>
   );
 };
