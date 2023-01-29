@@ -52,6 +52,11 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: 0,
       },
+      b_replies: {
+        type: Sequelize.DataTypes.BIGINT,
+        allowNull: true,
+        defaultValue: 0,
+      },
       b_upvote: {
         type: Sequelize.DataTypes.BIGINT,
         allowNull: true,
