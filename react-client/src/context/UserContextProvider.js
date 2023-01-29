@@ -32,7 +32,7 @@ export const UserContextProvider = ({ children }) => {
   // 모달창 열고 닫는 함수
   const modalHandler = () => {
     setModal({ ...modal, open: !modal.open });
-    document.location.href = "/";
+    // document.location.href = "/";
     console.log(userSession);
   };
 

@@ -40,18 +40,55 @@ export const fetchUser = async () => {
 
 // 결제
 
-export const payReady = async () => {
-  const MY_ADMIN_KEY = "7b813e919bafe76fbeafedd41126d803";
+import {
+  KAKAO_APP_ADMIN_KEY,
+  READY_URL,
+  APPROVE_URL,
+} from "../config/kakao_config";
+
+// 결제 승인
+
+export const payApprove = async (pg_token) => {
   const tid = localStorage.getItem("tid");
+  const reqBody = {
+    cid: "TC0ONETIME",
+    tid: tid,
+    partner_order_id: "1001",
+    partner_user_id: "user",
+    pg_token: pg_token,
+  };
+
+  console.log(reqBody);
+
+  const approveFetchOption = {
+    method: "POST",
+    body: new URLSearchParams(reqBody),
+    headers: {
+      Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
+      "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+    },
+  };
+
+  try {
+    const res = await fetch(APPROVE_URL, approveFetchOption);
+    const result = await res.json();
+    console.log(result);
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// 결제 준비
+export const payReady = async () => {
   const testBody = {
     cid: "TC0ONETIME",
-    partner_order_id: "partner_order_id",
-    partner_user_id: "partner_user_id",
+    partner_order_id: "1001",
+    partner_user_id: "user",
     item_name: "초코파이",
     quantity: 1,
     total_amount: 2200,
     tax_free_amount: 0,
-    approval_url: `http://localhost:5000/api/kakao/approval/${tid}`,
+    approval_url: `http://localhost:3000/approval/`,
     fail_url: "http://localhost:3000",
     cancel_url: "http://localhost:3000",
   };
@@ -60,16 +97,13 @@ export const payReady = async () => {
     method: "POST",
     body: new URLSearchParams(testBody),
     headers: {
-      Authorization: `KakaoAK ${MY_ADMIN_KEY}`,
+      Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
     },
   };
 
   try {
-    const res = await fetch(
-      "https://kapi.kakao.com/v1/payment/ready",
-      kakaoFetchOption
-    );
+    const res = await fetch(READY_URL, kakaoFetchOption);
     const result = await res.json();
     console.log(result);
     localStorage.setItem("tid", result.tid);
