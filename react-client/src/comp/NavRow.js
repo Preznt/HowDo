@@ -6,7 +6,8 @@ import { useUserContext } from "../context/UserContextProvider";
 
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
-  const { currentSearch, setCurrentSearch, onChange } = useAutoSearchContext();
+  const { currentSearch, setCurrentSearch, onChange, onKeyUp } =
+    useAutoSearchContext();
   const { userSession, logoutHandler } = useUserContext();
   const searchRef = useRef();
 
@@ -40,6 +41,7 @@ const NavRow = () => {
       <div className="flex ml-auto relative">
         <input
           onChange={onChange}
+          onKeyUp={onKeyUp}
           value={currentSearch}
           // ref={searchRef.inputRef}
           className="bg-white outline-none rounded-full p-12"

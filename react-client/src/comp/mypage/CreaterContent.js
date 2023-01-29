@@ -1,7 +1,7 @@
 import ReactPlayer from "react-player";
 import { useState } from "react";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
-import Slider from "react-slick";
+
 /**
  * map 을 이용한 컨텐츠 시리즈별 carousel 제작
  */
