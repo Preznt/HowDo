@@ -1,15 +1,14 @@
 import { UserContextProvider } from "./UserContextProvider";
 import { TransferContextProvider } from "./TransferContextProvider";
 import { VideoContentContextProvider } from "./VideoContentContextProvide";
-import { PostContextProvider } from "./PostContextProvider";
-
+import { AutoSearchContextProvider } from "./AutoSearchProvider";
 const Provider = ({ children }) => {
   return (
     <UserContextProvider>
       <VideoContentContextProvider>
-        <TransferContextProvider>
-          <PostContextProvider>{children}</PostContextProvider>
-        </TransferContextProvider>
+        <AutoSearchContextProvider>
+          <TransferContextProvider>{children}</TransferContextProvider>
+        </AutoSearchContextProvider>
       </VideoContentContextProvider>
     </UserContextProvider>
   );
