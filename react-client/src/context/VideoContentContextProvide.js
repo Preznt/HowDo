@@ -16,7 +16,7 @@ export const VideoContentContextProvider = ({ children }) => {
   useEffect(() => {
     (async () => {
       const response = await fetch(`/mypage/${userSession.username}`);
-      const result = await response.json();
+      const result = await response?.json();
       console.log(result);
       setVideoContentList(result);
     })();
