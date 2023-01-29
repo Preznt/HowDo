@@ -2,13 +2,12 @@ import { useEffect } from "react";
 import CreaterContent from "./CreaterContent";
 import CreaterContentFavorite from "./CreaterContentFavorite";
 import { useUserContext } from "../../context/UserContextProvider";
+import CreaterContentGroup from "./CreaterContentGroup";
 
 const MyPageMain = () => {
   const { userSession, setUserSession } = useUserContext();
-  
-  //  console.log(userSession.username);
 
-  
+  //  console.log(userSession.username);
 
   return (
     <div>
@@ -29,6 +28,7 @@ const MyPageMain = () => {
       </div>
       <CreaterContent />
       <CreaterContentFavorite />
+      <CreaterContentGroup />
     </div>
   );
 };
