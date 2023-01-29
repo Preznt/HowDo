@@ -12,3 +12,33 @@ export const submitPost = async (data) => {
     return null;
   }
 };
+
+export const getMainPosts = async () => {
+  try {
+    const response = await fetch("/community/posts/get");
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getDetailPost = async (bCode) => {
+  try {
+    const response = await fetch(`/community/post/${bCode}/get`);
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const deletePost = async (bCode) => {
+  try {
+    const response = await fetch(`/community/post/${bCode}/delete`);
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    return null;
+  }
+};

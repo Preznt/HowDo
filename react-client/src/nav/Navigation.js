@@ -1,18 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
 import AppSample from "../App";
 import MainPage from "../comp/mainpage/MainPage";
-import MainBar from "../comp/MainBar";
 import MyPageMain from "../comp/mypage/MyPageMain";
 import Join from "../comp/login/Join";
-import LoginModal from "../comp/login/LoginModal";
+import Login from "../comp/login/Login";
+import LoginModal from "../comp/login/Login";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <AppSample />,
     children: [
       { path: "", element: <MainPage /> },
-      { path: "/regist", element: <Join /> },
-      { path: "/creater", element: <MyPageMain /> },
+      { path: "/user", element: <Join /> },
+      { path: "/user/login", element: <Login /> },
+      { path: "/mypage", element: <MyPageMain /> },
+      { path: "/login", element: <LoginModal /> },
     ],
   },
 ]);
