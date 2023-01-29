@@ -11,6 +11,8 @@ export const useVideoContentContext = () => {
 export const VideoContentContextProvider = ({ children }) => {
   const [videoContent, setVideoContent] = useState(new VideoContent());
   const [videoContentList, setVideoContentList] = useState();
+  const [videoGroupCount, setVideoGroupCount] = useState();
+  const [groupThumbnail, setGroupThumbnail] = useState();
   const { userSession } = useUserContext();
 
   useEffect(() => {
@@ -18,7 +20,9 @@ export const VideoContentContextProvider = ({ children }) => {
       const response = await fetch(`/mypage/${userSession.username}`);
       const result = await response?.json();
       console.log(result);
-      setVideoContentList(result);
+      setVideoContentList(result.recent);
+      setVideoGroupCount(result.count);
+      setGroupThumbnail(result.group);
     })();
   }, [userSession]);
 
@@ -27,6 +31,10 @@ export const VideoContentContextProvider = ({ children }) => {
     setVideoContentList,
     videoContent,
     setVideoContent,
+    videoGroupCount,
+    setVideoGroupCount,
+    groupThumbnail,
+    setGroupThumbnail,
   };
 
   return (

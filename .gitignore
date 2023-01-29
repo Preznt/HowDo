@@ -108,3 +108,7 @@ package-lock.json
 
 # 공동으로 사용할 파일
 AppSample.js
+
+# upload 폴더 제외
+upload/
+uploads/
