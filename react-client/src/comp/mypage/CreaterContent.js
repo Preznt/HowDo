@@ -36,7 +36,7 @@ const CreaterContent = () => {
   const videoView = videoContentList?.map((item) => {
     return (
       <div
-        className="m-12 flex w-80 h-64 flex-col justify-center items-center transition-all duration-700 hover:h-72 hover:w-96 hover:ml-4 hover:mr-4 hover:mb-4"
+        className="m-12 flex w-80 h-64 flex-col justify-center items-center transition-all duration-700 hover:h-72 hover:w-96 hover:ml-4 hover:mr-4 hover:mb-4 shadow-lg"
         onMouseOver={() => onMouseOverHandler(item.v_code)}
         onMouseOut={() => onMouseOutHandler(item.v_code)}
         key={item.v_code}
@@ -59,10 +59,12 @@ const CreaterContent = () => {
   });
 
   return (
-    <>
-      <span className="p-4 border-b-2 border-black">최근 업로드한 영상</span>
+    <div className="w-full text-center min-h-64">
+      <span className="p-4  border-b-2 border-black text-center">
+        최근 업로드한 영상
+      </span>
       <div className="flex">{videoView}</div>
-    </>
+    </div>
   );
 };
 

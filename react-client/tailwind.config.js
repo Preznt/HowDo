@@ -13,6 +13,9 @@ module.exports = {
       height: {
         800: "800px",
       },
+      minHeight: {
+        64: "16rem",
+      },
     },
   },
   variants: {},
