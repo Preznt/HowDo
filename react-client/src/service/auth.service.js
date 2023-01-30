@@ -1,3 +1,9 @@
+import {
+  KAKAO_APP_ADMIN_KEY,
+  READY_URL,
+  APPROVE_URL,
+} from "../config/kakao_config.js";
+
 export const fetchJoin = async (joinUser) => {
   const fetchOption = {
     method: "POST",
@@ -39,12 +45,6 @@ export const fetchUser = async () => {
 };
 
 // 결제
-
-import {
-  KAKAO_APP_ADMIN_KEY,
-  READY_URL,
-  APPROVE_URL,
-} from "../config/kakao_config";
 
 // 결제 승인
 
