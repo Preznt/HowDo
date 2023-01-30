@@ -9,7 +9,7 @@ export const useAutoSearchContext = () => {
 export const AutoSearchContextProvider = ({ children }) => {
   const [currentSearch, setCurrentSearch] = useState("");
   const [savedKeyword, setSavedKeyword] = useState("");
-
+  const [autoComplete, setAutoComplete] = useState([null]);
   const onChange = (e) => {
     setCurrentSearch(e.target.value);
   };
@@ -25,20 +25,30 @@ export const AutoSearchContextProvider = ({ children }) => {
   }, [currentSearch]);
 
   const onKeyUp = () => {
-    const result = savedKeyword
-      .filter((keyword) => {
-        return (
-          keyword.v_title?.includes(currentSearch) ||
-          keyword.nickname?.includes(currentSearch)
-        );
-      })
-      .map((keyword) => {
-        return Object.values(keyword)[0];
-      });
-    console.log(result);
+    if (currentSearch) {
+      const result = savedKeyword
+        .filter((keyword) => {
+          return (
+            keyword.v_title?.includes(currentSearch) ||
+            keyword.nickname?.includes(currentSearch)
+          );
+        })
+        .map((keyword) => {
+          return Object.values(keyword)[0];
+        });
+      setAutoComplete([...result]);
+      console.log(autoComplete);
+    } else return setAutoComplete([null]);
   };
 
-  const props = { currentSearch, setCurrentSearch, onChange, onKeyUp };
+  const props = {
+    currentSearch,
+    setCurrentSearch,
+    onChange,
+    onKeyUp,
+    autoComplete,
+    setAutoComplete,
+  };
   return (
     <AutoSearchContext.Provider value={props}>
       {children}
