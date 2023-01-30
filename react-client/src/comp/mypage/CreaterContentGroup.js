@@ -5,18 +5,18 @@ import { useVideoContentContext } from "../../context/VideoContentContextProvide
  */
 const CreaterContentGroup = () => {
   const { videoGroupCount, groupThumbnail } = useVideoContentContext();
-  // const countView = videoGroupCount.map((item) => {
-  //   return (
-  //     <div>
-  //       <span>{item.count}</span>
-  //       <div></div>
-  //     </div>
-  //   );
-  // });
+  const countView = videoGroupCount.map((item) => {
+    return (
+      <div>
+        <span>{item.count}</span>
+        <div></div>
+      </div>
+    );
+  });
   return (
-    <div className="p-4 border-b-2 border-black">
-      <span>재생목록</span>
-      <div className=""></div>
+    <div className="">
+      <span className="p-4 border-b-2 border-black ">재생목록</span>
+      <div className="m-12">{countView}</div>
     </div>
   );
 };

@@ -25,14 +25,17 @@ export const AutoSearchContextProvider = ({ children }) => {
   }, [currentSearch]);
 
   const onKeyUp = () => {
-    return savedKeyword.map((keyword) => {
-      const regex = new RegExp(currentSearch, "giu");
-      const result = keyword.v_title.match(regex);
-      console.log(result);
-      // const regex = new RegExp(currentSearch, "gi");
-      // const result = keyword.nickname.match(regex);
-      // console.log(result);
-    });
+    const result = savedKeyword
+      .filter((keyword) => {
+        return (
+          keyword.v_title?.includes(currentSearch) ||
+          keyword.nickname?.includes(currentSearch)
+        );
+      })
+      .map((keyword) => {
+        return Object.values(keyword)[0];
+      });
+    console.log(result);
   };
 
   const props = { currentSearch, setCurrentSearch, onChange, onKeyUp };
