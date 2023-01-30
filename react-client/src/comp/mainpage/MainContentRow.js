@@ -6,7 +6,7 @@ const MainContentRow = () => {
     <div
       className={
         contentButton
-          ? "m-12 flex w-80 h-64 flex-col justify-center items-center"
+          ? "m-12 flex w-80 h-64 flex-col justify-center items-center shadow-lg p-3"
           : "hidden"
       }
     >
@@ -14,7 +14,7 @@ const MainContentRow = () => {
         className="w-full h-full columns-1 aspect-video border-black border-1"
         src="https://youtu.be/9IS-LYyMFGY"
       ></iframe>
-      <div>
+      <div className="item-left">
         <img alt="profile"></img>
         <h3>영상제목1</h3>
         <h6>작성자</h6>
