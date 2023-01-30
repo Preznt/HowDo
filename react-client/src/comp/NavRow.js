@@ -83,9 +83,12 @@ const NavRow = () => {
           </label>
         </div>
         {userSession.username ? null : (
-          <div className="ml-auto mt-2 h-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ring-1 ring-white">
+          <Link
+            className="ml-auto mt-2 h-10 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ring-1 ring-white"
+            to="/user/login"
+          >
             로그인
-          </div>
+          </Link>
         )}
         {userSession.username ? (
           <Link
