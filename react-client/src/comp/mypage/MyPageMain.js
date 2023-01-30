@@ -4,7 +4,7 @@ import CreaterContentFavorite from "./CreaterContentFavorite";
 import { useUserContext } from "../../context/UserContextProvider";
 
 const MyPageMain = () => {
-  const { userSession, setUserSession } = useUserContext();
+  const { userSession, setUserSession, modalHandler } = useUserContext();
 
   //  console.log(userSession.username);
 
