@@ -77,28 +77,39 @@ CREATE TABLE IF NOT EXISTS purchase(
 	PRIMARY KEY(p_code)
 );
 
--- 게시글
-CREATE TABLE IF NOT EXISTS board_content(
-	b_code	VARCHAR(256),
-	username	VARCHAR(256),
-	b_title	VARCHAR(256),	
-	b_content	TEXT,	
-	b_category	VARCHAR(125),		
-	b_date	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%Y-%m-%d")),
-	b_time	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%H:%i:&S")),
-	b_updated	 DATETIME	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
-	b_deleted	VARCHAR(125),		
-	b_views	BIGINT		DEFAULT 0,
-	b_replies	BIGINT		DEFAULT 0,
-	b_upvote	BIGINT		DEFAULT 0,
-	b_group	VARCHAR(125),
+-- 게시판
+CREATE TABLE IF NOT EXISTS board(
+	b_code	VARCHAR(125),
+	b_eng	VARCHAR(256)	NOT NULL,	
+	b_kor	VARCHAR(256)	NOT NULL,	
+	b_group_code	VARCHAR(125),		
+	b_group_eng	VARCHAR(256),		
+	b_group_kor	VARCHAR(256),
 	PRIMARY KEY(b_code)
+);
+
+-- 게시글
+CREATE TABLE IF NOT EXISTS post(
+	p_code	VARCHAR(256),
+	username	VARCHAR(256),
+	p_title	VARCHAR(256),	
+	p_content	TEXT,	
+	b_code	VARCHAR(125),		
+	p_date	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%Y-%m-%d")),
+	p_time	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%H:%i:&S")),
+	p_updated	 DATETIME	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
+	p_deleted	VARCHAR(125),		
+	p_views	BIGINT		DEFAULT 0,
+	p_replies	BIGINT		DEFAULT 0,
+	p_upvote	BIGINT		DEFAULT 0,
+	b_group_code	VARCHAR(125),
+	PRIMARY KEY(p_code)
 );
 
 -- 댓글
 CREATE TABLE IF NOT EXISTS reply(
 	r_code	VARCHAR(256),
-	b_code	VARCHAR(256),
+	p_code	VARCHAR(256),
 	username	VARCHAR(256),
 	r_content	VARCHAR(256),	
 	r_date	VARCHAR(10)	NOT NULL	DEFAULT(DATE_FORMAT(NOW(), "%Y-%m-%d")),
@@ -110,16 +121,16 @@ CREATE TABLE IF NOT EXISTS reply(
 );
 
 -- 추천
--- CREATE TABLE IF NOT EXISTS upvote(
--- 	b_code	VARCHAR(256),
--- 	username	VARCHAR(256),
--- 	PRIMARY KEY(b_code, username)			
--- );
+CREATE TABLE IF NOT EXISTS upvote(
+	p_code	VARCHAR(256),
+	username	VARCHAR(256),
+	PRIMARY KEY(p_code, username)			
+);
 
 -- 첨부파일
 CREATE TABLE IF NOT EXISTS attach(
 	a_code	VARCHAR(256),
-	b_code	VARCHAR(256),
+	p_code	VARCHAR(256),
 	a_date	DATETIME NOT NULL	DEFAULT CURRENT_TIMESTAMP,
 	a_original_name	VARCHAR(256),
 	a_save_name	VARCHAR(256),			

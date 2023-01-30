@@ -1,6 +1,7 @@
 import _attach from "./attach.js";
-import _board_content from "./board_content.js";
+import _board from "./board.js";
 import _image from "./image.js";
+import _post from "./post.js";
 import _purchase from "./purchase.js";
 import _reply from "./reply.js";
 import _shorts from "./shorts.js";
@@ -14,8 +15,9 @@ import _upvote from "./upvote.js";
 
 const initModels = (sequelize) => {
   const attach = _attach(sequelize);
-  const board_content = _board_content(sequelize);
+  const board = _board(sequelize);
   const image = _image(sequelize);
+  const post = _post(sequelize);
   const purchase = _purchase(sequelize);
   const reply = _reply(sequelize);
   const shorts = _shorts(sequelize);
@@ -80,11 +82,11 @@ const initModels = (sequelize) => {
   user.belongsToMany(image, { through: i_authority, foreignKey: "username" });
   image.belongsToMany(user, { through: i_authority, foreignKey: "i_code" });
 
-  user.belongsToMany(board_content, {
-    through: upvote,
-    foreignKey: "username",
-  });
-  board_content.belongsToMany(user, { through: upvote, foreignKey: "b_code" });
+  // user.belongsToMany(post, {
+  //   through: upvote,
+  //   foreignKey: "username",
+  // });
+  // post.belongsToMany(user, { through: upvote, foreignKey: "p_code" });
 
   user.belongsToMany(user, {
     as: "Children",
@@ -92,20 +94,20 @@ const initModels = (sequelize) => {
     foreignKey: "username",
   });
 
-  // board_content.hasMany(attach, { as: "attachs", foreignKey: "b_code" });
+  // board_content.hasMany(attach, { as: "attachs", foreignKey: "p_code" });
   // attach.belongsTo(board_content, {
   //   as: "rel_post",
-  //   foreignKey: "b_code",
+  //   foreignKey: "p_code",
   // });
 
-  board_content.hasMany(reply, { foreignKey: "b_code" });
-  reply.belongsTo(board_content, { foreignKey: "b_code" });
+  post.hasMany(reply, { foreignKey: "p_code" });
+  reply.belongsTo(post, { foreignKey: "p_code" });
 
-  user.hasMany(board_content, { foreignKey: "username" });
-  board_content.belongsTo(user, { foreignKey: "username" });
+  // user.hasMany(post, { foreignKey: "username" });
+  // post.belongsTo(user, { foreignKey: "username" });
 
-  user.hasMany(reply, { foreignKey: "username" });
-  reply.belongsTo(user, { foreignKey: "username" });
+  // user.hasMany(reply, { foreignKey: "username" });
+  // reply.belongsTo(user, { foreignKey: "username" });
 
   user.hasMany(image, { foreignKey: "username" });
   image.belongsTo(user, { foreignKey: "username" });
@@ -118,8 +120,9 @@ const initModels = (sequelize) => {
 
   return {
     attach,
-    board_content,
+    board,
     image,
+    post,
     purchase,
     reply,
     shorts,

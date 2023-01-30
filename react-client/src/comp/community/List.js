@@ -11,18 +11,18 @@ const List = ({ data }) => {
       return (
         <li
           className="list-item p-3 border-b border-slate-300"
-          key={item.b_code}
+          key={item.p_code}
         >
-          <div className="title font-semibold text-lg">{item.b_title}</div>
-          <div className="date text-sm flex justify-end items-end">{`${item.b_date} ${item.b_time}`}</div>
+          <div className="title font-semibold text-lg">{item.p_title}</div>
+          <div className="date text-sm flex justify-end items-end">{`${item.p_date} ${item.p_time}`}</div>
           <div className="nickname">{item.username}</div>
           <div className="detail-box text-right">
             <EyeIcon className="inline-block h-5 w-5 text-slate-500" />
-            <span className="mr-4">{item.b_views}</span>
+            <span className="mr-4">{item.p_views}</span>
             <HandThumbUpIcon className="inline-block h-5 w-5 text-slate-500" />
-            <span className="mr-4">{item.b_replies}</span>
+            <span className="mr-4">{item.p_replies}</span>
             <ChatBubbleOvalLeftEllipsisIcon className="inline-block h-5 w-5 text-slate-500" />
-            <span>{item.b_upvote}</span>
+            <span>{item.p_upvote}</span>
           </div>
         </li>
       );

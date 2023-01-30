@@ -9,7 +9,7 @@ const CommuMain = () => {
   useLayoutEffect(() => {
     (async () => {
       const result = await getMainPosts();
-      if (result) setRankData([...result.data]);
+      if (result) setRankData([...result]);
       return null;
     })();
   }, []);

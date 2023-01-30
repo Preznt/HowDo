@@ -23,9 +23,9 @@ export const getMainPosts = async () => {
   }
 };
 
-export const getCatPosts = async (catCode) => {
+export const getBoardPosts = async (bCode) => {
   try {
-    const response = await fetch(`/community/cat/${catCode}/get`);
+    const response = await fetch(`/community/board/${bCode}/get`);
     const result = await response.json();
     return result;
   } catch (err) {
@@ -33,9 +33,9 @@ export const getCatPosts = async (catCode) => {
   }
 };
 
-export const getDetailPost = async (bCode) => {
+export const getDetailPost = async (pCode) => {
   try {
-    const response = await fetch(`/community/post/${bCode}/get`);
+    const response = await fetch(`/community/post/${pCode}/get`);
     const result = await response.json();
     return result;
   } catch (err) {
@@ -43,9 +43,9 @@ export const getDetailPost = async (bCode) => {
   }
 };
 
-export const deletePost = async (bCode) => {
+export const deletePost = async (pCode) => {
   try {
-    const response = await fetch(`/community/post/${bCode}/delete`);
+    const response = await fetch(`/community/post/${pCode}/delete`);
     const result = await response.json();
     return result;
   } catch (err) {
@@ -53,12 +53,12 @@ export const deletePost = async (bCode) => {
   }
 };
 
-export const upvotePost = async (bCode, username) => {
+export const upvotePost = async (pCode, username) => {
   try {
     const fetchOption = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ b_code: bCode, username: username }),
+      body: JSON.stringify({ p_code: pCode, username: username }),
     };
     const response = await fetch(`/community/post/upvote`, fetchOption);
     const result = await response.json();
@@ -73,9 +73,9 @@ export const upvotePost = async (bCode, username) => {
   }
 };
 
-export const getReply = async (bCode) => {
+export const getReply = async (pCode) => {
   try {
-    const response = await fetch(`/community/reply/${bCode}/get`);
+    const response = await fetch(`/community/reply/${pCode}/get`);
     const result = await response.json();
     // replyList, replyCount
     return result;
@@ -101,7 +101,7 @@ export const insertReply = async (data) => {
     return null;
   }
   try {
-    const result = await getReply(data.b_code);
+    const result = await getReply(data.p_code);
     return result;
   } catch (err) {
     return null;

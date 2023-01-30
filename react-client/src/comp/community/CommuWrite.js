@@ -19,7 +19,7 @@ const CommuWrite = () => {
 
   const onChangeContentHandler = (e, editor) => {
     const data = editor.getData();
-    setPostData({ ...postData, b_content: data });
+    setPostData({ ...postData, p_content: data });
   };
 
   const onClickHandler = () => {
@@ -30,12 +30,12 @@ const CommuWrite = () => {
     <form className="post-editor">
       <input
         className="title"
-        name="b_title"
+        name="p_title"
         placeholder="제목"
-        value={postData.b_title}
+        value={postData.p_title}
         onChange={onChangeHandler}
       />
-      {/* <EditorModule data={postData.b_content} handler={onChangeContentHandler} b_code={postData.b_code} /> */}
+      {/* <EditorModule data={postData.p_content} handler={onChangeContentHandler} code={postData.p_code} /> */}
       <button id="submit" type="button" onClick={onClickHandler}>
         등록
       </button>

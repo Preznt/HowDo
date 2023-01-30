@@ -28,7 +28,7 @@ const CommuDetail = () => {
   const [replyList, setReplyList] = useState([]);
 
   // 임시 게시글 코드
-  const bCode = "e328768c-5dcb-4864-b257-608316864461";
+  const pCode = "173c3a8f-ba73-498d-b6f6-d3037bf083f4";
   // 임시 username(session context 에서)
   const username = "polly@gmail.com";
 
@@ -49,32 +49,32 @@ const CommuDetail = () => {
 
   useLayoutEffect(() => {
     (async () => {
-      const postResult = await getDetailPost(bCode);
-      const replyResult = await getReply(bCode);
+      const postResult = await getDetailPost(pCode);
+      const replyResult = await getReply(pCode);
       if (postResult) {
         setPostData({ ...postResult });
-        setUpvote(postResult.b_upvote);
+        setUpvote(postResult.p_upvote);
         setReplyList([...replyResult.replyList]);
-        setReplyCount(replyResult.replyCount.b_replies);
+        setReplyCount(replyResult.replyCount.p_replies);
       }
       return null;
     })();
   }, []);
 
   const onClickUpvote = async () => {
-    const result = await upvotePost(bCode, username);
+    const result = await upvotePost(pCode, username);
     if (result) setUpvote(upvote + result[0]);
   };
 
   const onChangeHandler = (e) => {
-    setReplyData({ ...replyData, b_code: bCode, r_content: e.target.value });
+    setReplyData({ ...replyData, p_code: pCode, r_content: e.target.value });
   };
 
   const onClickReply = async () => {
     const result = await insertReply(replyData);
     if (result) {
       setReplyList([...result.replyList]);
-      setReplyCount(result.replyCount.b_replies);
+      setReplyCount(result.replyCount.p_replies);
       setReplyData(initReply);
     }
   };
@@ -82,14 +82,14 @@ const CommuDetail = () => {
   return (
     <>
       <main className="commu-detail p-5 rounded border border-slate-300">
-        <section className="category p-2">{postData.b_category}</section>
+        <section className="board p-2">{postData.b_code}</section>
 
         <section className="flex p-2 border-b border-slate-300">
           <div className="title flex-1 text-xl font-semibold">
-            {postData.b_title}
+            {postData.p_title}
           </div>
           <EyeIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
-          <span className="mr-4">{postData.b_views}</span>
+          <span className="mr-4">{postData.p_views}</span>
           <HandThumbUpIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
           <span className="mr-4">{upvote}</span>
           <ChatBubbleOvalLeftEllipsisIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
@@ -100,13 +100,13 @@ const CommuDetail = () => {
           <img className="inline-block w-50" alt="프로필 이미지" />
           {/* 나중에 nickname으로 수정 */}
           <span className="nickname pl-2">{postData.username}</span>
-          <span className="float-right">{`${postData.b_date} ${postData.b_time}`}</span>
+          <span className="float-right">{`${postData.p_date} ${postData.p_time}`}</span>
         </section>
 
         <section className="flex flex-col items-center w-full p-20">
           <div
             className="content w-full pb-20"
-            dangerouslySetInnerHTML={{ __html: postData.b_content }}
+            dangerouslySetInnerHTML={{ __html: postData.p_content }}
           ></div>
 
           <button className={btnClass01} onClick={onClickUpvote}>

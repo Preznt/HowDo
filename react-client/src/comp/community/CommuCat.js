@@ -3,12 +3,12 @@
 import List from "./List";
 import "../../css/community/CommuCat.css";
 import { useState, useLayoutEffect } from "react";
-import { getCatPosts } from "../../service/post.service";
+import { getBoardPosts } from "../../service/post.service";
 
 const CommuCat = () => {
   // 임시 카테고리 코드
-  const catCode = "C21";
-  const [catList, setCatList] = useState([]);
+  const bCode = "C21";
+  const [boardList, setBoardList] = useState([]);
   const btnClass =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
   const selectClass =
@@ -18,9 +18,9 @@ const CommuCat = () => {
 
   useLayoutEffect(() => {
     (async () => {
-      const result = await getCatPosts(catCode);
+      const result = await getBoardPosts(bCode);
       if (result) {
-        setCatList([...result]);
+        setBoardList([...result]);
       }
       return null;
     })();
@@ -42,7 +42,7 @@ const CommuCat = () => {
         </div>
         <button className={btnClass}>글쓰기</button>
       </section>
-      <List data={catList} />
+      <List data={boardList} />
     </main>
   );
 };

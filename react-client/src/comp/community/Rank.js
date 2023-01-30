@@ -17,11 +17,11 @@ const Rank = ({ data }) => {
           {/* 나중에 nickname으로 수정 */}
           <div className="text-left">{item.username}</div>
           <div className="w-full text-right">
-            <span className="text-gray-400">{item.b_replies}</span>
-            <span className="text-gray-400">{item.b_upvote}</span>
+            <span className="text-gray-400">{item.p_replies}</span>
+            <span className="text-gray-400">{item.p_upvote}</span>
           </div>
-          <div className="text-left font-bold">{item.b_title}</div>
-          <div className="text-right">{item.b_category}</div>
+          <div className="text-left font-bold">{item.p_title}</div>
+          <div className="text-right">{item.b_code}</div>
         </div>
       );
     });
