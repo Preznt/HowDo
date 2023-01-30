@@ -28,9 +28,16 @@ const CommuDetail = () => {
   const [replyList, setReplyList] = useState([]);
 
   // 임시 게시글 코드
-  const bCode = "e4b9ae36-02b0-4728-9742-9bb4ae636eca";
-  const btnClass =
+  const bCode = "e328768c-5dcb-4864-b257-608316864461";
+  // 임시 username(session context 에서)
+  const username = "polly@gmail.com";
+
+  const btnClass01 =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
+  const btnClass02 =
+    "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded";
+  const inputClass =
+    "bg-transparent border-b border-blue-700 flex-1 mr-3 py-1 px-2 leading-tight focus:outline-none";
 
   // 카테고리, 그룹 값은 이전 페이지(게시판)에서 가져옴
   // detail 페이지에서 fetch 데이터를 전역 context 에 저장해야 함
@@ -49,21 +56,18 @@ const CommuDetail = () => {
         setUpvote(postResult.b_upvote);
         setReplyList([...replyResult.replyList]);
         setReplyCount(replyResult.replyCount.b_replies);
-        setReplyData({ ...replyData, b_code: bCode });
       }
       return null;
     })();
   }, []);
 
   const onClickUpvote = async () => {
-    // 임시 username(session context 에서)
-    const username = "polly@gmail.com";
     const result = await upvotePost(bCode, username);
     if (result) setUpvote(upvote + result[0]);
   };
 
   const onChangeHandler = (e) => {
-    setReplyData({ ...replyData, r_content: e.target.value });
+    setReplyData({ ...replyData, b_code: bCode, r_content: e.target.value });
   };
 
   const onClickReply = async () => {
@@ -81,7 +85,7 @@ const CommuDetail = () => {
         <section className="category p-2">{postData.b_category}</section>
 
         <section className="flex p-2 border-b border-slate-300">
-          <div className="title flex-1 text-lg font-semibold">
+          <div className="title flex-1 text-xl font-semibold">
             {postData.b_title}
           </div>
           <EyeIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
@@ -105,28 +109,33 @@ const CommuDetail = () => {
             dangerouslySetInnerHTML={{ __html: postData.b_content }}
           ></div>
 
-          <button className={btnClass} onClick={onClickUpvote}>
-            <div>{upvote}</div>
+          <button className={btnClass01} onClick={onClickUpvote}>
+            <div className="text-xl">{upvote}</div>
             <HandThumbUpIcon className="inline-block m-1 mb-2 h-5 w-5" />
             추천
           </button>
         </section>
 
         <section className="button-box flex justify-end w-full">
-          <button className={`${btnClass} mr-4`}>수정</button>
-          <button className={btnClass}>삭제</button>
+          <button className={`${btnClass01} mr-4`}>수정</button>
+          <button className={btnClass01}>삭제</button>
         </section>
-        <div>{`${replyCount || 0} 개의 댓글`}</div>
-        <div className="reply-input-box flex p-5 w-full">
-          <input
-            className="flex-1"
-            value={replyData.r_content}
-            onChange={onChangeHandler}
-          />
-          <button onClick={onClickReply}>게시</button>
-        </div>
 
-        <Reply data={replyList} />
+        <section className="m-5">
+          <div className="text-lg">{`${replyCount || 0} 개의 댓글`}</div>
+          <div className="reply-input-box flex mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
+            <input
+              className={inputClass}
+              type="text"
+              value={replyData.r_content}
+              onChange={onChangeHandler}
+            />
+            <button className={btnClass02} onClick={onClickReply}>
+              게시
+            </button>
+          </div>
+          <Reply data={replyList} />
+        </section>
       </main>
     </>
   );

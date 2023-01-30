@@ -30,8 +30,8 @@ const List = ({ data }) => {
   };
 
   return (
-    <section className="commu-list">
-      <ul className="item-wrapper">
+    <section className="commu-list w-full">
+      <ul className="item-wrapper w-full">
         <ListItem />
       </ul>
     </section>
