@@ -1,11 +1,11 @@
 // 각 게시판별 페이지
-// .../community/category/catA
+// .../community/board/catA
 import List from "./List";
-import "../../css/community/CommuCat.css";
+import "../../css/community/CommuBoard.css";
 import { useState, useLayoutEffect } from "react";
 import { getBoardPosts } from "../../service/post.service";
 
-const CommuCat = () => {
+const CommuBoard = () => {
   // 임시 카테고리 코드
   const bCode = "C21";
   const [boardList, setBoardList] = useState([]);
@@ -47,4 +47,4 @@ const CommuCat = () => {
   );
 };
 
-export default CommuCat;
+export default CommuBoard;

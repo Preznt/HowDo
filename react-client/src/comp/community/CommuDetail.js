@@ -21,14 +21,22 @@ import { usePostContext } from "../../context/PostContextProvider";
 // 카테고리 데이터 어떻게 해야?? 테이블 생성?
 
 const CommuDetail = () => {
-  const { postData, setPostData, replyData, setReplyData, initReply } =
-    usePostContext();
+  const {
+    postData,
+    setPostData,
+    replyData,
+    setReplyData,
+    initReply,
+    boardData,
+    setBoardData,
+  } = usePostContext();
+
   const [upvote, setUpvote] = useState(null);
   const [replyCount, setReplyCount] = useState(null);
   const [replyList, setReplyList] = useState([]);
 
   // 임시 게시글 코드
-  const pCode = "173c3a8f-ba73-498d-b6f6-d3037bf083f4";
+  const pCode = "66b9ed72-acdc-47bd-b012-52cd05694aa5";
   // 임시 username(session context 에서)
   const username = "polly@gmail.com";
 
@@ -52,7 +60,8 @@ const CommuDetail = () => {
       const postResult = await getDetailPost(pCode);
       const replyResult = await getReply(pCode);
       if (postResult) {
-        setPostData({ ...postResult });
+        setPostData({ ...postResult.postData });
+        setBoardData({ ...postResult.boardData });
         setUpvote(postResult.p_upvote);
         setReplyList([...replyResult.replyList]);
         setReplyCount(replyResult.replyCount.p_replies);
@@ -60,6 +69,8 @@ const CommuDetail = () => {
       return null;
     })();
   }, []);
+
+  console.log(postData);
 
   const onClickUpvote = async () => {
     const result = await upvotePost(pCode, username);
@@ -82,7 +93,7 @@ const CommuDetail = () => {
   return (
     <>
       <main className="commu-detail p-5 rounded border border-slate-300">
-        <section className="board p-2">{postData.b_code}</section>
+        <section className="board p-2">{boardData.b_kor}</section>
 
         <section className="flex p-2 border-b border-slate-300">
           <div className="title flex-1 text-xl font-semibold">

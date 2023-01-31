@@ -6,7 +6,7 @@ import Join from "../comp/login/Join";
 import Login from "../comp/login/Login";
 import LoginModal from "../comp/login/Login";
 import CommuMain from "../comp/community/CommuMain";
-import CommuCat from "../comp/community/CommuCat";
+import CommuBoard from "../comp/community/CommuBoard";
 import CommuDetail from "../comp/community/CommuDetail";
 import CommuWrite from "../comp/community/CommuWrite";
 
@@ -21,9 +21,9 @@ const router = createBrowserRouter([
       { path: "/mypage", element: <MyPageMain /> },
       { path: "/login", element: <LoginModal /> },
       { path: "/community", element: <CommuMain /> },
-      { path: "/community/:cat", element: <CommuCat /> },
-      { path: "/community/:cat/:board", element: <CommuDetail /> },
-      { path: "/community/write/:board?", element: <CommuWrite /> },
+      { path: "/community/:board", element: <CommuBoard /> },
+      { path: "/community/:board/:post", element: <CommuDetail /> },
+      { path: "/community/write/:post?", element: <CommuWrite /> },
     ],
   },
 ]);

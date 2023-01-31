@@ -7,6 +7,7 @@ import fs from "fs";
 import path from "path";
 import { v4 } from "uuid";
 
+const BOARD = DB.models.board;
 const POST = DB.models.post;
 const ATTACH = DB.models.attach;
 const UPVOTE = DB.models.upvote;
@@ -14,68 +15,32 @@ const REPLY = DB.models.reply;
 
 const router = express.Router();
 
-const boardList = [
-  {
-    group: "C1",
-    eng: "general",
-    kor: "일반",
-    sub: [
-      { eng: "notice", kor: "공지", group: "C1", category: "C11" },
-      { eng: "free", kor: "자유게시판", group: "C1", category: "C12" },
-    ],
-  },
-  {
-    group: "C2",
-    eng: "hobbies",
-    kor: "취미",
-    sub: [
-      { eng: "animals", kor: "동물", group: "C2", category: "C21" },
-      { eng: "plants", kor: "식물", group: "C2", category: "C22" },
-    ],
-  },
-  {
-    group: "C3",
-    eng: "learning",
-    kor: "학습",
-    sub: [
-      { eng: "programming", kor: "프로그래밍", group: "C3", category: "C31" },
-      { eng: "modeling", kor: "모델링", group: "C3", category: "C32" },
-    ],
-  },
-  {
-    group: "C4",
-    eng: "lifestyle",
-    kor: "생활",
-    sub: [
-      { eng: "health", kor: "건강", group: "C4", category: "C41" },
-      { eng: "fashion", kor: "패션", group: "C4", category: "C42" },
-    ],
-  },
-  {
-    group: "C5",
-    eng: "issue",
-    kor: "이슈",
-    sub: [
-      { eng: "politics", kor: "정치", group: "C5", category: "C51" },
-      { eng: "entertainment", kor: "연예", group: "C5", category: "C52" },
-    ],
-  },
-];
+// POST-ATTACH 관계 설정할 경우 에디터에 이미지를 등록할 때
+// 게시글보다 첨부파일이 먼저 등록되므로 INSERT 되지 않는 문제 발생
 
 // community Main fetch
 router.get("/posts/get", async (req, res) => {
   try {
-    // POST-ATTACH 관계 설정할 경우 에디터에 이미지를 등록할 때
-    // 게시글보다 첨부파일이 먼저 등록되므로 INSERT 되지 않는 문제 발생
-    let data = [];
-    for (let board of boardList) {
+    // 그룹 B1 을 제외한 모든 그룹 리스트
+    const notGeneral = await BOARD.findAll({
+      attributes: ["b_group_code", "b_group_kor"],
+      where: { b_group_code: { [Op.not]: "B1" } },
+      group: "b_group_code",
+    });
+
+    let boardList = [];
+    for (let board of notGeneral) {
       let items = {};
-      items.code = `${board.group}`;
-      items.name = `${board.kor}`;
-      items.posts = await POST.findAll({
+      items.b_group_code = `${board.b_group_code}`;
+      items.b_group_kor = `${board.b_group_kor}`;
+      items.list = await POST.findAll({
         where: {
-          [Op.and]: [{ b_group_code: `${board.group}` }, { p_deleted: null }],
+          [Op.and]: [
+            { b_group_code: `${board.b_group_code}` },
+            { p_deleted: null },
+          ],
         },
+        include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
         limit: 5,
         subQuery: false,
         order: [
@@ -84,10 +49,38 @@ router.get("/posts/get", async (req, res) => {
         ],
         raw: true,
       });
-      data.push(items);
+      boardList.push(items);
     }
 
-    return res.status(200).send(data);
+    const noticeList = POST.findAll({
+      where: {
+        [Op.and]: [{ b_code: `B11` }, { p_deleted: null }],
+      },
+      include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+      limit: 5,
+      subQuery: false,
+      order: [
+        ["p_upvote", "DESC"],
+        ["p_date", "DESC"],
+      ],
+      raw: true,
+    });
+
+    const freeList = POST.findAll({
+      where: {
+        [Op.and]: [{ b_code: `B12` }, { p_deleted: null }],
+      },
+      include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+      limit: 5,
+      subQuery: false,
+      order: [
+        ["p_upvote", "DESC"],
+        ["p_date", "DESC"],
+      ],
+      raw: true,
+    });
+
+    return res.status(200).send({ noticeList, freeList, boardList });
   } catch (err) {
     console.error(err);
   }
@@ -122,10 +115,10 @@ router.get("/board/:bCode/get", async (req, res) => {
 router.get("/post/:pCode/get", async (req, res) => {
   try {
     const pCode = req.params?.pCode;
-    const postData = await POST.findByPk(pCode);
-    const result = await postData.increment("p_views", { by: 1 });
-    console.log(result);
-    return res.status(200).send(result);
+    const result = await POST.findByPk(pCode);
+    const postData = await result.increment("p_views", { by: 1 });
+    const boardData = await BOARD.findByPk(result.toJSON().b_code);
+    return res.status(200).send({ postData, boardData });
   } catch (err) {
     console.error(err);
   }
