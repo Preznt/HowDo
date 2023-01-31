@@ -4,7 +4,7 @@ import { useUserContext } from "../context/UserContextProvider";
 const NavCol = () => {
   const { userSession, logoutHandler } = useUserContext();
   return (
-    <div className="flex flex-col w-30 bg-slate-600 h-screen p-1 content-center">
+    <div className="flex flex-col top-15 min-w-fit bg-slate-600 h-screen p-1 content-center fixed">
       <Link
         className="mt-6 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center ring-1 ring-white"
         to="/"
@@ -39,7 +39,7 @@ const NavCol = () => {
       </Link>
       {userSession.username ? (
         <Link
-          className="mt-12 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center ring-1 ring-white"
+          className="mt-12 max-w-[112px] bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center ring-1 ring-white"
           onClick={logoutHandler}
         >
           {userSession.nickname} 님 로그아웃

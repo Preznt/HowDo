@@ -5,8 +5,8 @@ const NavDynamic = ({ nOpen }) => {
     <div
       className={
         nOpen
-          ? "absolute w-48 z-50 top-14 -left-20 transition-all duration-700 translate-x-20 bg-black text-white h-screen"
-          : "absolute top-14 -left-24 z_1"
+          ? "fixed w-48 z-50 top-14 -left-20 transition-all duration-700 translate-x-20 bg-black text-white h-screen"
+          : "fixed top-14 -left-24 z_1"
       }
     >
       <div>

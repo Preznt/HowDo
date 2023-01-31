@@ -5,7 +5,7 @@ import { useVideoContentContext } from "../../context/VideoContentContextProvide
  */
 const CreaterContentGroup = () => {
   const { videoGroupCount, groupThumbnail } = useVideoContentContext();
-  const countView = videoGroupCount.map((item) => {
+  const countView = videoGroupCount?.map((item) => {
     return (
       <div>
         <span>{item.count}</span>
