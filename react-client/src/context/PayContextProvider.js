@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from "react";
 import { dataPayApprove, dataPayReady } from "../data/Pay";
+import { useUserContext } from "./UserContextProvider";
 
 const PayContext = createContext();
 
@@ -8,6 +9,7 @@ export const usePayContext = () => {
 };
 
 export const PayContextProvider = ({ children }) => {
+  const { userSession } = useUserContext();
   const [statePayReady, setPayReady] = useState(dataPayReady);
   const [statePayApprove, setPayApprove] = useState(dataPayApprove);
 
