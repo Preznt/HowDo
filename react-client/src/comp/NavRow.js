@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import NavDynamic from "./NavDynamic";
 import { useAutoSearchContext } from "../context/AutoSearchProvider";
 import { useUserContext } from "../context/UserContextProvider";
+import MainButton from "./mainpage/MainButton";
 
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
@@ -28,17 +29,30 @@ const NavRow = () => {
   const onClick = () => {
     searchRef();
   };
+
+  const autoClick = (e) => {
+    setCurrentSearch(e.target.innerHTML);
+    setAutoComplete([null]);
+  };
   const openClickHandler = () => {
     setNOpen(!nOpen);
     console.log(nOpen);
   };
-  const autoCompleteView = autoComplete?.map((word) => {
-    return <div className="cursor-pointer">{word}</div>;
+  const autoCompleteView = autoComplete?.map((word, index) => {
+    return (
+      <div
+        key={index}
+        className="cursor-pointer hover:bg-gray-300 rounded-lg"
+        onClick={autoClick}
+      >
+        {word}
+      </div>
+    );
   });
 
   return (
     <>
-      <div className="flex bg-slate-600 top-0 left-0 right-0 mb-12 fixed border-white border-b-2">
+      <div className="flex bg-slate-600 top-0 left-0 right-0 mb-12 fixed pr-2 z-50">
         <div
           className="flex w-12 h-8 m-3 mr-0 bg-inherit content-center justify-center cursor-pointer"
           onClick={openClickHandler}
@@ -50,7 +64,11 @@ const NavRow = () => {
             alt="burgermenu"
           />
         </div>
-        <div className="flex ml-auto relative ">
+        <div className="ml-auto">
+          <MainButton />
+        </div>
+
+        <div className="flex m-auto relative ">
           <input
             onChange={onChange}
             onKeyUp={onKeyUp}
@@ -61,7 +79,7 @@ const NavRow = () => {
             id="search"
           />
           {autoComplete ? (
-            <div className="absolute top-12 left-0 min-h-fit w-full bg-white border-black">
+            <div className="absolute top-11 left-0 min-h-fit min-w-full bg-white border-black rounded-lg shadow-lg">
               {autoCompleteView}
             </div>
           ) : (
