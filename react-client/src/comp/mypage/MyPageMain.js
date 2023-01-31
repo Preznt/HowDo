@@ -15,10 +15,10 @@ const MyPageMain = () => {
 
   return (
     <div>
-      <div className="m-12 w-screen h-60 container border-2 border-black border-current">
+      <div className="m-12 ml-56 w-screen h-60 container border-2 border-black border-current">
         <img src="https://picsum.photos/1540/240"></img>
       </div>
-      <div className="m-12 flex">
+      <div className="m-12 ml-56 flex">
         <img
           width="20px"
           heigt="20px"
@@ -32,8 +32,10 @@ const MyPageMain = () => {
         </div>
         <div>게시글 작성</div>
       </div>
-      <CreaterContent />
-      <CreaterContentFavorite />
+      <div className="ml-44">
+        <CreaterContent />
+        <CreaterContentFavorite />
+      </div>
       <Purchase />
     </div>
   );

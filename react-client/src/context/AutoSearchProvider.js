@@ -1,5 +1,5 @@
 import { useState, createContext, useContext, useEffect } from "react";
-
+import { SearchedData } from "../data/searcheddata";
 const AutoSearchContext = createContext();
 
 export const useAutoSearchContext = () => {
@@ -10,10 +10,11 @@ export const AutoSearchContextProvider = ({ children }) => {
   const [currentSearch, setCurrentSearch] = useState("");
   const [savedKeyword, setSavedKeyword] = useState("");
   const [autoComplete, setAutoComplete] = useState([null]);
+  const [searchedData, setSearchedData] = useState(SearchedData);
   const onChange = (e) => {
     setCurrentSearch(e.target.value);
   };
-
+  console.log(searchedData);
   useEffect(() => {
     (async () => {
       const result = await fetch(`/mypage/search/search`);
@@ -48,6 +49,7 @@ export const AutoSearchContextProvider = ({ children }) => {
     onKeyUp,
     autoComplete,
     setAutoComplete,
+    searchedData,
   };
   return (
     <AutoSearchContext.Provider value={props}>

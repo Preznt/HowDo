@@ -5,6 +5,7 @@ import MyPageMain from "../comp/mypage/MyPageMain";
 import Join from "../comp/login/Join";
 import Login from "../comp/login/Login";
 import Approve from "../comp/purchase/Approve";
+import SearchMain from "../comp/serachPage/SearchMain";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -15,6 +16,7 @@ const router = createBrowserRouter([
       { path: "/user/login", element: <Login /> },
       { path: "/mypage", element: <MyPageMain /> },
       { path: "/approval", element: <Approve /> },
+      { path: "/search", element: <SearchMain /> },
     ],
   },
 ]);
