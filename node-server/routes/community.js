@@ -87,9 +87,14 @@ router.get("/posts/get", async (req, res) => {
 });
 
 // community category fetch
-router.get("/board/:bCode/get", async (req, res) => {
-  const bCode = req.params.bCode;
+router.get("/board/:bEng/get", async (req, res) => {
+  const bEng = req.params.bEng;
   try {
+    const board = await BOARD.findOne({
+      attributes: ["b_code", "b_kor"],
+      where: { b_eng: bEng },
+    });
+
     const data = await POST.findAll({
       attributes: [
         "p_code",
@@ -101,11 +106,12 @@ router.get("/board/:bCode/get", async (req, res) => {
         "p_views",
         "p_upvote",
       ],
-      where: { [Op.and]: [{ b_code: bCode }, { p_deleted: null }] },
+      where: { [Op.and]: [{ b_code: board.b_code }, { p_deleted: null }] },
+      include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
       order: [["p_date", "DESC"]],
+      raw: true,
     });
-    console.log(data);
-    return res.status(200).send(data);
+    return res.status(200).send({ board, data });
   } catch (err) {
     console.error(err);
   }

@@ -23,9 +23,9 @@ export const getMainPosts = async () => {
   }
 };
 
-export const getBoardPosts = async (bCode) => {
+export const getBoardPosts = async (bEng) => {
   try {
-    const response = await fetch(`/community/board/${bCode}/get`);
+    const response = await fetch(`/community/board/${bEng}/get`);
     const result = await response.json();
     return result;
   } catch (err) {
@@ -37,6 +37,7 @@ export const getDetailPost = async (pCode) => {
   try {
     const response = await fetch(`/community/post/${pCode}/get`);
     const result = await response.json();
+    // postData, boardData
     return result;
   } catch (err) {
     return null;

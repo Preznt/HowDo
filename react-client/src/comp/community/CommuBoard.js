@@ -4,10 +4,12 @@ import List from "./List";
 import "../../css/community/CommuBoard.css";
 import { useState, useLayoutEffect } from "react";
 import { getBoardPosts } from "../../service/post.service";
+import { useParams } from "react-router-dom";
 
 const CommuBoard = () => {
   // 임시 카테고리 코드
-  const bCode = "C21";
+  const bEng = useParams().board;
+  const [boardName, setBoardName] = useState("");
   const [boardList, setBoardList] = useState([]);
   const btnClass =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
@@ -18,9 +20,10 @@ const CommuBoard = () => {
 
   useLayoutEffect(() => {
     (async () => {
-      const result = await getBoardPosts(bCode);
+      const result = await getBoardPosts(bEng);
       if (result) {
-        setBoardList([...result]);
+        setBoardList([...result.data]);
+        setBoardName(result.board.b_kor);
       }
       return null;
     })();
@@ -28,6 +31,7 @@ const CommuBoard = () => {
 
   return (
     <main className="commu-cat">
+      <h1>{boardName}</h1>
       <section className="flex pl-5 pr-5 pb-10 justify-between">
         <button className={`search-select ${selectClass}`}>{"최신순"}</button>
         <div className="hidden">

@@ -1,10 +1,10 @@
 import { useRef } from "react";
-// 추천수(또는 조회수) 랭킹 : Main 과 Category 에 포함
 import {
   EyeIcon,
   HandThumbUpIcon,
   ChatBubbleOvalLeftEllipsisIcon,
 } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 
 const Rank = ({ data }) => {
   const keyRef = useRef(0);
@@ -13,9 +13,10 @@ const Rank = ({ data }) => {
     return data.map((item) => {
       keyRef.current++;
       return (
-        <div
+        <Link
           className="rank-item grid grid-cols-2 grid-rows-2 p-2 border-b border-dashed border-slate-300"
           key={keyRef.current}
+          to={`/community/${item["board.b_eng"]}/${item.p_code}`}
         >
           <div className="text-left font-bold">{item.p_title}</div>
           <div className="w-full text-right">
@@ -27,9 +28,9 @@ const Rank = ({ data }) => {
             <span>{item.p_replies}</span>
           </div>
           {/* 나중에 nickname으로 수정 */}
-          <div className="text-left">{item.username}</div>
+          <div className="text-left text-sm">{item.username}</div>
           <div className="text-right">{item["board.b_kor"]}</div>
-        </div>
+        </Link>
       );
     });
   };

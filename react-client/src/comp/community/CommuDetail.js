@@ -14,6 +14,7 @@ import {
   upvotePost,
 } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
+import { Link, useParams } from "react-router-dom";
 
 // html tag -> entity -> tag 로 변환하는 과정 필요
 // 자기 자신을 참조하도록 테이블 관계 설정
@@ -34,9 +35,7 @@ const CommuDetail = () => {
   const [upvote, setUpvote] = useState(null);
   const [replyCount, setReplyCount] = useState(null);
   const [replyList, setReplyList] = useState([]);
-
-  // 임시 게시글 코드
-  const pCode = "66b9ed72-acdc-47bd-b012-52cd05694aa5";
+  const pCode = useParams().post;
   // 임시 username(session context 에서)
   const username = "polly@gmail.com";
 
@@ -62,7 +61,7 @@ const CommuDetail = () => {
       if (postResult) {
         setPostData({ ...postResult.postData });
         setBoardData({ ...postResult.boardData });
-        setUpvote(postResult.p_upvote);
+        setUpvote(postResult.postData.p_upvote);
         setReplyList([...replyResult.replyList]);
         setReplyCount(replyResult.replyCount.p_replies);
       }
@@ -93,7 +92,9 @@ const CommuDetail = () => {
   return (
     <>
       <main className="commu-detail p-5 rounded border border-slate-300">
-        <section className="board p-2">{boardData.b_kor}</section>
+        <Link className="board p-2" to={`/community/${boardData.b_eng}`}>
+          {boardData.b_kor}
+        </Link>
 
         <section className="flex p-2 border-b border-slate-300">
           <div className="title flex-1 text-xl font-semibold">
@@ -104,7 +105,7 @@ const CommuDetail = () => {
           <HandThumbUpIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
           <span className="mr-4">{upvote}</span>
           <ChatBubbleOvalLeftEllipsisIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
-          <span>{postData.r_count || "0"}</span>
+          <span>{replyCount}</span>
         </section>
 
         <section className="p-2">
@@ -133,7 +134,7 @@ const CommuDetail = () => {
         </section>
 
         <section className="m-5">
-          <div className="text-lg">{`${replyCount || 0} 개의 댓글`}</div>
+          <div className="text-lg">{`댓글 ${replyCount} 개`}</div>
           <div className="reply-input-box flex mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
             <input
               className={inputClass}
@@ -142,7 +143,7 @@ const CommuDetail = () => {
               onChange={onChangeHandler}
             />
             <button className={btnClass02} onClick={onClickReply}>
-              게시
+              등록
             </button>
           </div>
           <Reply data={replyList} />
