@@ -3,7 +3,7 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { payReady } from "../../service/auth.service";
 
 const Purchase = () => {
-  const { modal, modalHandler, statePayReady, setPayReady } = useUserContext();
+  const { modal, modalHandler } = useUserContext();
 
   return (
     <div>

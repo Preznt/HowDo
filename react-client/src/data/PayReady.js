@@ -1,4 +1,4 @@
-export const PayReady = {
+export const dataPayReady = {
   cid: "TC0ONETIME",
   partner_order_id: "1001",
   partner_user_id: "",
