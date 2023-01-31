@@ -3,7 +3,7 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { payReady } from "../../service/auth.service";
 
 const Purchase = () => {
-  const { modal, modalHandler } = useUserContext();
+  const { modal, modalHandler, statePayReady } = useUserContext();
 
   return (
     <div>
@@ -44,7 +44,9 @@ const Purchase = () => {
               <h2>₩3,000/월</h2>
               <button
                 className="p-2 ml-5 rounded-full text-white bg-sky-600 "
-                onClick={payReady}
+                onClick={() => {
+                  payReady(JSON.stringify(statePayReady));
+                }}
               >
                 구독하기
               </button>

@@ -3,7 +3,7 @@ import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
 import { fetchUser, fetchLogin } from "../service/auth.service";
-import { dataPayReady } from "../data/PayReady";
+import { PayReady } from "../data/PayReady";
 
 const UserContext = createContext();
 
@@ -19,7 +19,7 @@ export const UserContextProvider = ({ children }) => {
   const [modal, setModal] = useState({
     open: false,
   });
-  const [statePayReady, setPayReady] = useState(dataPayReady);
+  const [statePayReady, setPayReady] = useState(PayReady);
 
   const usernameRef = useRef();
   const nicknameRef = useRef();
@@ -73,8 +73,6 @@ export const UserContextProvider = ({ children }) => {
     modal,
     setModal,
     modalHandler,
-    statePayReady,
-    setPayReady,
   };
 
   return <UserContext.Provider value={props}>{children}</UserContext.Provider>;

@@ -3,6 +3,9 @@ const Approve = () => {
   const query = window.location.search;
   const pg_token = query.substring(10, 30);
 
+  const tid = localStorage.getItem("tid");
+ 
+
   payApprove(pg_token);
 
   return (
