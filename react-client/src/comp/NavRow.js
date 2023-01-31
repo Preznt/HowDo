@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import NavDynamic from "./NavDynamic";
 import { useAutoSearchContext } from "../context/AutoSearchProvider";
 import { useUserContext } from "../context/UserContextProvider";
@@ -7,6 +7,7 @@ import MainButton from "./mainpage/MainButton";
 
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
+  const navigate = useNavigate();
   const {
     currentSearch,
     setCurrentSearch,
@@ -27,7 +28,12 @@ const NavRow = () => {
     marginBottom: "8px",
   };
   const onClick = () => {
-    searchRef();
+    if (currentSearch) {
+      navigate("/search");
+    } else {
+      alert("검색어를 입력하세요");
+      searchRef();
+    }
   };
 
   const autoClick = (e) => {
@@ -52,9 +58,9 @@ const NavRow = () => {
 
   return (
     <>
-      <div className="flex bg-slate-600 top-0 left-0 right-0 mb-12 fixed pr-2 z-50">
+      <div className="flex bg-slate-700/60 top-0 left-0 right-0 mb-12 fixed pr-2 z-50">
         <div
-          className="flex w-12 h-8 m-3 mr-0 bg-inherit content-center justify-center cursor-pointer"
+          className="flex w-12 h-8 m-3 mr-0 content-center justify-center cursor-pointer"
           onClick={openClickHandler}
         >
           <img

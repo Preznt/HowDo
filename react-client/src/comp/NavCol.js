@@ -4,7 +4,7 @@ import { useUserContext } from "../context/UserContextProvider";
 const NavCol = () => {
   const { userSession, logoutHandler } = useUserContext();
   return (
-    <div className="flex flex-col top-15 min-w-fit bg-slate-600 h-screen p-1 content-center fixed">
+    <div className="flex flex-col top-15 min-w-fit bg-slate-700/60 h-screen p-1 content-center fixed">
       <Link
         className="mt-6 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-center ring-1 ring-white"
         to="/"
