@@ -8,7 +8,7 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true,
       },
-      b_code: {
+      p_code: {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
       },
