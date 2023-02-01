@@ -1,14 +1,17 @@
 import CreaterContent from "./CreaterContent";
 import CreaterContentFavorite from "./CreaterContentFavorite";
 import { useUserContext } from "../../context/UserContextProvider";
+import { usePayContext } from "../../context/PayContextProvider";
 import Purchase from "../purchase/Purchase";
 
 const MyPageMain = () => {
-  const { userSession, modalHandler, payReadyBody } = useUserContext();
+  const { userSession, modalHandler } = useUserContext();
+  const { payReadyBody, statePayReady } = usePayContext();
 
   const twoClickEvent = () => {
     modalHandler();
     payReadyBody();
+    console.log(statePayReady);
   };
 
   //  console.log(userSession.username);

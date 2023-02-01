@@ -1,9 +1,11 @@
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { useUserContext } from "../../context/UserContextProvider";
+import { usePayContext } from "../../context/PayContextProvider";
 import { payReady } from "../../service/auth.service";
 
 const Purchase = () => {
-  const { modal, modalHandler, statePayReady } = useUserContext();
+  const { modal, modalHandler } = useUserContext();
+  const { statePayReady } = usePayContext();
 
   return (
     <div>

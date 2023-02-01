@@ -47,10 +47,10 @@ export const fetchUser = async () => {
 // 결제
 // 결제 승인
 
-export const payApprove = async (pg_token) => {
+export const payApprove = async (dataPayApprove) => {
   const approveFetchOption = {
     method: "POST",
-    body: new URLSearchParams(),
+    body: new URLSearchParams(JSON.parse(dataPayApprove)),
     headers: {
       Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
@@ -85,7 +85,7 @@ export const payReady = async (statePayReady) => {
     const result = await res.json();
     console.log(result);
     localStorage.setItem("tid", result.tid);
-    // document.location.href = result.next_redirect_pc_url;
+    document.location.href = result.next_redirect_pc_url;
   } catch (e) {
     console.log("kakao error", e);
   }

@@ -1,5 +1,5 @@
 export const dataPayReady = {
-  cid: "TC0ONETIME",
+  cid: "TCSUBSCRIP",
   partner_order_id: "",
   partner_user_id: "",
   item_name: "",
@@ -9,12 +9,4 @@ export const dataPayReady = {
   approval_url: `http://localhost:3000/approval/`,
   fail_url: "http://localhost:3000",
   cancel_url: "http://localhost:3000",
-};
-
-export const dataPayApprove = {
-  cid: "TC0ONETIME",
-  tid: "",
-  partner_order_id: "",
-  partner_user_id: "",
-  pg_token: "",
 };
