@@ -3,7 +3,6 @@ import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
 import { fetchUser, fetchLogin } from "../service/auth.service";
-
 const UserContext = createContext();
 
 export const useUserContext = () => {
@@ -18,6 +17,7 @@ export const UserContextProvider = ({ children }) => {
   const [modal, setModal] = useState({
     open: false,
   });
+
   const usernameRef = useRef();
   const nicknameRef = useRef();
   const passwordRef = useRef();
@@ -27,6 +27,7 @@ export const UserContextProvider = ({ children }) => {
   const onClickHandler = async () => {
     const result = await fetchLogin(login);
     setUserSession(result);
+    if (result.username) document.location.href = "/";
     console.log(result);
   };
   // 모달창 열고 닫는 함수
