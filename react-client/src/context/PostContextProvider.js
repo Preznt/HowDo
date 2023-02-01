@@ -10,19 +10,19 @@ export const usePostContext = () => {
 export const PostContextProvider = ({ children }) => {
   const initPost = () => {
     const postData = {
-      b_code: v4(),
+      p_code: v4(),
       username: "polly@gmail.com",
-      b_title: "",
-      b_content: "",
-      b_category: "C21",
-      b_group: "C2",
+      p_title: "",
+      p_content: "",
+      b_code: "",
+      b_group_code: "",
     };
     return postData;
   };
   const initReply = () => {
     const replyData = {
       r_code: v4(),
-      b_code: "",
+      p_code: "",
       // session
       username: "polly@gmail.com",
       r_content: "",
@@ -31,17 +31,29 @@ export const PostContextProvider = ({ children }) => {
     return replyData;
   };
 
+  const [boardList, setBoardList] = useState([]);
   const [postData, setPostData] = useState(initPost);
-
   const [replyData, setReplyData] = useState(initReply);
+  const [boardData, setBoardData] = useState({
+    b_code: "",
+    b_eng: "",
+    b_kor: "",
+    b_group_code: "",
+    b_group_eng: "",
+    b_group_kor: "",
+  });
 
   const props = {
+    boardList,
+    setBoardList,
     initPost,
     postData,
     setPostData,
     initReply,
     replyData,
     setReplyData,
+    boardData,
+    setBoardData,
   };
 
   return <PostContext.Provider value={props}>{children}</PostContext.Provider>;

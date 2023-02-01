@@ -1,3 +1,36 @@
+export const getMainPosts = async () => {
+  try {
+    const response = await fetch("/community/posts/get");
+    const result = await response.json();
+    // noticeList, freeList, boardList
+    return result;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getBoardPosts = async (bEng) => {
+  try {
+    const response = await fetch(`/community/board/${bEng}/get`);
+    const result = await response.json();
+    // board, data;
+    return result;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getDetailPost = async (pCode) => {
+  try {
+    const response = await fetch(`/community/post/${pCode}/get`);
+    const result = await response.json();
+    // postData, boardData
+    return result;
+  } catch (err) {
+    return null;
+  }
+};
+
 export const submitPost = async (data) => {
   const fetchOption = {
     method: "POST",
@@ -13,9 +46,9 @@ export const submitPost = async (data) => {
   }
 };
 
-export const getMainPosts = async () => {
+export const deletePost = async (pCode) => {
   try {
-    const response = await fetch("/community/posts/get");
+    const response = await fetch(`/community/post/${pCode}/delete`);
     const result = await response.json();
     return result;
   } catch (err) {
@@ -23,42 +56,12 @@ export const getMainPosts = async () => {
   }
 };
 
-export const getCatPosts = async (catCode) => {
-  try {
-    const response = await fetch(`/community/cat/${catCode}/get`);
-    const result = await response.json();
-    return result;
-  } catch (err) {
-    return null;
-  }
-};
-
-export const getDetailPost = async (bCode) => {
-  try {
-    const response = await fetch(`/community/post/${bCode}/get`);
-    const result = await response.json();
-    return result;
-  } catch (err) {
-    return null;
-  }
-};
-
-export const deletePost = async (bCode) => {
-  try {
-    const response = await fetch(`/community/post/${bCode}/delete`);
-    const result = await response.json();
-    return result;
-  } catch (err) {
-    return null;
-  }
-};
-
-export const upvotePost = async (bCode, username) => {
+export const upvotePost = async (pCode, username) => {
   try {
     const fetchOption = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ b_code: bCode, username: username }),
+      body: JSON.stringify({ p_code: pCode, username: username }),
     };
     const response = await fetch(`/community/post/upvote`, fetchOption);
     const result = await response.json();
@@ -73,9 +76,9 @@ export const upvotePost = async (bCode, username) => {
   }
 };
 
-export const getReply = async (bCode) => {
+export const getReply = async (pCode) => {
   try {
-    const response = await fetch(`/community/reply/${bCode}/get`);
+    const response = await fetch(`/community/reply/${pCode}/get`);
     const result = await response.json();
     // replyList, replyCount
     return result;
@@ -101,7 +104,7 @@ export const insertReply = async (data) => {
     return null;
   }
   try {
-    const result = await getReply(data.b_code);
+    const result = await getReply(data.p_code);
     return result;
   } catch (err) {
     return null;
