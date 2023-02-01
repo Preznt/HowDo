@@ -14,6 +14,20 @@ export const VideoContentContextProvider = ({ children }) => {
   const [videoGroupCount, setVideoGroupCount] = useState();
   const [groupThumbnail, setGroupThumbnail] = useState();
   const { userSession } = useUserContext();
+  const [videoItemList, setVideoItemList] = useState([]);
+  const [file, setFile] = useState({}); // 동영상 업로드 미리보기용 state
+  const [shorts, setShorts] = useState({
+    shorts: false,
+  });
+  const [detail, setDetail] = useState({
+    url: "",
+    video: false,
+    v_title: "",
+    v_price: 0,
+    v_detail: "",
+    v_category: "",
+    v_save_file: "",
+  });
 
   useEffect(() => {
     (async () => {
@@ -35,6 +49,14 @@ export const VideoContentContextProvider = ({ children }) => {
     setVideoGroupCount,
     groupThumbnail,
     setGroupThumbnail,
+    videoItemList,
+    setVideoItemList,
+    file,
+    setFile,
+    detail,
+    setDetail,
+    shorts,
+    setShorts,
   };
 
   return (
