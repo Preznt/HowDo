@@ -19,7 +19,6 @@ import { Link, useParams } from "react-router-dom";
 // html tag -> entity -> tag 로 변환하는 과정 필요
 // 자기 자신을 참조하도록 테이블 관계 설정
 // 댓글을 중첩 구조로 데이터 가공해야 하는지?
-// 카테고리 데이터 어떻게 해야?? 테이블 생성?
 
 const CommuDetail = () => {
   const {
@@ -129,7 +128,13 @@ const CommuDetail = () => {
         </section>
 
         <section className="button-box flex justify-end w-full">
-          <button className={`${btnClass01} mr-4`}>수정</button>
+          <Link
+            className={`${btnClass01} mr-4`}
+            to={`/community/write/${postData.p_code}`}
+            state={{ data: postData }}
+          >
+            수정
+          </Link>
           <button className={btnClass01}>삭제</button>
         </section>
 

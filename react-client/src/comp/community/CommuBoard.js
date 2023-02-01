@@ -2,15 +2,16 @@
 // .../community/board/catA
 import List from "./List";
 import "../../css/community/CommuBoard.css";
-import { useState, useLayoutEffect } from "react";
 import { getBoardPosts } from "../../service/post.service";
-import { useParams } from "react-router-dom";
+import { usePostContext } from "../../context/PostContextProvider";
+import { useState, useLayoutEffect, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const CommuBoard = () => {
-  // 임시 카테고리 코드
   const bEng = useParams().board;
-  const [boardName, setBoardName] = useState("");
-  const [boardList, setBoardList] = useState([]);
+  const { boardData, setBoardData } = usePostContext();
+  const [postList, setPostList] = useState([]);
+
   const btnClass =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
   const selectClass =
@@ -22,16 +23,20 @@ const CommuBoard = () => {
     (async () => {
       const result = await getBoardPosts(bEng);
       if (result) {
-        setBoardList([...result.data]);
-        setBoardName(result.board.b_kor);
+        setPostList([...result.data]);
+        setBoardData({ ...result.board });
       }
       return null;
     })();
   }, []);
 
+  useEffect(() => {
+    console.log(boardData);
+  });
+
   return (
     <main className="commu-cat">
-      <h1>{boardName}</h1>
+      <h1>{boardData.b_kor}</h1>
       <section className="flex pl-5 pr-5 pb-10 justify-between">
         <button className={`search-select ${selectClass}`}>{"최신순"}</button>
         <div className="hidden">
@@ -44,9 +49,18 @@ const CommuBoard = () => {
           <input className={inputClass} />
           <button>검색</button>
         </div>
-        <button className={btnClass}>글쓰기</button>
+        <Link
+          className={btnClass}
+          to={`/community/write`}
+          state={{
+            b_code: boardData.b_code,
+            b_group_code: boardData.b_group_code,
+          }}
+        >
+          글쓰기
+        </Link>
       </section>
-      <List data={boardList} />
+      <List data={postList} />
     </main>
   );
 };

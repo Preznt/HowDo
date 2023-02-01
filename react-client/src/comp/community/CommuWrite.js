@@ -2,6 +2,8 @@
 // import EditorModule from "./EditorModule";
 import { submitPost } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
+import { useEffect } from "react";
+import { useParams, useLocation } from "react-router-dom";
 
 const CommuWrite = () => {
   // 카테고리, 그룹 값은 이전 페이지(게시판)에서 가져옴
@@ -11,7 +13,26 @@ const CommuWrite = () => {
   // 새로 글쓰기는 postData 초기화 / 수정은 저장된 postData 가져옴
   // ckEditor setData 사용해야
 
-  const { postData, setPostData } = usePostContext();
+  const { initPost, postData, setPostData } = usePostContext();
+  //useLocation().state.aaa 안됨
+  const location = useLocation();
+  const pCode = useParams().post;
+
+  useEffect(() => {
+    const { data, b_code, b_group_code } = location?.state;
+    // insert
+    // username 추가해야
+    if (!pCode) {
+      console.log("before", postData);
+      console.log(b_code, b_group_code);
+      setPostData({ ...initPost, b_code: b_code, b_group_code: b_group_code });
+      console.log("after", postData);
+    }
+    // update
+    else {
+      setPostData({ ...data });
+    }
+  }, []);
 
   const onChangeHandler = (e) => {
     setPostData({ ...postData, [e.target.name]: e.target.value });

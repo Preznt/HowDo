@@ -17,7 +17,9 @@ const List = ({ data }) => {
         >
           <div className="title font-semibold text-lg">{item.p_title}</div>
           <div className="date text-sm flex justify-end items-end">{`${item.p_date} ${item.p_time}`}</div>
-          <div className="nickname text-sm">{item.username}</div>
+          <div className="nickname text-sm flex items-center">
+            {item.username}
+          </div>
           <div className="detail-box text-right">
             <EyeIcon className="inline-block h-5 w-5 text-slate-500" />
             <span className="mr-4">{item.p_views}</span>

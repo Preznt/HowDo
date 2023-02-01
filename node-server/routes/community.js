@@ -91,7 +91,6 @@ router.get("/board/:bEng/get", async (req, res) => {
   const bEng = req.params.bEng;
   try {
     const board = await BOARD.findOne({
-      attributes: ["b_code", "b_kor"],
       where: { b_eng: bEng },
     });
 
