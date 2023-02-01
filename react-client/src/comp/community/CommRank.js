@@ -6,10 +6,10 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
-const Rank = ({ data }) => {
+const CommRank = ({ data }) => {
   const keyRef = useRef(0);
 
-  const RankItem = () => {
+  const Rank = () => {
     return data.map((item) => {
       keyRef.current++;
       return (
@@ -27,7 +27,7 @@ const Rank = ({ data }) => {
             <ChatBubbleOvalLeftEllipsisIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
             <span>{item.p_replies}</span>
           </div>
-          {/* 나중에 nickname으로 수정 */}
+          {/* nickname으로 수정 필요 */}
           <div className="text-left text-sm">{item.username}</div>
           <div className="text-right">{item["board.b_kor"]}</div>
         </Link>
@@ -37,9 +37,9 @@ const Rank = ({ data }) => {
 
   return (
     <section className="commu-rank grid grid-cols-none grid-rows-5">
-      <RankItem />
+      <Rank />
     </section>
   );
 };
 
-export default Rank;
+export default CommRank;

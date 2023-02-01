@@ -5,7 +5,7 @@ import { usePostContext } from "../../context/PostContextProvider";
 import { useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 
-const CommuWrite = () => {
+const PostWrite = () => {
   // 카테고리, 그룹 값은 이전 페이지(게시판)에서 가져옴
   // session 체크해서 게시글의 username 이 일치할 경우 수정 삭제 버튼 표시
   // detail 페이지에서 받은 데이터를 전역 context 에 저장해야 함
@@ -25,6 +25,7 @@ const CommuWrite = () => {
     if (!pCode) {
       console.log("before", postData);
       console.log(b_code, b_group_code);
+      // initPost 가 spread 안됨...
       setPostData({ ...initPost, b_code: b_code, b_group_code: b_group_code });
       console.log("after", postData);
     }
@@ -64,4 +65,4 @@ const CommuWrite = () => {
   );
 };
 
-export default CommuWrite;
+export default PostWrite;

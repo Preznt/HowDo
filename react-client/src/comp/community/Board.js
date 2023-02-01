@@ -1,16 +1,17 @@
 // 각 게시판별 페이지
-// .../community/board/catA
-import List from "./List";
-import "../../css/community/CommuBoard.css";
+import BoardList from "./BoardList";
+import "../../css/community/Board.css";
 import { getBoardPosts } from "../../service/post.service";
-import { usePostContext } from "../../context/PostContextProvider";
-import { useState, useLayoutEffect, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useLoaderData, Link } from "react-router-dom";
 
-const CommuBoard = () => {
-  const bEng = useParams().board;
-  const { boardData, setBoardData } = usePostContext();
-  const [postList, setPostList] = useState([]);
+export const loader = async ({ params }) => {
+  const bEng = params.board;
+  const { data, board } = await getBoardPosts(bEng);
+  return { data, board };
+};
+
+const Board = () => {
+  const { data, board } = useLoaderData();
 
   const btnClass =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
@@ -19,24 +20,9 @@ const CommuBoard = () => {
   const inputClass =
     "bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 p-2";
 
-  useLayoutEffect(() => {
-    (async () => {
-      const result = await getBoardPosts(bEng);
-      if (result) {
-        setPostList([...result.data]);
-        setBoardData({ ...result.board });
-      }
-      return null;
-    })();
-  }, []);
-
-  useEffect(() => {
-    console.log(boardData);
-  });
-
   return (
     <main className="commu-cat">
-      <h1>{boardData.b_kor}</h1>
+      <h1>{board.b_kor}</h1>
       <section className="flex pl-5 pr-5 pb-10 justify-between">
         <button className={`search-select ${selectClass}`}>{"최신순"}</button>
         <div className="hidden">
@@ -49,20 +35,23 @@ const CommuBoard = () => {
           <input className={inputClass} />
           <button>검색</button>
         </div>
-        <Link
-          className={btnClass}
-          to={`/community/write`}
-          state={{
-            b_code: boardData.b_code,
-            b_group_code: boardData.b_group_code,
-          }}
-        >
-          글쓰기
-        </Link>
+        {/* 관리자 권한 추가 */}
+        {board.b_eng !== "notice" && (
+          <Link
+            className={btnClass}
+            to={`/community/write`}
+            state={{
+              b_code: board.b_code,
+              b_group_code: board.b_group_code,
+            }}
+          >
+            글쓰기
+          </Link>
+        )}
       </section>
-      <List data={postList} />
+      <BoardList data={data} />
     </main>
   );
 };
 
-export default CommuBoard;
+export default Board;

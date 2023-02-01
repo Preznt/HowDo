@@ -1,6 +1,6 @@
 // 게시글 상세보기
 import Reply from "./Reply";
-import "../../css/community/CommuDetail.css";
+import "../../css/community/PostDetail.css";
 import {
   EyeIcon,
   HandThumbUpIcon,
@@ -14,27 +14,40 @@ import {
   upvotePost,
 } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
-import { Link, useParams } from "react-router-dom";
+import { useLoaderData, Link } from "react-router-dom";
 
 // html tag -> entity -> tag 로 변환하는 과정 필요
 // 자기 자신을 참조하도록 테이블 관계 설정
 // 댓글을 중첩 구조로 데이터 가공해야 하는지?
 
-const CommuDetail = () => {
-  const {
-    postData,
-    setPostData,
-    replyData,
-    setReplyData,
-    initReply,
-    boardData,
-    setBoardData,
-  } = usePostContext();
+export const loader = async ({ params }) => {
+  const pCode = params.post;
+  const { postData, boardData } = await getDetailPost(pCode);
+  const { replyList, replyCount } = await getReply(pCode);
+  return {
+    board: boardData,
+    post: postData,
+    reply: replyList,
+    count: replyCount,
+  };
+};
 
+const PostDetail = () => {
+  const { board, post, reply, count } = useLoaderData();
+  const { replyData, setReplyData, initReply } = usePostContext();
+  // reRendering data
   const [upvote, setUpvote] = useState(null);
   const [replyCount, setReplyCount] = useState(null);
   const [replyList, setReplyList] = useState([]);
-  const pCode = useParams().post;
+
+  useLayoutEffect(() => {
+    (async () => {
+      setUpvote(post.p_upvote);
+      setReplyList([...reply]);
+      setReplyCount(count.p_replies);
+    })();
+  }, []);
+
   // 임시 username(session context 에서)
   const username = "polly@gmail.com";
 
@@ -45,40 +58,22 @@ const CommuDetail = () => {
   const inputClass =
     "bg-transparent border-b border-blue-700 flex-1 mr-3 py-1 px-2 leading-tight focus:outline-none";
 
-  // 카테고리, 그룹 값은 이전 페이지(게시판)에서 가져옴
-  // detail 페이지에서 fetch 데이터를 전역 context 에 저장해야 함
-  // session 체크해서 게시글의 username 과 일치할 경우 수정 삭제 버튼 표시
-  // 현재 경로를 체크해서 새로 글쓰는 경우와 수정하는 경우 분리
-  // 수정은 저장된 postData 가져옴
-  // 새로 글쓰기 전후로 postData 초기화해야
-  // ckEditor setData 또는 initData 사용
-
-  useLayoutEffect(() => {
-    (async () => {
-      const postResult = await getDetailPost(pCode);
-      const replyResult = await getReply(pCode);
-      if (postResult) {
-        setPostData({ ...postResult.postData });
-        setBoardData({ ...postResult.boardData });
-        setUpvote(postResult.postData.p_upvote);
-        setReplyList([...replyResult.replyList]);
-        setReplyCount(replyResult.replyCount.p_replies);
-      }
-      return null;
-    })();
-  }, []);
-
-  console.log(postData);
-
+  // 추천 버튼 클릭
   const onClickUpvote = async () => {
-    const result = await upvotePost(pCode, username);
+    const result = await upvotePost(post.p_code, username);
     if (result) setUpvote(upvote + result[0]);
   };
 
+  // 댓글 입력 데이터 갱신
   const onChangeHandler = (e) => {
-    setReplyData({ ...replyData, p_code: pCode, r_content: e.target.value });
+    setReplyData({
+      ...replyData,
+      p_code: post.p_code,
+      r_content: e.target.value,
+    });
   };
 
+  // 댓글 등록 버튼 클릭
   const onClickReply = async () => {
     const result = await insertReply(replyData);
     if (result) {
@@ -91,16 +86,16 @@ const CommuDetail = () => {
   return (
     <>
       <main className="commu-detail p-5 rounded border border-slate-300">
-        <Link className="board p-2" to={`/community/${boardData.b_eng}`}>
-          {boardData.b_kor}
+        <Link className="board p-2" to={`/community/${board.b_eng}`}>
+          {board.b_kor}
         </Link>
 
         <section className="flex p-2 border-b border-slate-300">
           <div className="title flex-1 text-xl font-semibold">
-            {postData.p_title}
+            {post.p_title}
           </div>
           <EyeIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
-          <span className="mr-4">{postData.p_views}</span>
+          <span className="mr-4">{post.p_views}</span>
           <HandThumbUpIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
           <span className="mr-4">{upvote}</span>
           <ChatBubbleOvalLeftEllipsisIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
@@ -109,15 +104,15 @@ const CommuDetail = () => {
 
         <section className="p-2">
           <img className="inline-block w-50" alt="프로필 이미지" />
-          {/* 나중에 nickname으로 수정 */}
-          <span className="nickname pl-2">{postData.username}</span>
-          <span className="float-right">{`${postData.p_date} ${postData.p_time}`}</span>
+          {/* nickname으로 수정 필요 */}
+          <span className="nickname pl-2">{post.username}</span>
+          <span className="float-right">{`${post.p_date} ${post.p_time}`}</span>
         </section>
 
         <section className="flex flex-col items-center w-full p-20">
           <div
             className="content w-full pb-20"
-            dangerouslySetInnerHTML={{ __html: postData.p_content }}
+            dangerouslySetInnerHTML={{ __html: post.p_content }}
           ></div>
 
           <button className={btnClass01} onClick={onClickUpvote}>
@@ -127,11 +122,12 @@ const CommuDetail = () => {
           </button>
         </section>
 
+        {/* 게시글과 세션 username 비교 후 표시 */}
         <section className="button-box flex justify-end w-full">
           <Link
             className={`${btnClass01} mr-4`}
-            to={`/community/write/${postData.p_code}`}
-            state={{ data: postData }}
+            to={`/community/write/${post.p_code}`}
+            state={{ data: post }}
           >
             수정
           </Link>
@@ -141,6 +137,7 @@ const CommuDetail = () => {
         <section className="m-5">
           <div className="text-lg">{`댓글 ${replyCount} 개`}</div>
           <div className="reply-input-box flex mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
+            {/* 사용자 nickname 필요 */}
             <input
               className={inputClass}
               type="text"
@@ -158,4 +155,4 @@ const CommuDetail = () => {
   );
 };
 
-export default CommuDetail;
+export default PostDetail;

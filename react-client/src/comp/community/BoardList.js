@@ -1,4 +1,3 @@
-// 게시글 목록: Category 와 Detail 에 포함
 import {
   EyeIcon,
   HandThumbUpIcon,
@@ -6,7 +5,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
-const List = ({ data }) => {
+const BoardList = ({ data }) => {
   const ListItem = () => {
     return data.map((item) => {
       return (
@@ -42,4 +41,4 @@ const List = ({ data }) => {
   );
 };
 
-export default List;
+export default BoardList;

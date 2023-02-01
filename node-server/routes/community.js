@@ -163,7 +163,6 @@ router.post("/post/insert", async (req, res, next) => {
   const data = req.body;
   try {
     await POST.create(data);
-
     return res.send({ MESSAGE: "게시글이 정상적으로 등록되었습니다." });
   } catch (err) {
     console.error(err);
@@ -235,7 +234,6 @@ router.post("/reply/insert", async (req, res) => {
         { where: { p_code: req.body.p_code } }
       );
     }
-
     return res.send(result);
   } catch (err) {
     console.error(err);
