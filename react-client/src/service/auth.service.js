@@ -50,7 +50,7 @@ export const fetchUser = async () => {
 export const payApprove = async (dataPayApprove) => {
   const approveFetchOption = {
     method: "POST",
-    body: new URLSearchParams(JSON.parse(dataPayApprove)),
+    body: new URLSearchParams(dataPayApprove),
     headers: {
       Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
@@ -61,6 +61,7 @@ export const payApprove = async (dataPayApprove) => {
     const res = await fetch(APPROVE_URL, approveFetchOption);
     const result = await res.json();
     console.log(result);
+    // return result;
   } catch (e) {
     console.log(e);
   }
@@ -68,12 +69,11 @@ export const payApprove = async (dataPayApprove) => {
 
 // 결제 준비
 export const payReady = async (statePayReady) => {
-  const parseStatePayReady = JSON.parse(statePayReady);
-  console.log(parseStatePayReady);
+  console.log(statePayReady);
 
   const kakaoFetchOption = {
     method: "POST",
-    body: new URLSearchParams(parseStatePayReady),
+    body: new URLSearchParams(statePayReady),
     headers: {
       Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",

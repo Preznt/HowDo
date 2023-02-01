@@ -4,7 +4,7 @@ import { usePayContext } from "../../context/PayContextProvider";
 import { payReady } from "../../service/auth.service";
 
 const Purchase = () => {
-  const { modal, modalHandler } = useUserContext();
+  const { modal, modalHandler, joinUser } = useUserContext();
   const { statePayReady } = usePayContext();
 
   return (
@@ -47,7 +47,7 @@ const Purchase = () => {
               <button
                 className="p-2 ml-5 rounded-full text-white bg-sky-600 "
                 onClick={() => {
-                  payReady(JSON.stringify(statePayReady));
+                  payReady(statePayReady);
                 }}
               >
                 구독하기

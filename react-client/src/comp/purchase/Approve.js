@@ -9,14 +9,14 @@ const Approve = () => {
   const tid = localStorage.getItem("tid");
 
   const dataPayApprove = {
-    cid: "TC0ONETIME",
+    cid: "TCSUBSCRIP",
     tid: tid,
     partner_order_id: userSession.username,
     partner_user_id: userSession.username,
     pg_token: pg_token,
   };
 
-  payApprove(JSON.stringify(dataPayApprove));
+  payApprove(dataPayApprove);
 
   return (
     <div>
