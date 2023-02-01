@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import AppSample from "../AppSample";
+import AppSample from "../App";
 import MainPage from "../comp/mainpage/MainPage";
 import MyPageMain from "../comp/mypage/MyPageMain";
 import Join from "../comp/login/Join";
@@ -11,7 +11,8 @@ import PostDetail, {
   loader as DetailLoader,
 } from "../comp/community/PostDetail";
 import PostWrite from "../comp/community/PostWrite";
-
+import Approve from "../comp/purchase/Approve";
+import SearchMain from "../comp/serachPage/SearchMain";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,6 +35,8 @@ const router = createBrowserRouter([
         element: <PostDetail />,
       },
       { path: "/community/write/:post?", element: <PostWrite /> },
+      { path: "/approval", element: <Approve /> },
+      { path: "/search", element: <SearchMain /> },
     ],
   },
 ]);

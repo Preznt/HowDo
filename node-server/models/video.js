@@ -58,6 +58,11 @@ export default (sequelize) => {
         type: Sequelize.DataTypes.STRING(125),
         allowNull: true,
       },
+      v_hover: {
+        type: Sequelize.DataTypes.STRING(125),
+        allowNull: true,
+        default: "false",
+      },
     },
     {
       sequelize,

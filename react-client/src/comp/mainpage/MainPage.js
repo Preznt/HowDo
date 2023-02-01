@@ -1,11 +1,9 @@
 import MainpageBbs from "./MainPageBbs";
 import MainpageContent from "./MainPageContent";
-import MainButton from "./MainButton";
 import MainContentRow from "./MainContentRow";
 const MainPage = () => {
   return (
-    <div className="relative">
-      <MainButton />
+    <div className="relative ml-52">
       <MainpageBbs />
       <MainpageContent />
       <MainContentRow />

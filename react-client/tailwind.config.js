@@ -13,8 +13,15 @@ module.exports = {
       height: {
         800: "800px",
       },
+      minHeight: {
+        64: "16rem",
+      },
     },
   },
   variants: {},
-  plugins: [require("tw-elements/dist/plugin")],
+  plugins: [
+    require("tw-elements/dist/plugin"),
+    require("tailwindcss"),
+    require("autoprefixer"),
+  ],
 };

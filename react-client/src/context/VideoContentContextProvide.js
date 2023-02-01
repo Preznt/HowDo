@@ -11,14 +11,32 @@ export const useVideoContentContext = () => {
 export const VideoContentContextProvider = ({ children }) => {
   const [videoContent, setVideoContent] = useState(new VideoContent());
   const [videoContentList, setVideoContentList] = useState();
+  const [videoGroupCount, setVideoGroupCount] = useState();
+  const [groupThumbnail, setGroupThumbnail] = useState();
   const { userSession } = useUserContext();
+  const [videoItemList, setVideoItemList] = useState([]);
+  const [file, setFile] = useState({}); // 동영상 업로드 미리보기용 state
+  const [shorts, setShorts] = useState({
+    shorts: false,
+  });
+  const [detail, setDetail] = useState({
+    url: "",
+    video: false,
+    v_title: "",
+    v_price: 0,
+    v_detail: "",
+    v_category: "",
+    v_save_file: "",
+  });
 
   useEffect(() => {
     (async () => {
       const response = await fetch(`/mypage/${userSession.username}`);
-      const result = await response.json();
+      const result = await response?.json();
       console.log(result);
-      setVideoContentList(result);
+      setVideoContentList(result.recent);
+      setVideoGroupCount(result.count);
+      setGroupThumbnail(result.group);
     })();
   }, [userSession]);
 
@@ -27,6 +45,18 @@ export const VideoContentContextProvider = ({ children }) => {
     setVideoContentList,
     videoContent,
     setVideoContent,
+    videoGroupCount,
+    setVideoGroupCount,
+    groupThumbnail,
+    setGroupThumbnail,
+    videoItemList,
+    setVideoItemList,
+    file,
+    setFile,
+    detail,
+    setDetail,
+    shorts,
+    setShorts,
   };
 
   return (

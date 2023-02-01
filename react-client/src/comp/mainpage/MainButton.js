@@ -17,20 +17,18 @@ const MainButton = () => {
   };
 
   return (
-    <div className="m-12">
-      <div className="flex">
-        <div
-          className="rounded-full p-2 m-1.5 bg-black text-white cursor-pointer"
-          onClick={bbsOpen}
-        >
-          커뮤니티
-        </div>
-        <div
-          className="rounded-full p-2 m-1.5 bg-black text-white cursor-pointer"
-          onClick={contentOpen}
-        >
-          영상
-        </div>
+    <div className="flex">
+      <div
+        className="rounded-full p-2 m-1.5 bg-black text-white cursor-pointer"
+        onClick={bbsOpen}
+      >
+        커뮤니티
+      </div>
+      <div
+        className="rounded-full p-2 m-1.5 bg-black text-white cursor-pointer"
+        onClick={contentOpen}
+      >
+        영상
       </div>
     </div>
   );
