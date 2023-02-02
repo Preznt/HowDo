@@ -28,8 +28,11 @@ const NavRow = () => {
     marginTop: "8px",
     marginBottom: "8px",
   };
-  const onClick = () => {
+  const onClick = async () => {
     if (currentSearch) {
+      
+      const res = await fetch(`/mypage/search/${currentSearch}`);
+      const result = await res.json();
       navigate("/search");
     } else {
       alert("검색어를 입력하세요");

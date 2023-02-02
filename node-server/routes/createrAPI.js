@@ -1,6 +1,6 @@
 import express from "express";
 import DB from "../models/index.js";
-
+import { Op } from "sequelize";
 const router = express.Router();
 const V_CONTENT = DB.models.video;
 const USER = DB.models.user;
@@ -46,8 +46,8 @@ router.get("/search/search", async (req, res, next) => {
 });
 
 router.get("/search/:query", async (req, res, next) => {
-  console.log("검색");
   const query = req.params.query;
+
   try {
     const v_result = await V_CONTENT.findAll({
       where: { v_title: { [Op.like]: `%${query}%` } },
@@ -55,7 +55,7 @@ router.get("/search/:query", async (req, res, next) => {
     const u_result = await USER.findAll({
       where: { nickname: { [Op.like]: `%${query}%` } },
     });
-
+    console.log(v_result, u_result);
     return res.json({ v_result: v_result, u_result: u_result });
   } catch (error) {}
 });
