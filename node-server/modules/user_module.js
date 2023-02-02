@@ -53,6 +53,7 @@ export const chkJoin = async (info) => {
 
   info.password = encPassword;
 
+  // 권한 설정
   try {
     const userCount = await USER.count();
     if (!userCount) {
@@ -65,6 +66,7 @@ export const chkJoin = async (info) => {
     throw new Error(JSON.stringify(SYSTEM_RES.SQL_ERROR));
   }
 
+  // 인서트하기
   try {
     await USER.create(info);
   } catch (e) {

@@ -45,24 +45,12 @@ export const fetchUser = async () => {
 };
 
 // 결제
-
 // 결제 승인
 
-export const payApprove = async (pg_token) => {
-  const tid = localStorage.getItem("tid");
-  const reqBody = {
-    cid: "TC0ONETIME",
-    tid: tid,
-    partner_order_id: "1001",
-    partner_user_id: "user",
-    pg_token: pg_token,
-  };
-
-  console.log(reqBody);
-
+export const payApprove = async (dataPayApprove) => {
   const approveFetchOption = {
     method: "POST",
-    body: new URLSearchParams(reqBody),
+    body: new URLSearchParams(JSON.parse(dataPayApprove)),
     headers: {
       Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
@@ -79,23 +67,13 @@ export const payApprove = async (pg_token) => {
 };
 
 // 결제 준비
-export const payReady = async () => {
-  const testBody = {
-    cid: "TC0ONETIME",
-    partner_order_id: "1001",
-    partner_user_id: "user",
-    item_name: "초코파이",
-    quantity: 1,
-    total_amount: 2200,
-    tax_free_amount: 0,
-    approval_url: `http://localhost:3000/approval/`,
-    fail_url: "http://localhost:3000",
-    cancel_url: "http://localhost:3000",
-  };
+export const payReady = async (statePayReady) => {
+  const parseStatePayReady = JSON.parse(statePayReady);
+  console.log(parseStatePayReady);
 
   const kakaoFetchOption = {
     method: "POST",
-    body: new URLSearchParams(testBody),
+    body: new URLSearchParams(parseStatePayReady),
     headers: {
       Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",

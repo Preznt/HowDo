@@ -1,10 +1,18 @@
-import { useEffect } from "react";
 import CreaterContent from "./CreaterContent";
 import CreaterContentFavorite from "./CreaterContentFavorite";
 import { useUserContext } from "../../context/UserContextProvider";
+import { usePayContext } from "../../context/PayContextProvider";
+import Purchase from "../purchase/Purchase";
 
 const MyPageMain = () => {
-  const { userSession, setUserSession, modalHandler } = useUserContext();
+  const { userSession, modalHandler } = useUserContext();
+  const { payReadyBody, statePayReady } = usePayContext();
+
+  const twoClickEvent = () => {
+    modalHandler();
+    payReadyBody();
+    console.log(statePayReady);
+  };
 
   //  console.log(userSession.username);
 
@@ -22,7 +30,7 @@ const MyPageMain = () => {
           alt="profile"
         ></img>
         <div>{userSession.nickname}</div>
-        <div className="ml-auto" onClick={modalHandler}>
+        <div className="ml-auto" onClick={twoClickEvent}>
           구독
         </div>
         <div>게시글 작성</div>
@@ -31,6 +39,7 @@ const MyPageMain = () => {
         <CreaterContent />
         <CreaterContentFavorite />
       </div>
+      <Purchase />
     </div>
   );
 };
