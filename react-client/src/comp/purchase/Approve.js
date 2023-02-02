@@ -1,9 +1,8 @@
 import { payApprove } from "../../service/auth.service";
 import { usePayContext } from "../../context/PayContextProvider";
-import { useEffect } from "react";
 
-const Approve = () => {
-  const { userSession, setPayApprove, statePayApprove } = usePayContext();
+const Approve = async () => {
+  const { userSession } = usePayContext();
   const query = window.location.search;
   const pg_token = query.substring(10, 30);
   const tid = localStorage.getItem("tid");
@@ -16,7 +15,12 @@ const Approve = () => {
     pg_token: pg_token,
   };
 
-  payApprove(dataPayApprove);
+  try {
+    const result = await payApprove(dataPayApprove);
+    console.log(result);
+  } catch (error) {
+    console.log(error.messgae);
+  }
 
   return (
     <div>
