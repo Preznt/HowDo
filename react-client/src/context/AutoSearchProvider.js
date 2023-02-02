@@ -14,7 +14,7 @@ export const AutoSearchContextProvider = ({ children }) => {
   const onChange = (e) => {
     setCurrentSearch(e.target.value);
   };
-  console.log(searchedData);
+
   useEffect(() => {
     (async () => {
       const result = await fetch(`/mypage/search/search`);

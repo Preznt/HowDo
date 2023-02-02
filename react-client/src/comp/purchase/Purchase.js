@@ -1,9 +1,12 @@
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { useUserContext } from "../../context/UserContextProvider";
+import { usePayContext } from "../../context/PayContextProvider";
 import { payReady } from "../../service/auth.service";
 
 const Purchase = () => {
   const { modal, modalHandler } = useUserContext();
+  const { statePayReady } = usePayContext();
+
   return (
     <div>
       <div
@@ -43,7 +46,9 @@ const Purchase = () => {
               <h2>₩3,000/월</h2>
               <button
                 className="p-2 ml-5 rounded-full text-white bg-sky-600 "
-                onClick={payReady}
+                onClick={() => {
+                  payReady(JSON.stringify(statePayReady));
+                }}
               >
                 구독하기
               </button>

@@ -4,6 +4,7 @@ import NavDynamic from "./NavDynamic";
 import { useAutoSearchContext } from "../context/AutoSearchProvider";
 import { useUserContext } from "../context/UserContextProvider";
 import MainButton from "./mainpage/MainButton";
+import "../css/mainbar.css";
 
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
@@ -27,8 +28,11 @@ const NavRow = () => {
     marginTop: "8px",
     marginBottom: "8px",
   };
-  const onClick = () => {
+  const onClick = async () => {
     if (currentSearch) {
+      
+      const res = await fetch(`/mypage/search/${currentSearch}`);
+      const result = await res.json();
       navigate("/search");
     } else {
       alert("검색어를 입력하세요");
@@ -58,7 +62,7 @@ const NavRow = () => {
 
   return (
     <>
-      <div className="flex bg-slate-700/60 top-0 left-0 right-0 mb-12 fixed pr-2 z-50">
+      <div className="mainbar flex bg-slate-700/60 top-0 left-0 right-0 mb-12 fixed pr-2 z-50">
         <div
           className="flex w-12 h-8 m-3 mr-0 content-center justify-center cursor-pointer"
           onClick={openClickHandler}
