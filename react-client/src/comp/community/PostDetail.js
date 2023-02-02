@@ -10,43 +10,45 @@ import { useState, useLayoutEffect } from "react";
 import {
   getDetailPost,
   getReply,
-  insertReply,
   upvotePost,
+  deletePost,
 } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
-import { useLoaderData, Link } from "react-router-dom";
+import { useLoaderData, useParams, useNavigate, Link } from "react-router-dom";
 
 // html tag -> entity -> tag 로 변환하는 과정 필요
 // 자기 자신을 참조하도록 테이블 관계 설정
 // 댓글을 중첩 구조로 데이터 가공해야 하는지?
+// 같은 데이터를 호출하는 여러 코드들 어떻게 처리?
+// 불필요한 전역변수 어떻게 처리?
 
+// hook 은 컴포넌트 함수 또는 커스텀 hook 에서만 호출할 수 있다.
+// 따라서 일반 함수에서는 hook 을 호출할 수 없다.
 export const loader = async ({ params }) => {
   const pCode = params.post;
-  const { postData, boardData } = await getDetailPost(pCode);
-  const { replyList, replyCount } = await getReply(pCode);
-  return {
-    board: boardData,
-    post: postData,
-    reply: replyList,
-    count: replyCount,
-  };
+  const detail = await getDetailPost(pCode);
+  const reply = await getReply(pCode);
+  return { detail, reply };
 };
 
 const PostDetail = () => {
-  const { board, post, reply, count } = useLoaderData();
-  const { replyData, setReplyData, initReply } = usePostContext();
-  console.log(usePostContext());
-
-  // reRendering data
-  const [upvote, setUpvote] = useState(null);
-  const [replyCount, setReplyCount] = useState(null);
-  const [replyList, setReplyList] = useState([]);
+  const nav = useNavigate();
+  const bEng = useParams().board;
+  const { detail, reply } = useLoaderData();
+  const { replyCount, setReplyCount } = usePostContext();
+  const [upvote, setUpvote] = useState();
+  let board = detail?.board;
+  let post = detail?.post;
+  let list = reply?.list;
+  let count = reply?.count;
 
   useLayoutEffect(() => {
     (async () => {
-      setUpvote(post.p_upvote);
-      setReplyList([...reply]);
-      setReplyCount(count.p_replies);
+      if (detail.ERROR) {
+        nav(`/community/${bEng}`, { replace: true });
+      }
+      setUpvote(post?.p_upvote);
+      setReplyCount(count);
     })();
   }, []);
 
@@ -62,35 +64,28 @@ const PostDetail = () => {
     if (result) setUpvote(upvote + result[0]);
   };
 
-  // 댓글 입력 데이터 갱신
-  const onChangeHandler = (e) => {
-    setReplyData({
-      ...replyData,
-      p_code: post.p_code,
-      r_content: e.target.value,
-    });
-  };
-
-  // 댓글 등록 버튼 클릭
-  const onClickReply = async () => {
-    const result = await insertReply(replyData);
+  // 삭제 버튼 클릭
+  const onClickDelete = async () => {
+    const result = await deletePost(post.p_code);
     if (result) {
-      setReplyList([...result.replyList]);
-      setReplyCount(result.replyCount.p_replies);
-      setReplyData(initReply);
+      nav(`/community/${board.b_eng}`, { replace: true });
     }
   };
 
+  // 예외 처리를 하지 않으면 alert 후 navigation 하기 전 오류 발생
   return (
     <main className="commu-detail p-5 rounded border border-slate-300">
-      <Link className="board p-2" to={`/community/${board.b_eng}`}>
-        {board.b_kor}
+      <Link className="board p-2" to={`/community/${board?.b_eng}`}>
+        {board?.b_kor}
       </Link>
 
       <section className="flex p-2 border-b border-slate-300">
-        <div className="title flex-1 text-xl font-semibold">{post.p_title}</div>
+        <div className="title flex-1 text-xl font-semibold">
+          {post?.p_title}
+        </div>
         <EyeIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
-        <span className="mr-4">{post.p_views}</span>
+        {/* 게시글 열람하면 조회수가 그대로인데 새로고침, 뒤로가기 하면 올라가는 이유?.. */}
+        <span className="mr-4">{post?.p_views}</span>
         <HandThumbUpIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
         <span className="mr-4">{upvote}</span>
         <ChatBubbleOvalLeftEllipsisIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
@@ -100,14 +95,14 @@ const PostDetail = () => {
       <section className="p-2">
         <img className="inline-block w-50" alt="프로필 이미지" />
         {/* nickname으로 수정 필요 */}
-        <span className="nickname pl-2">{post.username}</span>
-        <span className="float-right">{`${post.p_date} ${post.p_time}`}</span>
+        <span className="nickname pl-2">{post?.username}</span>
+        <span className="float-right">{`${post?.p_date} ${post?.p_time}`}</span>
       </section>
 
       <section className="flex flex-col items-center w-full p-20">
         <div
           className="content w-full pb-20"
-          dangerouslySetInnerHTML={{ __html: post.p_content }}
+          dangerouslySetInnerHTML={{ __html: post?.p_content }}
         ></div>
 
         <button className={btnClass01} onClick={onClickUpvote}>
@@ -121,20 +116,16 @@ const PostDetail = () => {
       <section className="button-box flex justify-end w-full">
         <Link
           className={`${btnClass01} mr-4`}
-          to={`/community/write/${post.p_code}`}
+          to={`/community/write/${post?.p_code}`}
           state={{ data: post }}
         >
           수정
         </Link>
-        <button className={btnClass01}>삭제</button>
+        <button className={btnClass01} onClick={onClickDelete}>
+          삭제
+        </button>
       </section>
-      <Reply
-        replyCount={replyCount}
-        replyList={replyList}
-        replyData={replyData}
-        onChangeHandler={onChangeHandler}
-        onClickReply={onClickReply}
-      />
+      <Reply code={post?.p_code} list={list} count={replyCount} />
     </main>
   );
 };

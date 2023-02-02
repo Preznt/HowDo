@@ -1,12 +1,53 @@
 import ReplyList from "./ReplyList";
+import { useLayoutEffect } from "react";
+import { usePostContext } from "../../context/PostContextProvider";
+import { insertReply, getReply } from "../../service/post.service";
 
-const Input = ({
-  replyCount,
-  replyData,
-  replyList,
-  onChangeHandler,
-  onClickReply,
-}) => {
+const Reply = ({ code, list, count }) => {
+  const {
+    replyData,
+    setReplyData,
+    initReply,
+    replyList,
+    setReplyList,
+    replyCount,
+    setReplyCount,
+  } = usePostContext();
+
+  useLayoutEffect(() => {
+    (async () => {
+      setReplyList([...list]);
+      setReplyCount(count);
+      setReplyData(initReply);
+    })();
+  }, []);
+
+  /**
+   * Reply 를 재사용 가능한 컴포넌트로...
+   * 칼럼명을 포함한 데이터와 fetch 함수를 어떻게 해야 할까?
+   */
+
+  // 댓글 입력 데이터 갱신
+  const onChangeHandler = (e) => {
+    setReplyData({
+      ...replyData,
+      p_code: code,
+      r_content: e.target.value,
+    });
+  };
+
+  // 댓글 등록 버튼 클릭 시 fetch 및 reRendering
+  const onClickReply = async () => {
+    setReplyData(initReply);
+    await insertReply(replyData);
+    let data = await getReply(replyData.p_code);
+    if (data) {
+      setReplyList([...data.list]);
+      setReplyCount(data.count);
+      setReplyData(initReply);
+    }
+  };
+
   const btnClass02 =
     "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded";
   const inputClass =
@@ -32,4 +73,4 @@ const Input = ({
   );
 };
 
-export default Input;
+export default Reply;
