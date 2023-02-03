@@ -19,8 +19,8 @@ const PostWrite = () => {
 
     // username 추가 필요
     // insert
-    const init = initPost();
     if (!pCode) {
+      const init = initPost();
       setPostData({ ...init, b_code: b_code, b_group_code: b_group_code });
     }
     // update
@@ -40,7 +40,9 @@ const PostWrite = () => {
 
   const onClickHandler = async () => {
     let result;
+    // insert
     if (!pCode) result = await submitPost(postData);
+    // update
     if (pCode) result = await submitPost(postData, pCode);
     if (result.MESSAGE) {
       nav(`/community/${b_eng}`, { replace: true });

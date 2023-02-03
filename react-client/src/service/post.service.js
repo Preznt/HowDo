@@ -43,10 +43,14 @@ export const submitPost = async (data, pCode = null) => {
   };
   try {
     let response;
-    if (!pCode) await fetch("/coummnity/post/insert", fetchOption);
+    // insert
+    if (!pCode) {
+      response = await fetch("/post/insert", fetchOption);
+    }
+    // update
     if (pCode) {
       fetchOption.method = "PATCH";
-      await fetch("/coummnity/post/update", fetchOption);
+      response = await fetch("/post/update", fetchOption);
     }
     const result = await response.json();
     if (result.ERROR) {
