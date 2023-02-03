@@ -25,6 +25,7 @@ export const UserContextProvider = ({ children }) => {
   const inputRef = { usernameRef, nicknameRef, passwordRef, rePasswordRef };
 
   const onClickHandler = async () => {
+    console.log("로그인 정보", login);
     const result = await fetchLogin(login);
     setUserSession(result);
     if (result.username) document.location.href = "/";
