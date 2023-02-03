@@ -6,22 +6,22 @@ const Mainpage_bbs = () => {
   console.log("bbs : " + bbsButton);
   return (
     <div className={bbsButton ? "container m-4 ml-12 flex" : "hidden"}>
-      <Link className="rounded-full p-2 m-1.5 bg-black text-white">
+      <Link to="#" className="rounded-full p-2 m-1.5 bg-black text-white">
         커뮤 주제 1
       </Link>
-      <Link className="rounded-full p-2 m-1.5 bg-black text-white">
+      <Link to="#" className="rounded-full p-2 m-1.5 bg-black text-white">
         커뮤 주제 2
       </Link>
-      <Link className="rounded-full p-2 m-1.5 bg-black text-white">
+      <Link to="#" className="rounded-full p-2 m-1.5 bg-black text-white">
         커뮤 주제 3
       </Link>
-      <Link className="rounded-full p-2 m-1.5 bg-black text-white">
+      <Link to="#" className="rounded-full p-2 m-1.5 bg-black text-white">
         커뮤 주제 4
       </Link>
-      <Link className="rounded-full p-2 m-1.5 bg-black text-white">
+      <Link to="#" className="rounded-full p-2 m-1.5 bg-black text-white">
         커뮤 주제 5
       </Link>
-      <Link className="rounded-full p-2 m-1.5 bg-black text-white">
+      <Link to="#" className="rounded-full p-2 m-1.5 bg-black text-white">
         커뮤 주제 6
       </Link>
     </div>

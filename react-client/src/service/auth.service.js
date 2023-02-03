@@ -46,7 +46,7 @@ export const fetchUser = async () => {
 export const payReady = async (statePayReady) => {
   console.log(statePayReady);
 
-  const kakaoFetchOption = {
+  const FetchOption = {
     method: "POST",
     body: new URLSearchParams(statePayReady),
     headers: {
@@ -56,7 +56,7 @@ export const payReady = async (statePayReady) => {
   };
 
   try {
-    const res = await fetch(URL.READY, kakaoFetchOption);
+    const res = await fetch(URL.READY, FetchOption);
     const result = await res.json();
     console.log(result);
     localStorage.setItem("tid", result.tid);
@@ -69,7 +69,8 @@ export const payReady = async (statePayReady) => {
 // 결제 승인
 
 export const payApprove = async (dataPayApprove) => {
-  const approveFetchOption = {
+  console.log(dataPayApprove);
+  const FetchOption = {
     method: "POST",
     body: new URLSearchParams(dataPayApprove),
     headers: {
@@ -79,19 +80,31 @@ export const payApprove = async (dataPayApprove) => {
   };
 
   try {
-    const res = await fetch(URL.APPROVE, approveFetchOption);
+    const res = await fetch(URL.APPROVE, FetchOption);
     const result = await res.json();
-    console.log(result);
-    // return result;
+    // console.log(result);
+    return result;
   } catch (e) {
     console.log(e);
   }
 };
 
+// 정기 결제 승인완료한 데이터 저장하기 위한 fetch
+
+export const subApprovalSave = async () => {
+  const FetchOption = {
+    method: "POST",
+    body: JSON.stringify(),
+    headers: { "Content-Type": "application/json" },
+  };
+
+  await fetch("/kakao/sub");
+};
+
 // 정기  결제 요청
 
 export const subscriptionPay = async () => {
-  const subFetchOption = {
+  const FetchOption = {
     method: "POST",
     body: new URLSearchParams(),
     headers: {
@@ -101,7 +114,7 @@ export const subscriptionPay = async () => {
   };
 
   try {
-    const res = await fetch(URL.SUBSCRIPTION, subFetchOption);
+    const res = await fetch(URL.SUBSCRIPTION, FetchOption);
     const result = res.json();
     console.log(result);
   } catch (e) {

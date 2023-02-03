@@ -17,7 +17,7 @@ export const AutoSearchContextProvider = ({ children }) => {
   console.log(searchedData);
   useEffect(() => {
     (async () => {
-      const result = await fetch(`/mypage/search/search`);
+      const result = await fetch(`/mypage/search`);
       const keyword = await result?.json();
       // console.log(keyword);
       setSavedKeyword([...keyword.keyword_v, ...keyword.keyword_u]);

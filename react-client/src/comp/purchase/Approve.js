@@ -1,5 +1,6 @@
-import { payApprove } from "../../service/auth.service";
+import { payApprove, subApprovalSave } from "../../service/auth.service";
 import { usePayContext } from "../../context/PayContextProvider";
+import { dataPayApprove } from "../../data/Pay";
 
 const Approve = () => {
   const { userSession } = usePayContext();
@@ -7,20 +8,19 @@ const Approve = () => {
   const pg_token = query.substring(10, 30);
   const tid = localStorage.getItem("tid");
 
-  const dataPayApprove = {
-    cid: "TCSUBSCRIP",
-    tid: tid,
-    partner_order_id: userSession.username,
-    partner_user_id: userSession.username,
-    pg_token: pg_token,
-  };
+  dataPayApprove.tid = tid;
+  dataPayApprove.pg_token = pg_token;
+  dataPayApprove.partner_user_id = userSession.username;
 
-  try {
-    const result = payApprove(dataPayApprove);
-    console.log(result);
-  } catch (error) {
-    console.log(error.messgae);
-  }
+  // 카카오페이 승인 요청
+  let approveResult;
+  const exeApprove = async () => {
+    approveResult = await payApprove(dataPayApprove);
+
+    // await subApprovalSave()
+    console.log(approveResult);
+  };
+  exeApprove();
 
   return (
     <div>
