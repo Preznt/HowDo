@@ -54,7 +54,7 @@ const Reply = ({ code, list, count }) => {
     "bg-transparent border-b border-blue-700 flex-1 mr-3 py-1 px-2 leading-tight focus:outline-none";
 
   return (
-    <section className="m-5">
+    <section className="m-5 w-full">
       <div className="text-lg">{`댓글 ${replyCount} 개`}</div>
       <div className="reply-input-box flex mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
         {/* 사용자 nickname 필요 */}

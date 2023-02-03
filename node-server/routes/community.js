@@ -23,6 +23,7 @@ const router = express.Router();
 router.get("/posts/get", async (req, res) => {
   try {
     // 그룹 B1 을 제외한 모든 그룹 리스트
+    // 코드 수정 필요
     const notGeneral = await BOARD.findAll({
       attributes: ["b_group_code", "b_group_kor"],
       where: { b_group_code: { [Op.not]: "B1" } },
@@ -87,7 +88,7 @@ router.get("/posts/get", async (req, res) => {
   }
 });
 
-// community category fetch
+// community board fetch
 router.get("/board/:bEng/get", async (req, res) => {
   const bEng = req.params.bEng;
   try {
@@ -180,7 +181,6 @@ router.get("/post/:pCode/delete", async (req, res, next) => {
   const pCode = req.params.pCode;
   // const uploadDir = path.join("public/uploads");
   // let files;
-  // 댓글은 그대로 남겨야 하는지?
   // 일정 시간 지나면 댓글 + 첨부파일과 함께 게시글 완전 삭제 필요
   try {
     const date = moment().format("YYYY[-]MM[-]DD HH:mm:ss");

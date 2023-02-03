@@ -35,16 +35,26 @@ export const getDetailPost = async (pCode) => {
   }
 };
 
-export const submitPost = async (data) => {
+export const submitPost = async (data, pCode = null) => {
   const fetchOption = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   };
   try {
-    const response = await fetch("/community/post/insert", fetchOption);
+    let response;
+    if (!pCode) await fetch("/coummnity/post/insert", fetchOption);
+    if (pCode) {
+      fetchOption.method = "PATCH";
+      await fetch("/coummnity/post/update", fetchOption);
+    }
     const result = await response.json();
+    if (result.ERROR) {
+      alert(result.ERROR);
+      return null;
+    }
     alert(result.MESSAGE);
+    return result;
   } catch (err) {
     return null;
   }

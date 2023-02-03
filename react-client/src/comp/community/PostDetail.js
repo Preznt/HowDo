@@ -74,7 +74,7 @@ const PostDetail = () => {
 
   // 예외 처리를 하지 않으면 alert 후 navigation 하기 전 오류 발생
   return (
-    <main className="commu-detail p-5 rounded border border-slate-300">
+    <main className="commu-detail w-full p-5 rounded border border-slate-300">
       <Link className="board p-2" to={`/community/${board?.b_eng}`}>
         {board?.b_kor}
       </Link>
@@ -117,7 +117,7 @@ const PostDetail = () => {
         <Link
           className={`${btnClass01} mr-4`}
           to={`/community/write/${post?.p_code}`}
-          state={{ data: post }}
+          state={{ data: post, b_eng: board.b_eng }}
         >
           수정
         </Link>
