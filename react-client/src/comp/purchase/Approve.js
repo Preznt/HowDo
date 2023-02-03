@@ -1,7 +1,7 @@
 import { payApprove } from "../../service/auth.service";
 import { usePayContext } from "../../context/PayContextProvider";
 
-const Approve = async () => {
+const Approve = () => {
   const { userSession } = usePayContext();
   const query = window.location.search;
   const pg_token = query.substring(10, 30);
@@ -16,7 +16,7 @@ const Approve = async () => {
   };
 
   try {
-    const result = await payApprove(dataPayApprove);
+    const result = payApprove(dataPayApprove);
     console.log(result);
   } catch (error) {
     console.log(error.messgae);
