@@ -23,7 +23,7 @@ const Board = () => {
   return (
     <main className="commu-cat">
       <h1>{board.b_kor}</h1>
-      <section className="flex pl-5 pr-5 pb-10 justify-between">
+      <section className="flex w-full pl-5 pr-5 pb-10 justify-between">
         <button className={`search-select ${selectClass}`}>{"최신순"}</button>
         <div className="hidden">
           <button className="latest">최신순</button>
@@ -42,6 +42,7 @@ const Board = () => {
             to={`/community/write`}
             state={{
               b_code: board.b_code,
+              b_eng: board.b_eng,
               b_group_code: board.b_group_code,
             }}
           >
