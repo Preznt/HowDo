@@ -1,6 +1,7 @@
 import "../css/Nav.css";
 import { useState } from "react";
 import VideoUpload from "./Video/VideoUpload";
+import { navDyna } from "../nav/classNames/ClassNames";
 const NavDynamic = ({ nOpen }) => {
   const [openModel, setOpenModel] = useState({
     video: false,
@@ -20,9 +21,7 @@ const NavDynamic = ({ nOpen }) => {
       >
         <div>
           <img
-            className="m-auto cursor-pointer"
-            width="80px"
-            height="80px"
+            className={navDyna}
             src="./image/memo.png"
             alt="post_upload"
           ></img>
@@ -31,9 +30,7 @@ const NavDynamic = ({ nOpen }) => {
         <div>
           <img
             onClick={() => ModelHandler("video")}
-            className="m-auto cursor-pointer"
-            width="80px"
-            height="80px"
+            className={navDyna}
             src="./image/clapperboard.png"
             alt="video_upload"
           ></img>
@@ -43,9 +40,7 @@ const NavDynamic = ({ nOpen }) => {
         </div>
         <div>
           <img
-            className="m-auto cursor-pointer"
-            width="80px"
-            height="80px"
+            className={navDyna}
             src="./image/photo.png"
             alt="image_upload"
           ></img>
@@ -53,9 +48,7 @@ const NavDynamic = ({ nOpen }) => {
         </div>
         <div>
           <img
-            className="m-auto cursor-pointer"
-            width="80px"
-            height="80px"
+            className={navDyna}
             src="./image/subscribe.png"
             alt="subscribe"
           ></img>
