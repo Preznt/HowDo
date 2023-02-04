@@ -6,6 +6,7 @@ import DB from "../models/index.js";
 import fs from "fs";
 import path from "path";
 import { v4 } from "uuid";
+import moment from "moment";
 
 const BOARD = DB.models.board;
 const POST = DB.models.post;
@@ -22,6 +23,7 @@ const router = express.Router();
 router.get("/posts/get", async (req, res) => {
   try {
     // 그룹 B1 을 제외한 모든 그룹 리스트
+    // 코드 수정 필요
     const notGeneral = await BOARD.findAll({
       attributes: ["b_group_code", "b_group_kor"],
       where: { b_group_code: { [Op.not]: "B1" } },
@@ -86,7 +88,7 @@ router.get("/posts/get", async (req, res) => {
   }
 });
 
-// community category fetch
+// community board fetch
 router.get("/board/:bEng/get", async (req, res) => {
   const bEng = req.params.bEng;
   try {
@@ -121,9 +123,15 @@ router.get("/post/:pCode/get", async (req, res) => {
   try {
     const pCode = req.params?.pCode;
     const result = await POST.findByPk(pCode);
-    const postData = await result.increment("p_views", { by: 1 });
-    const boardData = await BOARD.findByPk(result.toJSON().b_code);
-    return res.status(200).send({ postData, boardData });
+    const board = await BOARD.findByPk(result.toJSON().b_code);
+    if (result.toJSON().p_deleted) {
+      return res.send({
+        ERROR: "삭제된 게시글입니다.",
+        bEng: board.toJSON().b_eng,
+      });
+    }
+    const post = await result.increment("p_views", { by: 1 });
+    return res.status(200).send({ post, board });
   } catch (err) {
     console.error(err);
   }
@@ -171,14 +179,31 @@ router.post("/post/insert", async (req, res, next) => {
 
 router.get("/post/:pCode/delete", async (req, res, next) => {
   const pCode = req.params.pCode;
+  // const uploadDir = path.join("public/uploads");
+  // let files;
+  // 일정 시간 지나면 댓글 + 첨부파일과 함께 게시글 완전 삭제 필요
   try {
-    await POST.update({ p_deleted: "" }, { where: { p_code: pCode } });
-    // 첨부파일, 댓글
+    const date = moment().format("YYYY[-]MM[-]DD HH:mm:ss");
+    await POST.update({ p_deleted: date }, { where: { p_code: pCode } });
+    await REPLY.update({ r_deleted: date }, { where: { p_code: pCode } });
 
     return res.send({ MESSAGE: "게시글이 삭제되었습니다." });
   } catch (err) {
     console.error(err);
+    return res.send({ ERROR: "게시글 삭제 중 문제가 발생했습니다." });
   }
+
+  // files = await ATTACH.findAll({ where: { p_code: pCode } });
+  // await files.forEach(async (file) => {
+  //   try {
+  //     const delFile = path.join(uploadDir, files.a_save_name);
+
+  //     fs.statSync(delFile);
+  //     fs.unlinkSync(delFile);
+  //   } catch (err) {
+  //     console.log(file.a_save_name, "파일을 찾을 수 없음");
+  //   }
+  // });
 });
 
 router.patch("/post/upvote", async (req, res, next) => {
@@ -187,7 +212,7 @@ router.patch("/post/upvote", async (req, res, next) => {
     await UPVOTE.create(data);
   } catch (err) {
     console.error(err);
-    return res.send({ MESSAGE: "이미 추천한 게시글입니다." });
+    return res.send({ ERROR: "이미 추천한 게시글입니다." });
   }
   try {
     const result = await POST.update(
@@ -216,7 +241,6 @@ router.get("/reply/:pCode/get", async (req, res) => {
       attributes: ["p_replies"],
       where: { p_code: pCode },
     });
-
     return res.send({ replyList, replyCount });
   } catch (err) {
     console.error(err);
@@ -237,7 +261,7 @@ router.post("/reply/insert", async (req, res) => {
     return res.send(result);
   } catch (err) {
     console.error(err);
-    return res.send({ MESSAGE: "댓글 게시 중 오류가 발생했습니다." });
+    return res.send({ ERROR: "댓글 게시 중 오류가 발생했습니다." });
   }
 });
 

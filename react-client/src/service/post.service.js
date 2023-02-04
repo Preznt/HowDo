@@ -24,36 +24,56 @@ export const getDetailPost = async (pCode) => {
   try {
     const response = await fetch(`/community/post/${pCode}/get`);
     const result = await response.json();
-    // postData, boardData
+    if (result.ERROR) {
+      alert(result.ERROR);
+      // post, board
+      return result;
+    }
     return result;
   } catch (err) {
     return null;
   }
 };
 
-export const submitPost = async (data) => {
+export const submitPost = async (data, pCode = null) => {
   const fetchOption = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   };
   try {
-    const response = await fetch("/community/post/insert", fetchOption);
+    let response;
+    if (!pCode) await fetch("/coummnity/post/insert", fetchOption);
+    if (pCode) {
+      fetchOption.method = "PATCH";
+      await fetch("/coummnity/post/update", fetchOption);
+    }
     const result = await response.json();
+    if (result.ERROR) {
+      alert(result.ERROR);
+      return null;
+    }
     alert(result.MESSAGE);
+    return result;
   } catch (err) {
     return null;
   }
 };
 
 export const deletePost = async (pCode) => {
-  try {
-    const response = await fetch(`/community/post/${pCode}/delete`);
-    const result = await response.json();
-    return result;
-  } catch (err) {
-    return null;
-  }
+  if (window.confirm("이 게시글을 삭제하시겠습니까?"))
+    try {
+      const response = await fetch(`/community/post/${pCode}/delete`);
+      const result = await response.json();
+      if (result.ERROR) {
+        alert(result.ERROR);
+        return null;
+      }
+      alert(result.MESSAGE);
+      return result.MESSAGE;
+    } catch (err) {
+      return null;
+    }
 };
 
 export const upvotePost = async (pCode, username) => {
@@ -65,8 +85,8 @@ export const upvotePost = async (pCode, username) => {
     };
     const response = await fetch(`/community/post/upvote`, fetchOption);
     const result = await response.json();
-    if (result.MESSAGE) {
-      alert(result.MESSAGE);
+    if (result.ERROR) {
+      alert(result.ERROR);
       return null;
     } else {
       return result;
@@ -80,8 +100,11 @@ export const getReply = async (pCode) => {
   try {
     const response = await fetch(`/community/reply/${pCode}/get`);
     const result = await response.json();
-    // replyList, replyCount
-    return result;
+    const data = {
+      list: result.replyList,
+      count: result.replyCount.p_replies,
+    };
+    return data;
   } catch (err) {
     return null;
   }
@@ -96,16 +119,11 @@ export const insertReply = async (data) => {
     };
     const response = await fetch(`/community/reply/insert`, fetchOption);
     const result = await response.json();
-    if (result.MESSAGE) {
-      alert(result.MESSAGE);
+    if (result.ERROR) {
+      alert(result.ERROR);
       return null;
     }
-  } catch (err) {
     return null;
-  }
-  try {
-    const result = await getReply(data.p_code);
-    return result;
   } catch (err) {
     return null;
   }
