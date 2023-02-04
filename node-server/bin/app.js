@@ -31,7 +31,7 @@ import videoRouter from "../routes/video.js";
 // create express framework
 const app = express();
 
-DB.sequelize.sync({ force: true }).then((dbConn) => {
+DB.sequelize.sync({ force: false }).then((dbConn) => {
   console.log(dbConn.options.host, dbConn.config.database, "DB Connection OK");
 });
 
@@ -69,7 +69,8 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join("public")));
+app.use(express.static(path.join("react-client/build")));
+app.use("/public", express.static(path.join("public")));
 
 // router link enable
 app.use("/", indexRouter);

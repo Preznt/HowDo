@@ -1,5 +1,5 @@
 // react build 하지 않으면 에디터 오류 발생
-// import EditorModule from "./EditorModule";
+import EditorModule from "./EditorModule";
 import { submitPost } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
 import { useLayoutEffect } from "react";
@@ -58,7 +58,11 @@ const PostWrite = () => {
         value={postData.p_title}
         onChange={onChangeHandler}
       />
-      {/* <EditorModule data={postData.p_content} handler={onChangeContentHandler} code={postData.p_code} /> */}
+      <EditorModule
+        data={postData.p_content}
+        handler={onChangeContentHandler}
+        code={postData.p_code}
+      />
       <button id="submit" type="button" onClick={onClickHandler}>
         등록
       </button>
