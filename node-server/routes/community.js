@@ -8,6 +8,7 @@ import path from "path";
 import { v4 } from "uuid";
 import moment from "moment";
 
+const USER = DB.models.user;
 const BOARD = DB.models.board;
 const POST = DB.models.post;
 const ATTACH = DB.models.attach;
@@ -42,7 +43,13 @@ router.get("/posts/get", async (req, res) => {
             { p_deleted: null },
           ],
         },
-        include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+        include: [
+          { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+          {
+            model: USER,
+            attributes: ["nickname"],
+          },
+        ],
         limit: 5,
         subQuery: false,
         order: [
@@ -58,7 +65,13 @@ router.get("/posts/get", async (req, res) => {
       where: {
         [Op.and]: [{ b_code: `B11` }, { p_deleted: null }],
       },
-      include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+      include: [
+        { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+        {
+          model: USER,
+          attributes: ["nickname"],
+        },
+      ],
       limit: 5,
       subQuery: false,
       order: [
@@ -72,7 +85,13 @@ router.get("/posts/get", async (req, res) => {
       where: {
         [Op.and]: [{ b_code: `B12` }, { p_deleted: null }],
       },
-      include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+      include: [
+        { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+        {
+          model: USER,
+          attributes: ["nickname"],
+        },
+      ],
       limit: 5,
       subQuery: false,
       order: [
@@ -108,10 +127,21 @@ router.get("/board/:bEng/get", async (req, res) => {
         "p_upvote",
       ],
       where: { [Op.and]: [{ b_code: board.b_code }, { p_deleted: null }] },
-      include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+      include: [
+        {
+          model: BOARD,
+          attributes: ["b_code", "b_kor", "b_eng"],
+        },
+        {
+          model: USER,
+          attributes: ["nickname"],
+        },
+      ],
       order: [["p_date", "DESC"]],
       raw: true,
     });
+
+    console.log(data);
     return res.status(200).send({ board, data });
   } catch (err) {
     console.error(err);
@@ -122,7 +152,15 @@ router.get("/board/:bEng/get", async (req, res) => {
 router.get("/post/:pCode/get", async (req, res) => {
   try {
     const pCode = req.params?.pCode;
-    const result = await POST.findByPk(pCode);
+    const result = await POST.findByPk(pCode, {
+      include: {
+        model: USER,
+        attributes: ["nickname", "profile_image"],
+      },
+    });
+    // const user = await USER.findByPk(result.toJSON().username, {
+    //   attributes: ["nickname", "profile_image"],
+    // });
     const board = await BOARD.findByPk(result.toJSON().b_code);
     if (result.toJSON().p_deleted) {
       return res.send({
@@ -130,7 +168,8 @@ router.get("/post/:pCode/get", async (req, res) => {
         bEng: board.toJSON().b_eng,
       });
     }
-    const post = await result.increment("p_views", { by: 1 });
+    let post = await result.increment("p_views", { by: 1 });
+    post = post.toJSON();
     return res.status(200).send({ post, board });
   } catch (err) {
     console.error(err);
@@ -243,12 +282,15 @@ router.get("/reply/:pCode/get", async (req, res) => {
   try {
     // 게시글의 모든 댓글
     const replyList = await REPLY.findAll({
+      raw: true,
       where: { [Op.and]: [{ p_code: pCode }, { r_deleted: null }] },
       order: [
         ["r_date", "DESC"],
         ["r_time", "DESC"],
       ],
+      include: [{ model: USER, attributes: ["nickname", "profile_image"] }],
     });
+    console.log(replyList);
     // 게시글의 최상위 댓글 수
     const replyCount = await POST.findOne({
       attributes: ["p_replies"],
@@ -275,6 +317,29 @@ router.post("/reply/insert", async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.send({ ERROR: "댓글 게시 중 오류가 발생했습니다." });
+  }
+});
+
+router.get("/reply/:rCode/:pCode/delete", async (req, res) => {
+  const rCode = req.params.rCode;
+  const pCode = req.params.pCode;
+  try {
+    const date = moment().format("YYYY[-]MM[-]DD HH:mm:ss");
+    const result = await REPLY.update(
+      { r_deleted: date },
+      { where: { r_code: rCode } }
+    );
+    console.log(result);
+    if (result) {
+      await POST.update(
+        { p_replies: sequelize.literal("p_replies - 1") },
+        { where: { p_code: pCode } }
+      );
+    }
+    return res.send({ MESSAGE: "댓글이 삭제되었습니다." });
+  } catch (err) {
+    console.error(err);
+    return res.send({ ERROR: "댓글 삭제 중 문제가 발생했습니다." });
   }
 });
 

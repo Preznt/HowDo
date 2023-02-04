@@ -1,9 +1,12 @@
 import ReplyList from "./ReplyList";
 import { useLayoutEffect } from "react";
 import { usePostContext } from "../../context/PostContextProvider";
+import { useUserContext } from "../../context/UserContextProvider";
 import { insertReply, getReply } from "../../service/post.service";
 
 const Reply = ({ code, list, count }) => {
+  const { userSession } = useUserContext();
+
   const {
     replyData,
     setReplyData,
@@ -31,6 +34,7 @@ const Reply = ({ code, list, count }) => {
   const onChangeHandler = (e) => {
     setReplyData({
       ...replyData,
+      username: userSession.username,
       p_code: code,
       r_content: e.target.value,
     });
@@ -57,14 +61,28 @@ const Reply = ({ code, list, count }) => {
     <section className="m-5 w-full">
       <div className="text-lg">{`댓글 ${replyCount} 개`}</div>
       <div className="reply-input-box flex mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
-        {/* 사용자 nickname 필요 */}
+        <img
+          className="rounded-full w-50 h-50 mr-3"
+          src={userSession?.profile_image}
+          alt="profile"
+        />
+        <div>{userSession?.nickname}</div>
         <input
           className={inputClass}
-          type="text"
           value={replyData.r_content}
           onChange={onChangeHandler}
+          placeholder={
+            !userSession?.username
+              ? "로그인 후 이용해주세요."
+              : "댓글을 입력하세요."
+          }
+          disabled={!userSession?.username ? true : false}
         />
-        <button className={btnClass02} onClick={onClickReply}>
+        <button
+          className={btnClass02}
+          onClick={onClickReply}
+          disabled={!userSession?.username || replyData.r_content.length < 1}
+        >
           등록
         </button>
       </div>

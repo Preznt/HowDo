@@ -1,11 +1,14 @@
 // react build 하지 않으면 에디터 오류 발생
 import EditorModule from "./EditorModule";
+import "../../css/community/Content.css";
 import { submitPost } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
+import { useUserContext } from "../../context/UserContextProvider";
 import { useLayoutEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 const PostWrite = () => {
+  const { userSession } = useUserContext();
   const nav = useNavigate();
   const { initPost, postData, setPostData } = usePostContext();
   const location = useLocation();
@@ -21,7 +24,12 @@ const PostWrite = () => {
     // insert
     if (!pCode) {
       const init = initPost();
-      setPostData({ ...init, b_code: b_code, b_group_code: b_group_code });
+      setPostData({
+        ...init,
+        username: userSession.username,
+        b_code: b_code,
+        b_group_code: b_group_code,
+      });
     }
     // update
     else {
