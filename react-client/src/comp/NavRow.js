@@ -64,7 +64,10 @@ const NavRow = () => {
   };
   const autoCompleteView = autoComplete?.map((word, index) => {
     return (
-      <div key={index} className=" cursor-pointer hover:bg-gray-300 rounded-lg">
+      <div
+        key={index}
+        className="autocomplete cursor-pointer hover:bg-gray-300 rounded-lg"
+      >
         {word}
       </div>
     );
