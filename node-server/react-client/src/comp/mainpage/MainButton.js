@@ -1,4 +1,5 @@
 import { useTransferContext } from "../../context/TransferContextProvider";
+import { button } from "../../nav/classNames/ClassNames";
 
 const MainButton = () => {
   const context = useTransferContext();
@@ -18,16 +19,10 @@ const MainButton = () => {
 
   return (
     <div className="flex">
-      <div
-        className="rounded-full p-2 m-1.5 bg-black text-white cursor-pointer"
-        onClick={bbsOpen}
-      >
+      <div className={button} onClick={bbsOpen}>
         커뮤니티
       </div>
-      <div
-        className="rounded-full p-2 m-1.5 bg-black text-white cursor-pointer"
-        onClick={contentOpen}
-      >
+      <div className={button} onClick={contentOpen}>
         영상
       </div>
     </div>
