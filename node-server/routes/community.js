@@ -158,9 +158,6 @@ router.get("/post/:pCode/get", async (req, res) => {
         attributes: ["nickname", "profile_image"],
       },
     });
-    // const user = await USER.findByPk(result.toJSON().username, {
-    //   attributes: ["nickname", "profile_image"],
-    // });
     const board = await BOARD.findByPk(result.toJSON().b_code);
     if (result.toJSON().p_deleted) {
       return res.send({
@@ -282,13 +279,18 @@ router.get("/reply/:pCode/get", async (req, res) => {
   try {
     // 게시글의 모든 댓글
     const replyList = await REPLY.findAll({
-      raw: true,
       where: { [Op.and]: [{ p_code: pCode }, { r_deleted: null }] },
       order: [
         ["r_date", "DESC"],
         ["r_time", "DESC"],
       ],
-      include: [{ model: USER, attributes: ["nickname", "profile_image"] }],
+      include: [
+        {
+          model: REPLY,
+          as: "reply_child",
+        },
+        { model: USER, attributes: ["nickname", "profile_image"] },
+      ],
     });
     console.log(replyList);
     // 게시글의 최상위 댓글 수

@@ -13,7 +13,7 @@ export const getBoardPosts = async (bEng) => {
   try {
     const response = await fetch(`/community/board/${bEng}/get`);
     const result = await response.json();
-    // board, user, data;
+    // board, data;
     return result;
   } catch (err) {
     return null;

@@ -103,7 +103,10 @@ const initModels = (sequelize) => {
   //   foreignKey: "p_code",
   // });
 
-  // board data import
+  // child reply
+  reply.belongsTo(reply, { as: "reply_child", foreignKey: "r_parent_code" });
+
+  // import board data
   board.hasMany(post, { foreignKey: "b_code" });
   post.belongsTo(board, { foreignKey: "b_code" });
 

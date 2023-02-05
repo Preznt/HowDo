@@ -6,8 +6,8 @@ const ReplyList = ({ data }) => {
       .filter((item) => {
         return !item.r_parent_code;
       })
-      .map((item) => {
-        return <ReplyItem key={item.r_code} data={data} item={item} />;
+      .map((item, index) => {
+        return <ReplyItem key={item.r_code} item={item} index={index} />;
       });
   };
 

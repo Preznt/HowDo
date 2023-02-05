@@ -1,4 +1,5 @@
-.commu-detail .content blockquote {
+.commu-detail .content blockquote,
+.ck-content blockquote {
   border-left: 5px solid #ccc;
   font-style: italic;
   margin-left: 0;
@@ -7,19 +8,40 @@
   padding-left: 1.5em;
   padding-right: 1.5em;
 }
-.commu-detail .content .text-tiny {
+.commu-detail .content .text-tiny,
+.ck-content .text-tiny {
   font-size: 0.7em;
 }
-.commu-detail .content .text-small {
+.commu-detail .content .text-small,
+.ck-content .text-small {
   font-size: 0.85em;
 }
-.commu-detail .content .text-big {
+.commu-detail .content .text-big,
+.ck-content .text-big {
   font-size: 1.4em;
 }
-.commu-detail .content .text-huge {
+.commu-detail .content .text-huge,
+.ck-content .text-huge {
   font-size: 1.8em;
 }
 .commu-detail .content ul li,
-.commu-detail .content ol li {
+.commu-detail .content ol li,
+.ck-content ul li,
+.ck-content ol li {
   list-style-position: inside;
+}
+
+.commu-detail .content .table table td,
+.commu-detail .content .table table th,
+.ck-content .table table td,
+.ck-content .table table th {
+  border: 1px solid #bfbfbf;
+  min-width: 2em;
+  padding: 0.4em;
+}
+
+.commu-detail .content .table table th,
+.ck-content .table table th {
+  background: rgba(0, 0, 0, 0.05);
+  font-weight: 700;
 }

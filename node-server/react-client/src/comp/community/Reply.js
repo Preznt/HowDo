@@ -2,7 +2,7 @@ import ReplyList from "./ReplyList";
 import { useLayoutEffect } from "react";
 import { usePostContext } from "../../context/PostContextProvider";
 import { useUserContext } from "../../context/UserContextProvider";
-import { insertReply, getReply } from "../../service/post.service";
+import { getReply, insertReply } from "../../service/post.service";
 
 const Reply = ({ code, list, count }) => {
   const { userSession } = useUserContext();
@@ -37,12 +37,12 @@ const Reply = ({ code, list, count }) => {
       username: userSession.username,
       p_code: code,
       r_content: e.target.value,
+      r_parent_code: null,
     });
   };
 
   // 댓글 등록 버튼 클릭 시 fetch 및 reRendering
   const onClickReply = async () => {
-    setReplyData(initReply);
     await insertReply(replyData);
     let data = await getReply(replyData.p_code);
     if (data) {
@@ -60,13 +60,13 @@ const Reply = ({ code, list, count }) => {
   return (
     <section className="m-5 w-full">
       <div className="text-lg">{`댓글 ${replyCount} 개`}</div>
-      <div className="reply-input-box flex mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
+      <div className="reply-input-box flex gap-3 mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
         <img
-          className="rounded-full w-50 h-50 mr-3"
+          className="rounded-full flex items-center w-50 h-50"
           src={userSession?.profile_image}
           alt="profile"
         />
-        <div>{userSession?.nickname}</div>
+        <div className="flex items-center">{userSession?.nickname}</div>
         <input
           className={inputClass}
           value={replyData.r_content}
