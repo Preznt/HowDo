@@ -13,20 +13,31 @@ const MyPageMain = () => {
     payReadyBody();
     console.log(statePayReady);
   };
-
+  console.log(userSession);
   //  console.log(userSession.username);
 
   return (
-    <div>
-      <div className="m-12 ml-56 w-screen h-60 container border-2 border-black border-current">
-        <img src="https://picsum.photos/1540/240"></img>
-      </div>
-      <div className="m-12 ml-56 flex">
+    <div className="w-full">
+      <div className="m-12 ml-56 w-full h-60 container border-2 border-black">
         <img
-          width="20px"
-          heigt="20px"
+          className="w-full h-full"
+          src={
+            userSession.title_image
+              ? userSession.title_image
+              : "./image/noimage.png"
+          }
+        ></img>
+      </div>
+      <div className="mt-12 mb-6 pl-56 w-11/12 flex">
+        <img
+          width="50px"
+          heigt="50px"
           className="rounded-full"
-          src={userSession.profile_image}
+          src={
+            userSession.profile_image
+              ? userSession.profile_image
+              : "./image/noimage.png"
+          }
           alt="profile"
         ></img>
         <div>{userSession.nickname}</div>

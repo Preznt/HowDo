@@ -21,7 +21,7 @@ router.get("/total/:query", async (req, res, next) => {
   console.log("object");
   try {
     const v_result = await V_CONTENT.findAll({
-      attributes: ["v_title", "v_views", "v_src"],
+      attributes: ["v_title", "v_views", "v_src", "v_code"],
       where: { v_title: { [Op.like]: `%${query}%` } },
     });
     const u_result = await USER.findAll({
@@ -52,7 +52,7 @@ router.get("/:username", async (req, res, next) => {
   try {
     const result = await V_CONTENT.findAll({
       where: { username: username },
-      limit: 4,
+      limit: 10,
     });
     const group = await V_CONTENT.findAll({
       group: "v_series",

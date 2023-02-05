@@ -1,13 +1,23 @@
 import ReactPlayer from "react-player";
 import { useState } from "react";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
+import {
+  moreButton,
+  myPageContentMain,
+  nameLabel,
+  videoBeforeButton,
+  videoContenView,
+  videoNextButton,
+  videoNohover,
+} from "../../nav/classNames/ClassNames";
 
 /**
  * map 을 이용한 컨텐츠 시리즈별 carousel 제작
  */
 const CreaterContent = () => {
   const { videoContentList, setVideoContentList } = useVideoContentContext();
-  const { position, setPosition } = useState(0);
+  const [position, setPosition] = useState(0);
+  const CONTENT_WIDTH = 392;
   const setHover = (v_code, toggle) => {
     setVideoContentList([
       ...videoContentList.map((item) => {
@@ -24,27 +34,12 @@ const CreaterContent = () => {
     setHover(v_code, false);
   };
 
-  const settings = {
-    className: "center flex",
-    dots: true,
-    lazyLoad: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
-  const CONTENT_WIDTH = 256;
   const before = () => {
-    let newPosition = position + CONTENT_WIDTH;
-    console.log(CONTENT_WIDTH * (videoContentList.length - 1) * -1);
-    console.log(position);
-    if (position === 0) {
-      newPosition = CONTENT_WIDTH * (videoContentList.length - 1) * -1;
+    let newPosition = position - CONTENT_WIDTH;
+    if (position <= (CONTENT_WIDTH * videoContentList.length - 1) * -1) {
+      newPosition = 0;
     }
-    console.log(newPosition);
     setPosition(newPosition);
-
-    console.log(position);
   };
 
   const next = () => {
@@ -57,7 +52,7 @@ const CreaterContent = () => {
   const videoView = videoContentList?.map((item) => {
     return (
       <div
-        className="m-12 flex w-80 h-52 flex-col justify-center items-center transition-all duration-700 hover:h-64 hover:w-96 hover:ml-4 hover:mr-4 hover:mb-4 shadow-lg"
+        className={videoNohover}
         onMouseOver={() => onMouseOverHandler(item.v_code)}
         onMouseOut={() => onMouseOutHandler(item.v_code)}
         key={item.v_code}
@@ -80,18 +75,20 @@ const CreaterContent = () => {
   });
 
   return (
-    <div className="w-full text-center min-h-80">
-      <span className="p-4 border-b-2 border-black text-center">
-        최근 업로드한 영상
-      </span>
+    <div className={myPageContentMain}>
+      <span className={nameLabel}>최근 업로드한 영상</span>
+      <div className={videoNextButton} onClick={before}>
+        앞
+      </div>
+      <div className={videoBeforeButton} onClick={next}>
+        뒤
+      </div>
       <div
-        className="flex overflow-hidden relative min-h-80 w-full"
+        className={videoContenView}
         style={{ transform: `translateX(${position}px)` }}
       >
-        <div className="absolute flex w-full h-full top-0 left-0 transition-all duration-700">
-          {videoView}
-          <div onClick={before}>앞</div>
-          <div onClick={next}>뒤</div>
+        <div className="flex">
+          {videoView},<div className={moreButton}>더보기</div>
         </div>
       </div>
     </div>

@@ -12,8 +12,11 @@ const SearchMain = () => {
   const userSearchView = searchedData?.u_result?.map((item) => {
     return (
       <div className={itemwrap} key={item.username}>
-        <img className="w-60 h-36 place-self-center">{item.profile_image}</img>
-        <div className="mt-4 text-center">{item.nickname}</div>
+        <img
+          className="w-60 h-36 place-self-center"
+          src={item?.profile_image ? item.profile_image : "./image/noimage.png"}
+        ></img>
+        <div className="mt-4 text-center">닉네임 : {item.nickname}</div>
       </div>
     );
   });
