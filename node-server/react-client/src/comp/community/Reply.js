@@ -1,9 +1,12 @@
 import ReplyList from "./ReplyList";
 import { useLayoutEffect } from "react";
 import { usePostContext } from "../../context/PostContextProvider";
-import { insertReply, getReply } from "../../service/post.service";
+import { useUserContext } from "../../context/UserContextProvider";
+import { getReply, insertReply } from "../../service/post.service";
 
 const Reply = ({ code, list, count }) => {
+  const { userSession } = useUserContext();
+
   const {
     replyData,
     setReplyData,
@@ -31,14 +34,15 @@ const Reply = ({ code, list, count }) => {
   const onChangeHandler = (e) => {
     setReplyData({
       ...replyData,
+      username: userSession.username,
       p_code: code,
       r_content: e.target.value,
+      r_parent_code: null,
     });
   };
 
   // 댓글 등록 버튼 클릭 시 fetch 및 reRendering
   const onClickReply = async () => {
-    setReplyData(initReply);
     await insertReply(replyData);
     let data = await getReply(replyData.p_code);
     if (data) {
@@ -54,17 +58,31 @@ const Reply = ({ code, list, count }) => {
     "bg-transparent border-b border-blue-700 flex-1 mr-3 py-1 px-2 leading-tight focus:outline-none";
 
   return (
-    <section className="m-5 w-full">
+    <section className="p-5 w-full">
       <div className="text-lg">{`댓글 ${replyCount} 개`}</div>
-      <div className="reply-input-box flex mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
-        {/* 사용자 nickname 필요 */}
+      <div className="reply-input-box flex gap-3 mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
+        <img
+          className="rounded-full flex items-center w-50 h-50"
+          src={userSession?.profile_image}
+          alt="profile"
+        />
+        <div className="flex items-center">{userSession?.nickname}</div>
         <input
           className={inputClass}
-          type="text"
           value={replyData.r_content}
           onChange={onChangeHandler}
+          placeholder={
+            !userSession?.username
+              ? "로그인 후 이용해주세요."
+              : "댓글을 입력하세요."
+          }
+          disabled={!userSession?.username ? true : false}
         />
-        <button className={btnClass02} onClick={onClickReply}>
+        <button
+          className={btnClass02}
+          onClick={onClickReply}
+          disabled={!userSession?.username || replyData.r_content.length < 1}
+        >
           등록
         </button>
       </div>
