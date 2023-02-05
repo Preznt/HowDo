@@ -19,7 +19,7 @@ const NavCol = () => {
         />
         <h3>Home</h3>
       </Link>
-      <Link className={navCol} to="/bbs">
+      <Link className={navCol} to="/community">
         게시판
       </Link>
       <Link className={navCol} to="/contents">

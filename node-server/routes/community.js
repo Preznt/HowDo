@@ -17,6 +17,16 @@ const REPLY = DB.models.reply;
 
 const router = express.Router();
 
+// get board list
+router.get("/boards/get", async (req, res) => {
+  try {
+    const board = await BOARD.findAll();
+    return res.status(200).send(board);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 // POST-ATTACH 관계 설정할 경우 에디터에 이미지를 등록할 때
 // 게시글보다 첨부파일이 먼저 등록되므로 INSERT 되지 않는 문제 발생
 
