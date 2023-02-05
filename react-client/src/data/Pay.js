@@ -18,3 +18,12 @@ export const dataPayApprove = {
   partner_user_id: "",
   pg_token: "",
 };
+
+export class dataSubApprovalSave {
+  constructor(partner_user_id, partner_order_id, sid, approved_at) {
+    this.partner_user_id = partner_user_id;
+    this.partner_order_id = partner_order_id;
+    this.sid = sid;
+    this.approved_at = approved_at;
+  }
+}

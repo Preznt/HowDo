@@ -67,12 +67,14 @@ export const chkJoin = async (info) => {
   }
 
   // 인서트하기
-  try {
-    await USER.create(info);
-  } catch (e) {
-    console.log(e.message);
-    throw new Error(JSON.stringify(USER_JOIN_RES.USER_NOT_CREATE));
-  }
+  if (info.button)
+    try {
+      await USER.create(info);
+      return info.username;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error(JSON.stringify(USER_JOIN_RES.USER_NOT_CREATE));
+    }
 };
 
 export const chkLogin = async (info) => {

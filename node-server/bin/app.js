@@ -28,10 +28,11 @@ import userRouter from "../routes/user.js";
 import communityRouter from "../routes/community.js";
 import createrAPI from "../routes/createrAPI.js";
 import videoRouter from "../routes/video.js";
+import kakaoRouter from "../routes/kakaoAPI.js";
 // create express framework
 const app = express();
 
-DB.sequelize.sync({ force: true }).then((dbConn) => {
+DB.sequelize.sync({ force: false }).then((dbConn) => {
   console.log(dbConn.options.host, dbConn.config.database, "DB Connection OK");
 });
 
@@ -77,6 +78,7 @@ app.use("/user", userRouter);
 app.use("/community", communityRouter);
 app.use("/mypage", createrAPI);
 app.use("/video", videoRouter);
+app.use("/kakao", kakaoRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

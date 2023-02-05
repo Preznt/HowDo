@@ -46,7 +46,7 @@ export const fetchUser = async () => {
 export const payReady = async (statePayReady) => {
   console.log(statePayReady);
 
-  const FetchOption = {
+  const fetchOption = {
     method: "POST",
     body: new URLSearchParams(statePayReady),
     headers: {
@@ -56,7 +56,7 @@ export const payReady = async (statePayReady) => {
   };
 
   try {
-    const res = await fetch(URL.READY, FetchOption);
+    const res = await fetch(URL.READY, fetchOption);
     const result = await res.json();
     console.log(result);
     localStorage.setItem("tid", result.tid);
@@ -70,7 +70,7 @@ export const payReady = async (statePayReady) => {
 
 export const payApprove = async (dataPayApprove) => {
   console.log(dataPayApprove);
-  const FetchOption = {
+  const fetchOption = {
     method: "POST",
     body: new URLSearchParams(dataPayApprove),
     headers: {
@@ -80,7 +80,7 @@ export const payApprove = async (dataPayApprove) => {
   };
 
   try {
-    const res = await fetch(URL.APPROVE, FetchOption);
+    const res = await fetch(URL.APPROVE, fetchOption);
     const result = await res.json();
     // console.log(result);
     return result;
@@ -91,20 +91,20 @@ export const payApprove = async (dataPayApprove) => {
 
 // 정기 결제 승인완료한 데이터 저장하기 위한 fetch
 
-export const subApprovalSave = async () => {
-  const FetchOption = {
+export const subApprovalSave = async (data) => {
+  const fetchOption = {
     method: "POST",
-    body: JSON.stringify(),
+    body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" },
   };
 
-  await fetch("/kakao/sub");
+  await fetch("/kakao/sub", fetchOption);
 };
 
 // 정기  결제 요청
 
 export const subscriptionPay = async () => {
-  const FetchOption = {
+  const fetchOption = {
     method: "POST",
     body: new URLSearchParams(),
     headers: {
@@ -114,7 +114,7 @@ export const subscriptionPay = async () => {
   };
 
   try {
-    const res = await fetch(URL.SUBSCRIPTION, FetchOption);
+    const res = await fetch(URL.SUBSCRIPTION, fetchOption);
     const result = res.json();
     console.log(result);
   } catch (e) {
