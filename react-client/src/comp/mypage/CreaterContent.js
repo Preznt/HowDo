@@ -10,13 +10,14 @@ import {
   videoNextButton,
   videoNohover,
 } from "../../nav/classNames/ClassNames";
-
+import { useUserContext } from "../../context/UserContextProvider";
 /**
  * map 을 이용한 컨텐츠 시리즈별 carousel 제작
  */
 const CreaterContent = () => {
   const { videoContentList, setVideoContentList } = useVideoContentContext();
   const [position, setPosition] = useState(0);
+  const { userSession } = useUserContext();
   const CONTENT_WIDTH = 392;
   const setHover = (v_code, toggle) => {
     setVideoContentList([
@@ -77,19 +78,26 @@ const CreaterContent = () => {
   return (
     <div className={myPageContentMain}>
       <span className={nameLabel}>최근 업로드한 영상</span>
-      <div className={videoNextButton} onClick={before}>
-        앞
-      </div>
-      <div className={videoBeforeButton} onClick={next}>
-        뒤
-      </div>
+      {userSession.username ? (
+        <>
+          <div className={videoNextButton} onClick={before}>
+            앞
+          </div>
+          <div className={videoBeforeButton} onClick={next}>
+            뒤
+          </div>
+        </>
+      ) : null}
+
       <div
         className={videoContenView}
         style={{ transform: `translateX(${position}px)` }}
       >
-        <div className="flex">
-          {videoView},<div className={moreButton}>더보기</div>
-        </div>
+        {userSession.username ? (
+          <div className="flex">
+            {videoView},<div className={moreButton}>더보기</div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

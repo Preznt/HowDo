@@ -13,6 +13,7 @@ import PostDetail, {
 import PostWrite from "../comp/community/PostWrite";
 import Approve from "../comp/purchase/Approve";
 import SearchMain from "../comp/serachPage/SearchMain";
+
 const router = createBrowserRouter([
   {
     path: "/",
