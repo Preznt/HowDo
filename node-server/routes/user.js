@@ -6,7 +6,8 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   console.log(req.body);
   try {
-    await chkJoin(req.body);
+    const result = await chkJoin(req.body);
+    return res.json(result);
   } catch (error) {
     console.log(error.message);
     const e = JSON.parse(error?.message);

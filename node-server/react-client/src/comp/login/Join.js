@@ -9,13 +9,24 @@ const Join = () => {
     setJoinUser({ ...joinUser, [name]: value });
   };
 
-  const onClickHandler = async () => {
+  const onClickHandler = async (e) => {
+    if (e.target.tagName === "BUTTON") {
+      setJoinUser({ ...joinUser, button: true });
+    }
+
     const result = await fetchJoin(joinUser);
-    setError({ ...result });
-    // if (result.CODE) {
-    //   document.location.href = "/";
-    // }
+    if (result.CODE) {
+      setError({ ...result });
+    }
+    if (result == joinUser.username && e.target.tagName === "BUTTON") {
+      document.location.href = "/";
+    }
     console.log(result);
+  };
+
+  const twoEvent = (e) => {
+    onChangeHandler(e);
+    onClickHandler(e);
   };
 
   const submitHandler = (e) => {
@@ -33,14 +44,9 @@ const Join = () => {
       <form method="post" onSubmit={submitHandler} className="mt-10 sm:mt-0">
         <div className="md:gap-6">
           <div className="md:col-span-1">
-            <div className="px-4 sm:px-0">
-              <h3 className="text-lg font-medium leading-6 text-gray-900">
-                회원가입
-              </h3>
-              <p className="mt-1 text-sm text-gray-600">
-                Use a permanent address where you can receive mail.
-              </p>
-            </div>
+            <h3 className="text-lg ml-5 font-medium leading-6 text-gray-900">
+              회원가입
+            </h3>
           </div>
           <div className="mt-5 md:col-span-2 md:mt-0">
             <div>
@@ -58,15 +64,15 @@ const Join = () => {
                       type="email"
                       name="username"
                       id="username"
-                      onChange={onChangeHandler}
+                      onChange={twoEvent}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_USERNAME" ? (
-                      <p className="text-red-500 mb-2">
+                      <p className="text-red-500 mb-2 text-center">
                         이메일을 입력해 주세요
                       </p>
                     ) : error.CODE === "OVERLAP_USERNAME" ? (
-                      <p className="text-red-500 mb-2">
+                      <p className="text-red-500 mb-2 text-center">
                         이미 가입되어 있는 이메일입니다
                       </p>
                     ) : null}
@@ -83,15 +89,15 @@ const Join = () => {
                       type="text"
                       name="nickname"
                       id="nickname"
-                      onChange={onChangeHandler}
+                      onChange={twoEvent}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_NICKNAME" ? (
-                      <p className="text-red-500 mb-2">
+                      <p className="text-red-500 mb-2 text-center">
                         닉네임을 입력해 주세요
                       </p>
                     ) : error.CODE === "OVERLAP_NICKNAME" ? (
-                      <p className="text-red-500 mb-2">
+                      <p className="text-red-500 mb-2 text-center">
                         이미 존재하는 닉네임입니다
                       </p>
                     ) : null}
@@ -108,11 +114,11 @@ const Join = () => {
                       type="password"
                       name="password"
                       id="password"
-                      onChange={onChangeHandler}
+                      onChange={twoEvent}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_PASSWORD" ? (
-                      <p className="text-red-500 mb-2">
+                      <p className="text-red-500 mb-2 text-center">
                         비밀번호를 입력해 주세요
                       </p>
                     ) : null}
@@ -129,15 +135,15 @@ const Join = () => {
                       type="password"
                       name="re_password"
                       id="re_password"
-                      onChange={onChangeHandler}
+                      onChange={twoEvent}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_RE_PASSWORD" ? (
-                      <p className="text-red-500 mb-2">
+                      <p className="text-red-500 mb-2 text-center">
                         비밀번호 확인을 입력해 주세요
                       </p>
                     ) : error.CODE === "MATCH_NOT_RE_PASSWORD" ? (
-                      <p className="text-red-500 mb-2">
+                      <p className="text-red-500 mb-2 text-center">
                         비밀번호와 비밀번호 확인이 일치하지 않습니다
                       </p>
                     ) : null}
