@@ -7,15 +7,12 @@ import Purchase from "../purchase/Purchase";
 const MyPageMain = () => {
   const { userSession, modalHandler } = useUserContext();
   const { payReadyBody, statePayReady } = usePayContext();
-
   const navigate = useNavigate();
-
   const twoClickEvent = () => {
     modalHandler();
     payReadyBody();
     console.log(statePayReady);
   };
-
   return (
     <>
       {userSession.username ? (

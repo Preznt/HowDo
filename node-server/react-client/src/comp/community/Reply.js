@@ -1,8 +1,8 @@
 import ReplyList from "./ReplyList";
 import { useLayoutEffect } from "react";
-import { usePostContext } from "../../context/PostContextProvider";
 import { useUserContext } from "../../context/UserContextProvider";
-import { getReply, insertReply } from "../../service/post.service";
+import { usePostContext } from "../../context/PostContextProvider";
+import { insertReply, getReply } from "../../service/post.service";
 
 const Reply = ({ code, list, count }) => {
   const { userSession } = useUserContext();
@@ -43,6 +43,8 @@ const Reply = ({ code, list, count }) => {
 
   // 댓글 등록 버튼 클릭 시 fetch 및 reRendering
   const onClickReply = async () => {
+    setReplyData(initReply);
+
     await insertReply(replyData);
     let data = await getReply(replyData.p_code);
     if (data) {

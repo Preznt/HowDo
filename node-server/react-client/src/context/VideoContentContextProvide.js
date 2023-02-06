@@ -1,5 +1,7 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useEffect } from "react";
 import { VideoContent } from "../data/VideoContent";
+import { useUserContext } from "./UserContextProvider";
+
 const VideoContentContext = createContext();
 
 export const useVideoContentContext = () => {

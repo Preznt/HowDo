@@ -60,6 +60,8 @@ const NavRow = () => {
   };
 
   const pressEnter = async (e) => {
+    setLoading(true);
+
     if (e.keyCode === 13) {
       if (!currentSearch) {
         alert("검색어를 입력하세요");
@@ -157,9 +159,9 @@ const NavRow = () => {
           </Link>
         )}
         {userSession.username ? (
-          <div className={navRowMlAuto} onClick={intoPage}>
+          <Link className={navRowMlAuto} to="/mypage">
             {userSession.nickname} 님의 페이지
-          </div>
+          </Link>
         ) : (
           <Link to="/regist" className={navRow}>
             회원가입

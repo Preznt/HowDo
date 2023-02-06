@@ -3,7 +3,6 @@ import BoardList from "./BoardList";
 import "../../css/community/Board.css";
 import { getBoardPosts } from "../../service/post.service";
 import { useLoaderData, Link } from "react-router-dom";
-
 import { useUserContext } from "../../context/UserContextProvider";
 
 export const loader = async ({ params }) => {
@@ -14,7 +13,6 @@ export const loader = async ({ params }) => {
 
 const Board = () => {
   const { userSession } = useUserContext();
-
   const { data, board } = useLoaderData();
 
   const btnClass =
@@ -39,7 +37,6 @@ const Board = () => {
           <input className={inputClass} />
           <button>검색</button>
         </div>
-
         {/* 로그인 유저의 등급이 게시판 권한등급보다 같거나 높을 때 */}
         {Number(userSession?.level) >= Number(board.b_level) && (
           <Link
