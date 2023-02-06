@@ -1,5 +1,6 @@
 CREATE DATABASE howdo;
 USE howdo;
+DROP DATABASE howdo;
 
 DROP TABLE image;
 SELECT * FROM user;
