@@ -3,6 +3,7 @@ import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
 import { fetchUser, fetchLogin } from "../service/auth.service";
+
 const UserContext = createContext();
 
 export const useUserContext = () => {
@@ -10,6 +11,9 @@ export const useUserContext = () => {
 };
 
 export const UserContextProvider = ({ children }) => {
+ 
+  const [creater, setCreater] = useState();
+
   const [joinUser, setJoinUser] = useState(new User());
   const [login, setLogin] = useState(new Login());
   const [error, setError] = useState({});
@@ -72,6 +76,10 @@ export const UserContextProvider = ({ children }) => {
     modal,
     setModal,
     modalHandler,
+
+    creater,
+    setCreater,
+
   };
 
   return <UserContext.Provider value={props}>{children}</UserContext.Provider>;

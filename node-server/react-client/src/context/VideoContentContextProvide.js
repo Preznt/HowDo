@@ -9,11 +9,15 @@ export const useVideoContentContext = () => {
 };
 
 export const VideoContentContextProvider = ({ children }) => {
+  const [loading, setLoading] = useState(false);
+
   const [videoContent, setVideoContent] = useState(new VideoContent());
   const [videoContentList, setVideoContentList] = useState();
   const [videoGroupCount, setVideoGroupCount] = useState();
   const [groupThumbnail, setGroupThumbnail] = useState();
+
   const { userSession } = useUserContext();
+
   const [videoItemList, setVideoItemList] = useState([]);
   const [file, setFile] = useState({}); // 동영상 업로드 미리보기용 state
   const [shorts, setShorts] = useState({
@@ -57,6 +61,9 @@ export const VideoContentContextProvider = ({ children }) => {
     setDetail,
     shorts,
     setShorts,
+
+    loading,
+    setLoading,
   };
 
   return (

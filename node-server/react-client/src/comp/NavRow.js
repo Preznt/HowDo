@@ -3,6 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import NavDynamic from "./NavDynamic";
 import { useAutoSearchContext } from "../context/AutoSearchProvider";
 import { useUserContext } from "../context/UserContextProvider";
+
+import { useVideoContentContext } from "../context/VideoContentContextProvide";
+
 import MainButton from "./mainpage/MainButton";
 import "../css/mainbar.css";
 import { navRow, navRowMlAuto } from "../nav/classNames/ClassNames";
@@ -19,6 +22,15 @@ const NavRow = () => {
     searchedData,
   } = useAutoSearchContext();
   const { userSession, logoutHandler } = useUserContext();
+
+  const {
+    setGroupThumbnail,
+    setVideoContentList,
+    setVideoGroupCount,
+    loading,
+    setLoading,
+  } = useVideoContentContext();
+
   const searchRef = useRef(null);
 
   const borderStyle = {
@@ -31,6 +43,8 @@ const NavRow = () => {
   };
 
   const onClick = async () => {
+    setLoading(true);
+
     if (currentSearch) {
       const res = await fetch(`/mypage/total/${currentSearch}`);
       const result = await res.json();
@@ -41,9 +55,13 @@ const NavRow = () => {
       alert("검색어를 입력하세요");
       searchRef.current.focus();
     }
+
+    setLoading(false);
   };
 
   const pressEnter = async (e) => {
+    setLoading(true);
+
     if (e.keyCode === 13) {
       if (!currentSearch) {
         alert("검색어를 입력하세요");
@@ -56,12 +74,27 @@ const NavRow = () => {
         navigate("/search");
       }
     }
+
+    setLoading(false);
   };
 
   const openClickHandler = () => {
     setNOpen(!nOpen);
     console.log(nOpen);
   };
+
+  const intoPage = async () => {
+    setLoading(true);
+    const response = await fetch(`/mypage/${userSession.username}`);
+    const result = await response?.json();
+    console.log(result);
+    navigate("/mypage");
+    setVideoContentList(result.recent);
+    setVideoGroupCount(result.count);
+    setGroupThumbnail(result.group);
+    setLoading(false);
+  };
+
   const autoCompleteView = autoComplete?.map((word, index) => {
     return (
       <div
