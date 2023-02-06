@@ -2,7 +2,9 @@
   "name": "react-client",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:5000",
+
+  "proxy": "http://localhost:3000",
+
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^5.0.6",
     "@headlessui/react": "^1.7.7",
@@ -20,12 +22,19 @@
     "react-router-dom": "^6.7.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
+
     "react-spinners": "^0.13.8",
+
     "slick-carousel": "^1.8.1",
     "tw-elements": "^1.0.0-alpha13",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+
+    "window": "set PORT=5000 && react-scripts start",
+    "mac": "export PORT=5000 && react-scripts start",
+    "linux": "export PORT=5000 && react-scripts start",
+
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

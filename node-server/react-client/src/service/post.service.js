@@ -1,3 +1,15 @@
+
+export const getBoardList = async () => {
+  try {
+    const response = await fetch("/community/boards/get");
+    const result = await response.json();
+    return result;
+  } catch (err) {
+    return null;
+  }
+};
+
+
 export const getMainPosts = async () => {
   try {
     const response = await fetch("/community/posts/get");
@@ -43,10 +55,21 @@ export const submitPost = async (data, pCode = null) => {
   };
   try {
     let response;
+
     if (!pCode) await fetch("/coummnity/post/insert", fetchOption);
     if (pCode) {
       fetchOption.method = "PATCH";
       await fetch("/coummnity/post/update", fetchOption);
+
+    // insert
+    if (!pCode) {
+      response = await fetch("/community/post/insert", fetchOption);
+    }
+    // update
+    if (pCode) {
+      fetchOption.method = "PATCH";
+      response = await fetch("/community/post/update", fetchOption);
+
     }
     const result = await response.json();
     if (result.ERROR) {
@@ -61,7 +84,11 @@ export const submitPost = async (data, pCode = null) => {
 };
 
 export const deletePost = async (pCode) => {
+
   if (window.confirm("이 게시글을 삭제하시겠습니까?"))
+
+  if (window.confirm("이 게시글을 삭제할까요?"))
+
     try {
       const response = await fetch(`/community/post/${pCode}/delete`);
       const result = await response.json();
@@ -128,3 +155,21 @@ export const insertReply = async (data) => {
     return null;
   }
 };
+
+
+export const deleteReply = async (rCode, pCode) => {
+  if (window.confirm("이 댓글을 삭제할까요?"))
+    try {
+      const response = await fetch(`/community/reply/${rCode}/${pCode}/delete`);
+      const result = await response.json();
+      if (result.ERROR) {
+        alert(result.ERROR);
+        return null;
+      }
+      alert(result.MESSAGE);
+      return null;
+    } catch (err) {
+      return null;
+    }
+};
+

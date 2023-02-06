@@ -1,11 +1,22 @@
 // react build 하지 않으면 에디터 오류 발생
+
 // import EditorModule from "./EditorModule";
 import { submitPost } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
+
+import EditorModule from "./EditorModule";
+import "../../css/community/Content.css";
+import { submitPost } from "../../service/post.service";
+import { usePostContext } from "../../context/PostContextProvider";
+import { useUserContext } from "../../context/UserContextProvider";
+
 import { useLayoutEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 const PostWrite = () => {
+
+  const { userSession } = useUserContext();
+
   const nav = useNavigate();
   const { initPost, postData, setPostData } = usePostContext();
   const location = useLocation();
@@ -19,9 +30,20 @@ const PostWrite = () => {
 
     // username 추가 필요
     // insert
+
     const init = initPost();
     if (!pCode) {
       setPostData({ ...init, b_code: b_code, b_group_code: b_group_code });
+
+    if (!pCode) {
+      const init = initPost();
+      setPostData({
+        ...init,
+        username: userSession.username,
+        b_code: b_code,
+        b_group_code: b_group_code,
+      });
+
     }
     // update
     else {
@@ -40,7 +62,13 @@ const PostWrite = () => {
 
   const onClickHandler = async () => {
     let result;
+
     if (!pCode) result = await submitPost(postData);
+
+    // insert
+    if (!pCode) result = await submitPost(postData);
+    // update
+r
     if (pCode) result = await submitPost(postData, pCode);
     if (result.MESSAGE) {
       nav(`/community/${b_eng}`, { replace: true });
@@ -56,7 +84,15 @@ const PostWrite = () => {
         value={postData.p_title}
         onChange={onChangeHandler}
       />
+
       {/* <EditorModule data={postData.p_content} handler={onChangeContentHandler} code={postData.p_code} /> */}
+
+      <EditorModule
+        data={postData.p_content}
+        handler={onChangeContentHandler}
+        code={postData.p_code}
+      />
+
       <button id="submit" type="button" onClick={onClickHandler}>
         등록
       </button>

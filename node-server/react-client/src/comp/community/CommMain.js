@@ -30,7 +30,10 @@ const CommMain = () => {
   };
 
   return (
+
     <main className="cat-main container mx-auto">
+
+
       <BoardBox />
     </main>
   );
