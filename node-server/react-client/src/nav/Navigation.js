@@ -27,20 +27,6 @@ const router = createBrowserRouter([
       { path: "/user/login", element: <Login /> },
       { path: "/mypage", element: <MyPageMain /> },
       { path: "/login", element: <LoginModal /> },
-
-      { path: "/community", element: <CommMain /> },
-      {
-        path: "/community/:board",
-        loader: BoardLoader,
-        element: <Board />,
-      },
-      {
-        path: "/community/:board/:post",
-        loader: DetailLoader,
-        element: <PostDetail />,
-      },
-      { path: "/community/write/:post?", element: <PostWrite /> },
-
       {
         path: "/community",
         loader: CommLoader,
@@ -57,10 +43,9 @@ const router = createBrowserRouter([
             loader: DetailLoader,
             element: <PostDetail />,
           },
-          { path: "write/:post?", element: <PostWrite /> },
+          { path: ":board/write/:post?", element: <PostWrite /> },
         ],
       },
-
       { path: "/approval", element: <Approve /> },
       { path: "/search", element: <SearchMain /> },
     ],
