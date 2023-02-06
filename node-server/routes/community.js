@@ -8,6 +8,7 @@ import path from "path";
 import { v4 } from "uuid";
 import moment from "moment";
 
+const USER = DB.models.user;
 const BOARD = DB.models.board;
 const POST = DB.models.post;
 const ATTACH = DB.models.attach;
@@ -15,6 +16,16 @@ const UPVOTE = DB.models.upvote;
 const REPLY = DB.models.reply;
 
 const router = express.Router();
+
+// get board list
+router.get("/boards/get", async (req, res) => {
+  try {
+    const board = await BOARD.findAll();
+    return res.status(200).send(board);
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 // POST-ATTACH 관계 설정할 경우 에디터에 이미지를 등록할 때
 // 게시글보다 첨부파일이 먼저 등록되므로 INSERT 되지 않는 문제 발생
@@ -42,7 +53,13 @@ router.get("/posts/get", async (req, res) => {
             { p_deleted: null },
           ],
         },
-        include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+        include: [
+          { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+          {
+            model: USER,
+            attributes: ["nickname"],
+          },
+        ],
         limit: 5,
         subQuery: false,
         order: [
@@ -58,7 +75,13 @@ router.get("/posts/get", async (req, res) => {
       where: {
         [Op.and]: [{ b_code: `B11` }, { p_deleted: null }],
       },
-      include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+      include: [
+        { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+        {
+          model: USER,
+          attributes: ["nickname"],
+        },
+      ],
       limit: 5,
       subQuery: false,
       order: [
@@ -72,7 +95,13 @@ router.get("/posts/get", async (req, res) => {
       where: {
         [Op.and]: [{ b_code: `B12` }, { p_deleted: null }],
       },
-      include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+      include: [
+        { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+        {
+          model: USER,
+          attributes: ["nickname"],
+        },
+      ],
       limit: 5,
       subQuery: false,
       order: [
@@ -108,10 +137,21 @@ router.get("/board/:bEng/get", async (req, res) => {
         "p_upvote",
       ],
       where: { [Op.and]: [{ b_code: board.b_code }, { p_deleted: null }] },
-      include: { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
+      include: [
+        {
+          model: BOARD,
+          attributes: ["b_code", "b_kor", "b_eng"],
+        },
+        {
+          model: USER,
+          attributes: ["nickname"],
+        },
+      ],
       order: [["p_date", "DESC"]],
       raw: true,
     });
+
+    console.log(data);
     return res.status(200).send({ board, data });
   } catch (err) {
     console.error(err);
@@ -122,7 +162,12 @@ router.get("/board/:bEng/get", async (req, res) => {
 router.get("/post/:pCode/get", async (req, res) => {
   try {
     const pCode = req.params?.pCode;
-    const result = await POST.findByPk(pCode);
+    const result = await POST.findByPk(pCode, {
+      include: {
+        model: USER,
+        attributes: ["nickname", "profile_image"],
+      },
+    });
     const board = await BOARD.findByPk(result.toJSON().b_code);
     if (result.toJSON().p_deleted) {
       return res.send({
@@ -130,7 +175,8 @@ router.get("/post/:pCode/get", async (req, res) => {
         bEng: board.toJSON().b_eng,
       });
     }
-    const post = await result.increment("p_views", { by: 1 });
+    let post = await result.increment("p_views", { by: 1 });
+    post = post.toJSON();
     return res.status(200).send({ post, board });
   } catch (err) {
     console.error(err);
@@ -167,13 +213,26 @@ router.post("/upload", fileUp.single("upload"), async (req, res, next) => {
   }
 });
 
-router.post("/post/insert", async (req, res, next) => {
+router.post("/post/insert", async (req, res) => {
   const data = req.body;
   try {
     await POST.create(data);
-    return res.send({ MESSAGE: "게시글이 정상적으로 등록되었습니다." });
+    return res.send({ MESSAGE: "게시글이 등록되었습니다." });
   } catch (err) {
     console.error(err);
+    return res.send({ ERROR: "게시글을 등록하는 중 문제가 발생했습니다." });
+  }
+});
+
+router.patch("/post/update", async (req, res, next) => {
+  const data = req.body;
+  try {
+    console.log("asdf", data.p_code);
+    await POST.update(data, { where: { p_code: data.p_code } });
+    return res.send({ MESSAGE: "게시글이 수정되었습니다." });
+  } catch (err) {
+    console.error(err);
+    return res.send({ ERROR: "게시글을 수정하는 중 문제가 발생했습니다." });
   }
 });
 
@@ -235,7 +294,15 @@ router.get("/reply/:pCode/get", async (req, res) => {
         ["r_date", "DESC"],
         ["r_time", "DESC"],
       ],
+      include: [
+        {
+          model: REPLY,
+          as: "reply_child",
+        },
+        { model: USER, attributes: ["nickname", "profile_image"] },
+      ],
     });
+    console.log(replyList);
     // 게시글의 최상위 댓글 수
     const replyCount = await POST.findOne({
       attributes: ["p_replies"],
@@ -262,6 +329,29 @@ router.post("/reply/insert", async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.send({ ERROR: "댓글 게시 중 오류가 발생했습니다." });
+  }
+});
+
+router.get("/reply/:rCode/:pCode/delete", async (req, res) => {
+  const rCode = req.params.rCode;
+  const pCode = req.params.pCode;
+  try {
+    const date = moment().format("YYYY[-]MM[-]DD HH:mm:ss");
+    const result = await REPLY.update(
+      { r_deleted: date },
+      { where: { r_code: rCode } }
+    );
+    console.log(result);
+    if (result) {
+      await POST.update(
+        { p_replies: sequelize.literal("p_replies - 1") },
+        { where: { p_code: pCode } }
+      );
+    }
+    return res.send({ MESSAGE: "댓글이 삭제되었습니다." });
+  } catch (err) {
+    console.error(err);
+    return res.send({ ERROR: "댓글 삭제 중 문제가 발생했습니다." });
   }
 });
 

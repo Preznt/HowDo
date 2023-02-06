@@ -84,6 +84,7 @@ CREATE TABLE IF NOT EXISTS board(
 	b_code	VARCHAR(125),
 	b_eng	VARCHAR(256)	NOT NULL,	
 	b_kor	VARCHAR(256)	NOT NULL,	
+    b_level INT NOT NULL,
 	b_group_code	VARCHAR(125),		
 	b_group_eng	VARCHAR(256),		
 	b_group_kor	VARCHAR(256),
