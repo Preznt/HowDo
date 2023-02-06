@@ -1,6 +1,11 @@
+
+import { useContext, createContext, useState } from "react";
+import { VideoContent } from "../data/VideoContent";
+
 import { useContext, createContext, useState, useEffect } from "react";
 import { VideoContent } from "../data/VideoContent";
 import { useUserContext } from "./UserContextProvider";
+
 
 const VideoContentContext = createContext();
 
@@ -9,11 +14,16 @@ export const useVideoContentContext = () => {
 };
 
 export const VideoContentContextProvider = ({ children }) => {
+
+  const [loading, setLoading] = useState(false);
+
   const [videoContent, setVideoContent] = useState(new VideoContent());
   const [videoContentList, setVideoContentList] = useState();
   const [videoGroupCount, setVideoGroupCount] = useState();
   const [groupThumbnail, setGroupThumbnail] = useState();
+
   const { userSession } = useUserContext();
+
   const [videoItemList, setVideoItemList] = useState([]);
   const [file, setFile] = useState({}); // 동영상 업로드 미리보기용 state
   const [shorts, setShorts] = useState({
@@ -29,6 +39,7 @@ export const VideoContentContextProvider = ({ children }) => {
     v_save_file: "",
   });
 
+
   useEffect(() => {
     (async () => {
       const response = await fetch(`/mypage/${userSession.username}`);
@@ -39,6 +50,7 @@ export const VideoContentContextProvider = ({ children }) => {
       setGroupThumbnail(result.group);
     })();
   }, [userSession]);
+
 
   const props = {
     videoContentList,
@@ -57,6 +69,10 @@ export const VideoContentContextProvider = ({ children }) => {
     setDetail,
     shorts,
     setShorts,
+
+    loading,
+    setLoading,
+
   };
 
   return (
