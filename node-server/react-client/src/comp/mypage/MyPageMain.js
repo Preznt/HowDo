@@ -4,6 +4,13 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { usePayContext } from "../../context/PayContextProvider";
 import Purchase from "../purchase/Purchase";
 
+export const myPageFetch = async ({ params }) => {
+  const username = params.id;
+
+  const response = await fetch(`/mypage/${username}`);
+  const result = await response?.json();
+  return result;
+};
 const MyPageMain = () => {
   const { userSession, modalHandler } = useUserContext();
   const { payReadyBody, statePayReady } = usePayContext();
@@ -13,6 +20,7 @@ const MyPageMain = () => {
     payReadyBody();
     console.log(statePayReady);
   };
+
   return (
     <>
       {userSession.username ? (

@@ -2,6 +2,11 @@
   "name": "react-client",
   "version": "0.1.0",
   "private": true,
+
+
+
+
+
   "proxy": "http://localhost:3000",
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^5.0.6",
