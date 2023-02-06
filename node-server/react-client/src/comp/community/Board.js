@@ -6,7 +6,6 @@ import { useLoaderData, Link } from "react-router-dom";
 
 import { useUserContext } from "../../context/UserContextProvider";
 
-
 export const loader = async ({ params }) => {
   const bEng = params.board;
   const { data, board } = await getBoardPosts(bEng);
@@ -14,7 +13,6 @@ export const loader = async ({ params }) => {
 };
 
 const Board = () => {
-
   const { userSession } = useUserContext();
 
   const { data, board } = useLoaderData();
@@ -27,11 +25,7 @@ const Board = () => {
     "bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 p-2";
 
   return (
-
-    <main className="commu-cat">
-
     <main className="commu-cat w-full">
-
       <h1>{board.b_kor}</h1>
       <section className="flex w-full pl-5 pr-5 pb-10 justify-between">
         <button className={`search-select ${selectClass}`}>{"최신순"}</button>
@@ -46,12 +40,8 @@ const Board = () => {
           <button>검색</button>
         </div>
 
-        {/* 관리자 권한 추가 */}
-        {board.b_eng !== "notice" && (
-
         {/* 로그인 유저의 등급이 게시판 권한등급보다 같거나 높을 때 */}
         {Number(userSession?.level) >= Number(board.b_level) && (
-
           <Link
             className={btnClass}
             to={`/community/write`}
