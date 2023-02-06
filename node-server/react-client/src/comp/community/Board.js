@@ -45,8 +45,10 @@ const Board = () => {
 
   return (
     <main className="commu-cat w-full">
-      <h1 className="text-xl font-bold p-5">{board.b_kor}</h1>
-      <section className="flex w-full pl-5 pr-5 pb-10 justify-between">
+      <div className="border-2 rounded border-slate-400 text-xl font-bold p-2 mb-5">
+        {board.b_kor}
+      </div>
+      <section className="flex w-full px-5 pb-5 justify-between">
         <button
           className={`search-select relative w-30 ${selectClass}`}
           onClick={onClickShowOrder}

@@ -2,12 +2,22 @@ import "../css/Nav.css";
 import { useState } from "react";
 import VideoUpload from "./Video/VideoUpload";
 import { navDyna } from "../nav/classNames/ClassNames";
-const NavDynamic = ({ nOpen }) => {
+import { useUserContext } from "../context/UserContextProvider";
+import { useNavigate } from "react-router-dom";
+const NavDynamic = ({ nOpen, setNOpen }) => {
+  const nav = useNavigate();
+  const { userSession } = useUserContext();
   const [openModel, setOpenModel] = useState({
     video: false,
   });
   const ModelHandler = (name) => {
-    setOpenModel({ ...openModel, [name]: !openModel[name] });
+    if (userSession.username) {
+      return setOpenModel({ ...openModel, [name]: !openModel[name] });
+    } else {
+      alert("로그인이 필요한 기능입니다");
+      nav("/user/login");
+      return setNOpen(!nOpen);
+    }
   };
   return (
     <>

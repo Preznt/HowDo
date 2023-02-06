@@ -11,7 +11,7 @@ const BoardList = ({ data }) => {
       return (
         <Link
           to={`/community/${item["board.b_eng"]}/${item.p_code}`}
-          className="list-item p-3 border-b border-slate-300"
+          className="list-item p-3 border-b border-dashed border-slate-300"
           key={item.p_code}
         >
           <div className="title font-semibold text-lg">{item.p_title}</div>
