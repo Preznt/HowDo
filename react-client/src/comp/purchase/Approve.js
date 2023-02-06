@@ -1,6 +1,7 @@
 import { payApprove, subApprovalSave } from "../../service/auth.service";
 import { usePayContext } from "../../context/PayContextProvider";
-import { dataPayApprove } from "../../data/Pay";
+import { dataPayApprove, dataSubApprovalSave } from "../../data/Pay";
+import { useEffect } from "react";
 
 const Approve = () => {
   const { userSession } = usePayContext();
@@ -13,14 +14,27 @@ const Approve = () => {
   dataPayApprove.partner_user_id = userSession.username;
 
   // 카카오페이 승인 요청
-  let approveResult;
-  const exeApprove = async () => {
-    approveResult = await payApprove(dataPayApprove);
+  let result;
+  useEffect(() => {
+    (async () => {
+      result = await payApprove(dataPayApprove);
+      console.log(result);
+    })();
+  }, []);
 
-    // await subApprovalSave()
-    console.log(approveResult);
+  const exeApprove = async () => {
+    result = await payApprove(dataPayApprove);
+    console.log(result);
+
+    // const data = new dataSubApprovalSave(
+    //   result.partner_user_id,
+    //   result.partner_order_id,
+    //   result.sid,
+    //   result.approved_at
+    // );
+    // subApprovalSave(data);
   };
-  exeApprove();
+  // exeApprove();
 
   return (
     <div>

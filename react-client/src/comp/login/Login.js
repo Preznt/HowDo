@@ -3,8 +3,7 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { fetchLogin } from "../../service/auth.service";
 
 const Login = () => {
-  const { login, setLogin, userSession, setUserSession, onClickHandler } =
-    useUserContext();
+  const { login, setLogin, error, onClickHandler } = useUserContext();
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -17,8 +16,8 @@ const Login = () => {
 
   return (
     <>
-      <div className="min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-8">
+      <div className="min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 m-auto">
+        <div className="w-96 max-w-md space-y-8">
           <div>
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               HowDo
@@ -59,16 +58,19 @@ const Login = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="text-sm">
-                <a
-                  href="#"
-                  className="font-medium text-indigo-600 hover:text-indigo-500"
-                >
-                  비밀번호 찾기
-                </a>
-              </div>
-            </div>
+            {/* <div className="text-sm text-right">
+              <a
+                href="#"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                비밀번호 찾기
+              </a>
+            </div> */}
+            {error.CODE ? (
+              <p className="text-red-500 text-right">{error.MESSAGE}</p>
+            ) : (
+              ""
+            )}
 
             <div>
               <button

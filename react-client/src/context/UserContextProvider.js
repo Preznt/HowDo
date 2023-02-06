@@ -26,10 +26,14 @@ export const UserContextProvider = ({ children }) => {
 
   const onClickHandler = async () => {
     const result = await fetchLogin(login);
+    if (result.CODE) {
+      setError({ ...result });
+    }
     setUserSession(result);
     if (result.username) document.location.href = "/";
     console.log(result);
   };
+
   // 모달창 열고 닫는 함수
   const modalHandler = () => {
     setModal({ ...modal, open: !modal.open });

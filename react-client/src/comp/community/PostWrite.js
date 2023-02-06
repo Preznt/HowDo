@@ -2,32 +2,26 @@
 // import EditorModule from "./EditorModule";
 import { submitPost } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
-import { useEffect } from "react";
-import { useParams, useLocation } from "react-router-dom";
+import { useLayoutEffect } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 const PostWrite = () => {
-  // 카테고리, 그룹 값은 이전 페이지(게시판)에서 가져옴
-  // session 체크해서 게시글의 username 이 일치할 경우 수정 삭제 버튼 표시
-  // detail 페이지에서 받은 데이터를 전역 context 에 저장해야 함
-  // 현재 경로를 체크해서(useLocation) 새로 글쓰는 경우와 수정하는 경우 분리
-  // 새로 글쓰기는 postData 초기화 / 수정은 저장된 postData 가져옴
-  // ckEditor setData 사용해야
-
+  const nav = useNavigate();
   const { initPost, postData, setPostData } = usePostContext();
-  //useLocation().state.aaa 안됨
   const location = useLocation();
+  const { b_code, b_eng, b_group_code } = location?.state;
+  const data = location?.state?.data;
   const pCode = useParams().post;
 
-  useEffect(() => {
-    const { data, b_code, b_group_code } = location?.state;
+  useLayoutEffect(() => {
+    // setState 를 같은 함수 내에서 여러 번 실행하면
+    // 가장 마지막 setState 만 실행된다.
+
+    // username 추가 필요
     // insert
-    // username 추가해야
+    const init = initPost();
     if (!pCode) {
-      console.log("before", postData);
-      console.log(b_code, b_group_code);
-      // initPost 가 spread 안됨...
-      setPostData({ ...initPost, b_code: b_code, b_group_code: b_group_code });
-      console.log("after", postData);
+      setPostData({ ...init, b_code: b_code, b_group_code: b_group_code });
     }
     // update
     else {
@@ -44,8 +38,13 @@ const PostWrite = () => {
     setPostData({ ...postData, p_content: data });
   };
 
-  const onClickHandler = () => {
-    submitPost(postData);
+  const onClickHandler = async () => {
+    let result;
+    if (!pCode) result = await submitPost(postData);
+    if (pCode) result = await submitPost(postData, pCode);
+    if (result.MESSAGE) {
+      nav(`/community/${b_eng}`, { replace: true });
+    }
   };
 
   return (

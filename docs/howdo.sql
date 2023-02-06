@@ -1,9 +1,10 @@
 CREATE DATABASE howdo;
+DROP DATABASE howdo;
 USE howdo;
 DROP DATABASE howdo;
 
 DROP TABLE image;
-SELECT * FROM user;
+SELECT * FROM subscribe;
 
 -- 사용자정보
 CREATE TABLE IF NOT EXISTS user(
@@ -78,7 +79,6 @@ CREATE TABLE IF NOT EXISTS purchase(
 	PRIMARY KEY(p_code)
 );
 
-<<<<<<< HEAD
 -- 게시판
 CREATE TABLE IF NOT EXISTS board(
 	b_code	VARCHAR(125),
@@ -87,21 +87,6 @@ CREATE TABLE IF NOT EXISTS board(
 	b_group_code	VARCHAR(125),		
 	b_group_eng	VARCHAR(256),		
 	b_group_kor	VARCHAR(256),
-=======
--- 게시글
-CREATE TABLE IF NOT EXISTS board_content(
-	b_code	VARCHAR(256),
-	username	VARCHAR(256),
-	b_title	VARCHAR(256),	
-	b_detail	TEXT,	
-	b_category	VARCHAR(125),		
-	b_create_date	 datetime	DEFAULT CURRENT_TIMESTAMP,
-	b_update_date	 datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
-	b_delete_date	VARCHAR(125),		
-	b_views	BIGINT		DEFAULT 0,
-	b_upvote	BIGINT		DEFAULT 0,
-	b_group	VARCHAR(125),
->>>>>>> master
 	PRIMARY KEY(b_code)
 );
 
@@ -129,9 +114,9 @@ CREATE TABLE IF NOT EXISTS reply(
 	p_code	VARCHAR(256),
 	username	VARCHAR(256),
 	r_content	VARCHAR(256),		
-	r_create_date	datetime	DEFAULT CURRENT_TIMESTAMP,		
-	r_update_date	datetime	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
-	r_delete_date	VARCHAR(125),		
+	r_created	DATETIME	DEFAULT CURRENT_TIMESTAMP,		
+	r_updated	DATETIME	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,		
+	r_deleted	VARCHAR(125),		
 	r_parent_code	VARCHAR(256),
 	PRIMARY KEY(r_code)
 );
@@ -146,13 +131,8 @@ CREATE TABLE IF NOT EXISTS upvote(
 -- 첨부파일
 CREATE TABLE IF NOT EXISTS attach(
 	a_code	VARCHAR(256),
-<<<<<<< HEAD
 	p_code	VARCHAR(256),
-	a_date	DATETIME NOT NULL	DEFAULT CURRENT_TIMESTAMP,
-=======
-	b_code	VARCHAR(256),
-	a_date	datetime	DEFAULT CURRENT_TIMESTAMP,
->>>>>>> master
+	a_date	DATETIME	DEFAULT CURRENT_TIMESTAMP,
 	a_original_name	VARCHAR(256),
 	a_save_name	VARCHAR(256),			
 	a_ext	VARCHAR(10),		
@@ -166,6 +146,18 @@ username	VARCHAR(256),
 v_code	VARCHAR(256),
 i_code	VARCHAR(256),
 h_date	datetime						DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 구독 테이블
+
+CREATE TABLE IF NOT EXISTS subscribe(
+partner_user_id	VARCHAR(256)	,	
+partner_order_id	VARCHAR(256),		
+sid	VARCHAR(20)	NOT NULL	,
+approved_at	VARCHAR(50)	NOT NULL	,
+inactivated_at	VARCHAR(50)		,
+PRIMARY KEY(partner_user_id,partner_order_id)
+
 );
 
 
