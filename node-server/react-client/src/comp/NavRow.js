@@ -132,7 +132,7 @@ const NavRow = () => {
           </div>
         ) : null}
       </div>
-      <NavDynamic nOpen={nOpen} />
+      <NavDynamic nOpen={nOpen} setNOpen={setNOpen} />
     </>
   );
 };
