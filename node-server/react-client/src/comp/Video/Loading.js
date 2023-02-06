@@ -1,4 +1,5 @@
 import { SyncLoader } from "react-spinners";
+
 const Loading = () => {
   return (
     <div className="absolute flex flex-col w-full h-full z-100">

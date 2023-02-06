@@ -3,7 +3,7 @@ export default (sequelize) => {
   return sequelize.define(
     "subscribe",
     {
-      username: {
+      partner_user_id: {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: false,
         primaryKey: true,
@@ -12,7 +12,7 @@ export default (sequelize) => {
           key: "username",
         },
       },
-      ChildUsername: {
+      partner_order_id: {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: false,
         primaryKey: true,
@@ -21,13 +21,17 @@ export default (sequelize) => {
           key: "username",
         },
       },
-      s_start_date: {
-        type: Sequelize.DataTypes.DATE,
-        allowNull: true,
-        defaultValue: Sequelize.Sequelize.literal("CURRENT_TIMESTAMP"),
+
+      sid: {
+        type: Sequelize.DataTypes.STRING(20),
+        allowNull: false,
       },
-      s_end_date: {
-        type: Sequelize.DataTypes.STRING(125),
+      approved_at: {
+        type: Sequelize.DataTypes.STRING(50),
+        allowNull: false,
+      },
+      inactivated_at: {
+        type: Sequelize.DataTypes.STRING(50),
         allowNull: true,
       },
     },
@@ -40,12 +44,12 @@ export default (sequelize) => {
           name: "PRIMARY",
           unique: true,
           using: "BTREE",
-          fields: [{ name: "username" }, { name: "ChildUsername" }],
+          fields: [{ name: "partner_user_id" }, { name: "partner_order_id" }],
         },
         {
-          name: "ChildUsername",
+          name: "partner_order_id",
           using: "BTREE",
-          fields: [{ name: "ChildUsername" }],
+          fields: [{ name: "partner_order_id" }],
         },
       ],
     }

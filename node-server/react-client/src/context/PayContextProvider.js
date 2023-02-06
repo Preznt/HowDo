@@ -16,10 +16,7 @@ export const PayContextProvider = ({ children }) => {
   const payReadyBody = () => {
     setPayReady({
       ...statePayReady,
-      partner_order_id: userSession.username,
       partner_user_id: userSession.username,
-      item_name: userSession.username,
-      // total_amount: userSession.price,
     });
   };
 

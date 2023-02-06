@@ -92,9 +92,14 @@ const initModels = (sequelize) => {
   post.belongsTo(user, { foreignKey: "username" });
 
   user.belongsToMany(user, {
-    as: "Children",
+    as: "f_sub_user",
     through: subscribe,
-    foreignKey: "username",
+    foreignKey: "partner_user_id",
+  });
+  user.belongsToMany(user, {
+    as: "f_sub_order",
+    through: subscribe,
+    foreignKey: "partner_order_id",
   });
 
   // post.hasMany(attach, { as: "attachs", foreignKey: "p_code" });

@@ -4,10 +4,7 @@ import {
   wrapperDiv,
   nameSpan,
   itemwrap,
- 
   videoNohover,
-
- mater
 } from "../../nav/classNames/ClassNames";
 const SearchMain = () => {
   const { searchedData } = useAutoSearchContext();
@@ -26,14 +23,7 @@ const SearchMain = () => {
   const videoSearchView = searchedData?.v_result?.map((item) => {
     return (
       <div className={itemwrap} key={item.v_code}>
- 
         <ReactPlayer className={videoNohover} src={item.v_src}></ReactPlayer>
-
-        <ReactPlayer
-          className="w-60 h-36 place-self-center"
-          src={item.v_src}
-        ></ReactPlayer>
- 
         <div className="mt-4 text-center">{item.v_title}</div>
         <div className="mt-4 text-center">{item.t_views}</div>
       </div>
@@ -45,7 +35,6 @@ const SearchMain = () => {
     <div className="flex flex-col ml-40 w-full">
       <span className={nameSpan}>사용자 검색 공간입니다</span>
       <div className={wrapperDiv}>
- 
         {searchedData.u_result ? userSearchView : searchNull}
       </div>
       <span className={nameSpan}>컨텐츠 검색 공간입니다</span>
