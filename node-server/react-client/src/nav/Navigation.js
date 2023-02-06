@@ -5,10 +5,8 @@ import MyPageMain from "../comp/mypage/MyPageMain";
 import Join from "../comp/login/Join";
 import Login from "../comp/login/Login";
 import LoginModal from "../comp/login/Login";
-import CommMain from "../comp/community/CommMain";
-
 import CommIndex, { loader as CommLoader } from "../comp/community/CommIndex";
-
+import CommMain, { loader as CommMainLoader } from "../comp/community/CommMain";
 import Board, { loader as BoardLoader } from "../comp/community/Board";
 import PostDetail, {
   loader as DetailLoader,
@@ -32,7 +30,7 @@ const router = createBrowserRouter([
         loader: CommLoader,
         element: <CommIndex />,
         children: [
-          { path: "", element: <CommMain /> },
+          { path: "", loader: CommMainLoader, element: <CommMain /> },
           {
             path: ":board",
             loader: BoardLoader,
