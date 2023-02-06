@@ -43,7 +43,6 @@ const NavRow = () => {
   };
 
   const onClick = async () => {
-
     setLoading(true);
 
     if (currentSearch) {
@@ -63,10 +62,6 @@ const NavRow = () => {
   const pressEnter = async (e) => {
     setLoading(true);
 
-  };
-
-  const pressEnter = async (e) => {
-
     if (e.keyCode === 13) {
       if (!currentSearch) {
         alert("검색어를 입력하세요");
@@ -81,7 +76,6 @@ const NavRow = () => {
     }
 
     setLoading(false);
-
   };
 
   const openClickHandler = () => {
@@ -165,15 +159,9 @@ const NavRow = () => {
           </Link>
         )}
         {userSession.username ? (
-
-          <div className={navRowMlAuto} onClick={intoPage}>
-            {userSession.nickname} 님의 페이지
-          </div>
-
           <Link className={navRowMlAuto} to="/mypage">
             {userSession.nickname} 님의 페이지
           </Link>
-
         ) : (
           <Link to="/regist" className={navRow}>
             회원가입

@@ -1,0 +1,7 @@
+.board-link {
+  display: inline-block;
+}
+
+.board-link.active {
+  color: rgb(59, 130, 246);
+}

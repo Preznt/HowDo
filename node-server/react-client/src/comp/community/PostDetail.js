@@ -39,7 +39,6 @@ export const loader = async ({ params }) => {
 };
 
 const PostDetail = () => {
-
   const { userSession } = useUserContext();
 
   const nav = useNavigate();
@@ -62,19 +61,14 @@ const PostDetail = () => {
     })();
   }, []);
 
-
   // 임시 username(session context 에서)
   const username = "polly@gmail.com";
-
 
   const btnClass01 =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
 
   // 추천 버튼 클릭
   const onClickUpvote = async () => {
-
-    const result = await upvotePost(post.p_code, username);
-
     if (!userSession?.username) {
       alert("로그인 후 이용해주세요.");
       return null;
@@ -113,7 +107,6 @@ const PostDetail = () => {
       </section>
 
       <section className="p-2">
-
         <img className="inline-block w-50" alt="프로필 이미지" />
         {/* nickname으로 수정 필요 */}
         <span className="nickname pl-2">{post?.username}</span>
