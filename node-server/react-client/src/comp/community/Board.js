@@ -24,7 +24,7 @@ const Board = () => {
 
   return (
     <main className="commu-cat w-full">
-      <h1>{board.b_kor}</h1>
+      <h1 className="text-xl font-bold p-5">{board.b_kor}</h1>
       <section className="flex w-full pl-5 pr-5 pb-10 justify-between">
         <button className={`search-select ${selectClass}`}>{"최신순"}</button>
         <div className="hidden">

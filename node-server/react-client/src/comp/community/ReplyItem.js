@@ -85,9 +85,9 @@ const ReplyItem = ({ item, index }) => {
           display: showChild === true ? "block" : "none",
         }}
       >
-        {item?.reply_child?.map((child, index) => {
+        {/* {item?.reply_child?.map((child, index) => {
           <ReplyItem item={child} index={index} />;
-        })}
+        })} */}
 
         <div
           className="reply-input-box gap-3 w-full"

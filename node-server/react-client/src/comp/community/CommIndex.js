@@ -1,3 +1,4 @@
+import "../../css/community/Index.css";
 import BoardNav from "./BoardNav";
 import { useLoaderData, Outlet } from "react-router-dom";
 import { getBoardList } from "../../service/post.service";
