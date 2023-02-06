@@ -35,7 +35,9 @@ const Approve = () => {
 
   return (
     <div>
-      <h1>여기는 승인 화면</h1>
+      <div>
+        <h1>결제가 완료되었습니다</h1>
+      </div>
     </div>
   );
 };

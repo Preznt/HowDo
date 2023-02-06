@@ -51,6 +51,8 @@ export const UserContextProvider = ({ children }) => {
     console.log(userSession);
   };
 
+  let dataExpireUser;
+
   useEffect(() => {
     (async () => {
       const loginUser = await fetchUser();
