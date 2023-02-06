@@ -1,6 +1,10 @@
 // 게시글 상세보기
 import Reply from "./Reply";
+
+import "../../css/community/PostDetail.css";
+
 import "../../css/community/Content.css";
+
 import {
   EyeIcon,
   HandThumbUpIcon,
@@ -14,7 +18,9 @@ import {
   deletePost,
 } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
+
 import { useUserContext } from "../../context/UserContextProvider";
+
 import { useLoaderData, useParams, useNavigate, Link } from "react-router-dom";
 
 // html tag -> entity -> tag 로 변환하는 과정 필요
@@ -33,7 +39,9 @@ export const loader = async ({ params }) => {
 };
 
 const PostDetail = () => {
+
   const { userSession } = useUserContext();
+
   const nav = useNavigate();
   const bEng = useParams().board;
   const { detail, reply } = useLoaderData();
@@ -54,16 +62,25 @@ const PostDetail = () => {
     })();
   }, []);
 
+
+  // 임시 username(session context 에서)
+  const username = "polly@gmail.com";
+
+
   const btnClass01 =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
 
   // 추천 버튼 클릭
   const onClickUpvote = async () => {
+
+    const result = await upvotePost(post.p_code, username);
+
     if (!userSession?.username) {
       alert("로그인 후 이용해주세요.");
       return null;
     }
     const result = await upvotePost(post.p_code, userSession?.username);
+
     if (result) setUpvote(upvote + result[0]);
   };
 
@@ -96,12 +113,18 @@ const PostDetail = () => {
       </section>
 
       <section className="p-2">
+
+        <img className="inline-block w-50" alt="프로필 이미지" />
+        {/* nickname으로 수정 필요 */}
+        <span className="nickname pl-2">{post?.username}</span>
+
         <img
           className="inline-block w-50"
           src={post?.user["profile_image"]}
           alt="profile"
         />
         <span className="nickname pl-2">{post?.user["nickname"]}</span>
+
         <span className="float-right">{`${post?.p_date} ${post?.p_time}`}</span>
       </section>
 
@@ -119,6 +142,20 @@ const PostDetail = () => {
       </section>
 
       {/* 게시글과 세션 username 비교 후 표시 */}
+
+      <section className="button-box flex justify-end w-full">
+        <Link
+          className={`${btnClass01} mr-4`}
+          to={`/community/write/${post?.p_code}`}
+          state={{ data: post, b_eng: board.b_eng }}
+        >
+          수정
+        </Link>
+        <button className={btnClass01} onClick={onClickDelete}>
+          삭제
+        </button>
+      </section>
+
       {userSession?.username === post?.username && (
         <section className="button-box flex justify-end w-full">
           <Link
@@ -133,6 +170,7 @@ const PostDetail = () => {
           </button>
         </section>
       )}
+
       <Reply code={post?.p_code} list={list} count={replyCount} />
     </main>
   );
