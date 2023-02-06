@@ -45,13 +45,36 @@ router.get("/total/:query", async (req, res, next) => {
     });
   } catch (error) {}
 });
-
-router.get("/:username", async (req, res, next) => {
-  const username = req.params.username;
-
+router.get("/creater/:id", async (req, res, next) => {
+  const nickname = req.params.id;
+  console.log(nickname);
+  let userid;
   try {
+    const id = await USER.findOne({
+      attributes: ["profile_image", "title_image", "nickname", "username"],
+      where: { nickname: nickname },
+      raw: true,
+    });
+    userid = id.username;
     const result = await V_CONTENT.findAll({
-      where: { username: username },
+      where: { username: userid },
+      limit: 10,
+    });
+    return res.json({ u_result: id, v_result: result });
+  } catch (err) {}
+});
+router.get("/:username", async (req, res, next) => {
+  const nickname = req.params.username;
+  let userid;
+  try {
+    const id = await USER.findOne({
+      where: { nickname: nickname },
+      raw: true,
+    });
+    console.log(id.username);
+    userid = id.username;
+    const result = await V_CONTENT.findAll({
+      where: { username: userid },
       limit: 10,
     });
     const group = await V_CONTENT.findAll({

@@ -17,6 +17,10 @@ export const nameSpan = classNames(
 );
 export const itemwrap = classNames("flex flex-col m-12 ml-6 w-10/12 shadow-lg");
 
+export const searchItemwrap = classNames(
+  "flex flex-col m-12 ml-6 w-10/12 shadow-lg cursor-pointer"
+);
+
 export const navDyna = classNames("m-auto cursor-pointer w-20 h-20");
 
 export const navRow = classNames(

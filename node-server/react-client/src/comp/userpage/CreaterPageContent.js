@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import ReactPlayer from "react-player";
-import { useState } from "react";
+import { useLoaderData } from "react-router-dom";
+import { useUserContext } from "../../context/UserContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
 import {
   moreButton,
@@ -10,17 +12,17 @@ import {
   videoNextButton,
   videoNohover,
 } from "../../nav/classNames/ClassNames";
-import { useUserContext } from "../../context/UserContextProvider";
-import { useLoaderData } from "react-router-dom";
-/**
- * map 을 이용한 컨텐츠 시리즈별 carousel 제작
- */
-const CreaterContent = () => {
-  const result = useLoaderData();
+
+const CreaterPageContent = () => {
+  const createrResult = useLoaderData();
   const { videoContentList, setVideoContentList } = useVideoContentContext();
   const [position, setPosition] = useState(0);
   const { userSession } = useUserContext();
   const CONTENT_WIDTH = 392;
+  useEffect(() => {
+    setVideoContentList(createrResult.v_result);
+  }, []);
+
   const setHover = (v_code, toggle) => {
     setVideoContentList([
       ...videoContentList.map((item) => {
@@ -28,7 +30,6 @@ const CreaterContent = () => {
         else return item;
       }),
     ]);
-    console.log(videoContentList);
   };
   const onMouseOverHandler = (v_code) => {
     setHover(v_code, true);
@@ -39,7 +40,7 @@ const CreaterContent = () => {
 
   const before = () => {
     let newPosition = position - CONTENT_WIDTH;
-    if (position <= (CONTENT_WIDTH * result.recent.length - 1) * -1) {
+    if (position <= (CONTENT_WIDTH * createrResult.v_result.length - 1) * -1) {
       newPosition = 0;
     }
     setPosition(newPosition);
@@ -48,11 +49,11 @@ const CreaterContent = () => {
   const next = () => {
     let newPosition = position + CONTENT_WIDTH;
     if (position === 0) {
-      newPosition = CONTENT_WIDTH * (result.recent.length - 1) * -1;
+      newPosition = CONTENT_WIDTH * (createrResult.v_result.length - 1) * -1;
     }
     setPosition(newPosition);
   };
-  const videoView = result.recent?.map((item) => {
+  const videoView = videoContentList?.map((item) => {
     return (
       <div
         className={videoNohover}
@@ -80,7 +81,7 @@ const CreaterContent = () => {
   return (
     <div className={myPageContentMain}>
       <span className={nameLabel}>최근 업로드한 영상</span>
-      {userSession.username ? (
+      {createrResult.v_result[0] ? (
         <>
           <div className={videoNextButton} onClick={before}>
             앞
@@ -88,22 +89,21 @@ const CreaterContent = () => {
           <div className={videoBeforeButton} onClick={next}>
             뒤
           </div>
-        </>
-      ) : null}
-
-      <div
-        className={videoContenView}
-        style={{ transform: `translateX(${position}px)` }}
-      >
-        {userSession.username ? (
-          <div className="flex">
-            {videoView}
-            <div className={moreButton}>더보기</div>
+          <div
+            className={videoContenView}
+            style={{ transform: `translateX(${position}px)` }}
+          >
+            <div className="flex">
+              {videoView}
+              <div className={moreButton}>더보기</div>
+            </div>
           </div>
-        ) : null}
-      </div>
+        </>
+      ) : (
+        <div className="m-auto text-3xl">영상이 없습니다</div>
+      )}
     </div>
   );
 };
 
-export default CreaterContent;
+export default CreaterPageContent;
