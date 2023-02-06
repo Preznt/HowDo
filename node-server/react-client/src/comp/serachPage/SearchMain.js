@@ -1,7 +1,3 @@
- 
-
-import classNames from "classnames";
- maser
 import ReactPlayer from "react-player";
 import { useAutoSearchContext } from "../../context/AutoSearchProvider";
 import {
@@ -63,16 +59,8 @@ const SearchMain = () => {
 
         {searchedData?.u_result ? userSearchView : searchNull}
       </div>
-      <span className={nameSpan}>컨텐츠 검색 공간입니다</span>
-      <div className={wrapperDiv}>
-        {searchedData?.v_result ? videoSearchView : searchNull}
-      </div>
-      <span className={nameSpan}>게시글 검색 공간입니다</span>
-      <div className={wrapperDiv}></div>
-      <span className={nameSpan}>댓글 검색 공간입니다</span>
-      <div className={wrapperDiv}></div>
- 
-    </div>
+   
+
   );
 };
 
