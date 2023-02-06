@@ -69,7 +69,9 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join("public")));
+app.use(express.static(path.join("react-client/build")));
+// 첫번째 인수 /public 은 미디어 파일 get 경로 설정
+app.use("/public", express.static(path.join("public")));
 
 // router link enable
 app.use("/", indexRouter);

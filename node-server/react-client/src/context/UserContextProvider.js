@@ -11,7 +11,9 @@ export const useUserContext = () => {
 };
 
 export const UserContextProvider = ({ children }) => {
+ 
   const [creater, setCreater] = useState();
+
   const [joinUser, setJoinUser] = useState(new User());
   const [login, setLogin] = useState(new Login());
   const [error, setError] = useState({});
@@ -74,8 +76,10 @@ export const UserContextProvider = ({ children }) => {
     modal,
     setModal,
     modalHandler,
+
     creater,
     setCreater,
+
   };
 
   return <UserContext.Provider value={props}>{children}</UserContext.Provider>;

@@ -3,7 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import NavDynamic from "./NavDynamic";
 import { useAutoSearchContext } from "../context/AutoSearchProvider";
 import { useUserContext } from "../context/UserContextProvider";
+
 import { useVideoContentContext } from "../context/VideoContentContextProvide";
+
 import MainButton from "./mainpage/MainButton";
 import "../css/mainbar.css";
 import { navRow, navRowMlAuto } from "../nav/classNames/ClassNames";
@@ -20,6 +22,7 @@ const NavRow = () => {
     searchedData,
   } = useAutoSearchContext();
   const { userSession, logoutHandler } = useUserContext();
+
   const {
     setGroupThumbnail,
     setVideoContentList,
@@ -27,6 +30,7 @@ const NavRow = () => {
     loading,
     setLoading,
   } = useVideoContentContext();
+
   const searchRef = useRef(null);
 
   const borderStyle = {
@@ -39,7 +43,9 @@ const NavRow = () => {
   };
 
   const onClick = async () => {
+
     setLoading(true);
+
     if (currentSearch) {
       const res = await fetch(`/mypage/total/${currentSearch}`);
       const result = await res.json();
@@ -50,11 +56,17 @@ const NavRow = () => {
       alert("검색어를 입력하세요");
       searchRef.current.focus();
     }
+
     setLoading(false);
   };
 
   const pressEnter = async (e) => {
     setLoading(true);
+
+  };
+
+  const pressEnter = async (e) => {
+
     if (e.keyCode === 13) {
       if (!currentSearch) {
         alert("검색어를 입력하세요");
@@ -67,13 +79,16 @@ const NavRow = () => {
         navigate("/search");
       }
     }
+
     setLoading(false);
+
   };
 
   const openClickHandler = () => {
     setNOpen(!nOpen);
     console.log(nOpen);
   };
+
   const intoPage = async () => {
     setLoading(true);
     const response = await fetch(`/mypage/${userSession.username}`);
@@ -85,6 +100,7 @@ const NavRow = () => {
     setGroupThumbnail(result.group);
     setLoading(false);
   };
+
   const autoCompleteView = autoComplete?.map((word, index) => {
     return (
       <div
@@ -149,9 +165,15 @@ const NavRow = () => {
           </Link>
         )}
         {userSession.username ? (
+
           <div className={navRowMlAuto} onClick={intoPage}>
             {userSession.nickname} 님의 페이지
           </div>
+
+          <Link className={navRowMlAuto} to="/mypage">
+            {userSession.nickname} 님의 페이지
+          </Link>
+
         ) : (
           <Link to="/regist" className={navRow}>
             회원가입
