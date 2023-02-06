@@ -52,21 +52,19 @@ const SearchMain = () => {
     <div className="flex flex-col ml-40 w-full">
       <span className={nameSpan}>사용자 검색 공간입니다</span>
       <div className={wrapperDiv}>
-        {SearchR?.u_result ? userSearchView : searchNull}
+        {SearchR.u_result[0] ? userSearchView : searchNull}
       </div>
       <span className={nameSpan}>컨텐츠 검색 공간입니다</span>
       <div className={wrapperDiv}>
-        {SearchR?.v_result ? videoSearchView : searchNull}
+        {SearchR.v_result[0] ? videoSearchView : searchNull}
       </div>
       <span className={nameSpan}>게시글 검색 공간입니다</span>
       <div className={wrapperDiv}>{searchNull}</div>
       <span className={nameSpan}>댓글 검색 공간입니다</span>
       <div className={wrapperDiv}>{searchNull}</div>
 
-        {searchedData?.u_result ? userSearchView : searchNull}
-      </div>
-   
-
+      {SearchR.u_result ? userSearchView : searchNull}
+    </div>
   );
 };
 
