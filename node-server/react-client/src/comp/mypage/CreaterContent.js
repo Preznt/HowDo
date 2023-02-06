@@ -95,13 +95,6 @@ const CreaterContent = () => {
         </>
       ) : null}
 
-      <div className={videoNextButton} onClick={before}>
-        앞
-      </div>
-      <div className={videoBeforeButton} onClick={next}>
-        뒤
-      </div>
-
       <div
         className={videoContenView}
         style={{ transform: `translateX(${position}px)` }}
@@ -112,10 +105,6 @@ const CreaterContent = () => {
             <div className={moreButton}>더보기</div>
           </div>
         ) : null}
-
-        <div className="flex">
-          {videoView},<div className={moreButton}>더보기</div>
-        </div>
       </div>
     </div>
   );

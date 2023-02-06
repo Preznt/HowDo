@@ -19,6 +19,9 @@ import PostWrite from "../comp/community/PostWrite";
 import Approve from "../comp/purchase/Approve";
 import SearchMain, { SearchLoader } from "../comp/serachPage/SearchMain";
 import UserPageMain, { userPageFetch } from "../comp/userpage/UserPageMain";
+import CreaterMain, {
+  loader as CreaterFetch,
+} from "../comp/userpage/CreaterMain";
 
 const router = createBrowserRouter([
   {
@@ -29,6 +32,7 @@ const router = createBrowserRouter([
       { path: "/user", element: <Join /> },
       { path: "/user/login", element: <Login /> },
       { path: "/:id", loader: myPageLoader, element: <MyPageMain /> },
+      { path: "/creater", loader: CreaterFetch, element: <CreaterMain /> },
       {
         path: "/creater/:id",
         loader: userPageFetch,
