@@ -10,6 +10,10 @@ const Join = () => {
   };
 
   const onClickHandler = async (e) => {
+    if (e.target.tagName === "BUTTON") {
+      setJoinUser({ ...joinUser, button: true });
+    }
+
     const result = await fetchJoin(joinUser);
     if (result.CODE) {
       setError({ ...result });

@@ -121,3 +121,13 @@ export const subscriptionPay = async () => {
     console.log(e);
   }
 };
+
+export const expireUser = async () => {
+  try {
+    const res = await fetch("/kakao/expire");
+    const result = res.json();
+    console.log(result);
+  } catch (e) {
+    console.log(`expire sql error \n`, e);
+  }
+};

@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useRef, useEffect } from "react";
 import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
-import { fetchUser, fetchLogin } from "../service/auth.service";
+import { fetchUser, fetchLogin, expireUser } from "../service/auth.service";
 
 const UserContext = createContext();
 
@@ -11,7 +11,6 @@ export const useUserContext = () => {
 };
 
 export const UserContextProvider = ({ children }) => {
- 
   const [creater, setCreater] = useState();
 
   const [joinUser, setJoinUser] = useState(new User());
@@ -82,7 +81,6 @@ export const UserContextProvider = ({ children }) => {
 
     creater,
     setCreater,
-
   };
 
   return <UserContext.Provider value={props}>{children}</UserContext.Provider>;

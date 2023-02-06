@@ -3,7 +3,7 @@ DROP DATABASE howdo;
 USE howdo;
 DROP DATABASE howdo;
 
-DROP TABLE image;
+DROP TABLE subscribe;
 SELECT * FROM subscribe;
 
 -- 사용자정보

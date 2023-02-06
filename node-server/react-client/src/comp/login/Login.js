@@ -1,9 +1,10 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
+import { useEffect } from "react";
 import { useUserContext } from "../../context/UserContextProvider";
 import { fetchLogin } from "../../service/auth.service";
 
 const Login = () => {
-  const { login, setLogin, error, onClickHandler } = useUserContext();
+  const { login, setLogin, error, setError, onClickHandler } = useUserContext();
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;

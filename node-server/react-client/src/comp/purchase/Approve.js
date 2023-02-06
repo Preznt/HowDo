@@ -14,27 +14,24 @@ const Approve = () => {
   dataPayApprove.partner_user_id = userSession.username;
 
   // 카카오페이 승인 요청
-  let result;
+
   useEffect(() => {
     (async () => {
-      result = await payApprove(dataPayApprove);
-      console.log(result);
+      const result = await payApprove(dataPayApprove);
+      // console.log(result);
+
+      if (result.sid) {
+        const data = new dataSubApprovalSave(
+          result.partner_user_id,
+          result.partner_order_id,
+          result.sid,
+          result.approved_at
+        );
+        // console.log(data);
+        subApprovalSave(data);
+      }
     })();
-  }, []);
-
-  const exeApprove = async () => {
-    result = await payApprove(dataPayApprove);
-    console.log(result);
-
-    // const data = new dataSubApprovalSave(
-    //   result.partner_user_id,
-    //   result.partner_order_id,
-    //   result.sid,
-    //   result.approved_at
-    // );
-    // subApprovalSave(data);
-  };
-  // exeApprove();
+  });
 
   return (
     <div>

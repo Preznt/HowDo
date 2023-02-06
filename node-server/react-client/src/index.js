@@ -8,9 +8,9 @@ import Provider from "./context/ProviderCompil";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <Provider>
-      <RouterProvider router={router} />
-    </Provider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider>
+    <RouterProvider router={router} />
+  </Provider>
+  // </React.StrictMode>
 );
