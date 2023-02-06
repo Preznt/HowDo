@@ -5,19 +5,17 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
-const CommRank = ({ data }) => {
-  console.log(data);
-
-  const Rank = () => {
-    return data.map((item) => {
+const CommList = ({ data }) => {
+  const List = () => {
+    return data.list.map((item) => {
       return (
         <Link
-          className="rank-item"
+          className="rank-item grid grid-cols-2 grid-rows-1 p-2 border-b border-dashed border-slate-300"
           key={item.p_code}
           to={`/community/${item["board.b_eng"]}/${item.p_code}`}
         >
-          <div className="inline-block p-2">{item["board.b_kor"]}</div>
-          <div className="inline-block p-2 float-right">
+          <div className="text-left font-bold">{item.p_title}</div>
+          <div className="w-full text-right">
             <EyeIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
             <span className="mr-2">{item.p_views}</span>
             <HandThumbUpIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
@@ -25,19 +23,22 @@ const CommRank = ({ data }) => {
             <ChatBubbleOvalLeftEllipsisIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
             <span>{item.p_replies}</span>
           </div>
-          <div className="w-full h-44 bg-black col-span-2"></div>
-          <div className="text-left font-bold p-2">{item.p_title}</div>
-          <div className="text-left text-sm pl-2">{item["user.nickname"]}</div>
+          <div className="text-left text-sm">{item["user.nickname"]}</div>
         </Link>
       );
     });
   };
 
   return (
-    <section className="commu-rank grid grid-cols-5 gap-5 p-5">
-      <Rank />
+    <section className="commu-rank mb-10">
+      <div className="main-item-title mb-2.5 p-2 text-left text-lg font-bold border-b border-slate-500">
+        {data.b_kor}
+      </div>
+      <div className="grid grid-cols-2 grid-rows-3 grid-flow-col gap-5">
+        <List />
+      </div>
     </section>
   );
 };
 
-export default CommRank;
+export default CommList;

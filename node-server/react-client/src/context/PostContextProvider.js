@@ -11,11 +11,7 @@ export const PostContextProvider = ({ children }) => {
   const initPost = () => {
     const postData = {
       p_code: v4(),
- 
-      username: "polly@gmail.com",
-
       username: "",
- 
       p_title: "",
       p_content: "",
       b_code: "",
@@ -27,12 +23,7 @@ export const PostContextProvider = ({ children }) => {
     const replyData = {
       r_code: v4(),
       p_code: "",
- 
-      // session
-      username: "polly@gmail.com",
-
       username: "",
- 
       r_content: "",
       r_parent_code: null,
     };
@@ -42,10 +33,9 @@ export const PostContextProvider = ({ children }) => {
   const [boardList, setBoardList] = useState([]);
   const [postData, setPostData] = useState(initPost);
   const [replyData, setReplyData] = useState(initReply);
- 
 
   const [cReplyData, setCReplyData] = useState(initReply);
- 
+
   const [replyCount, setReplyCount] = useState();
   const [replyList, setReplyList] = useState([]);
   const [boardData, setBoardData] = useState({
@@ -66,11 +56,8 @@ export const PostContextProvider = ({ children }) => {
     initReply,
     replyData,
     setReplyData,
- 
-
     cReplyData,
     setCReplyData,
- 
     replyCount,
     setReplyCount,
     replyList,
