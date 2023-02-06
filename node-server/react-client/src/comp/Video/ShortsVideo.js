@@ -1,8 +1,7 @@
 import ReactPlayer from "react-player";
-const Video = ({ video }) => {
+const ShortsVideo = ({ video }) => {
   return (
     <>
-      <h2>Player Test</h2>
       <div className="inline-block items-center">
         <ReactPlayer
           className="react-player"
@@ -21,4 +20,4 @@ const Video = ({ video }) => {
   );
 };
 
-export default Video;
+export default ShortsVideo;

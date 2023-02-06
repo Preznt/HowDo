@@ -4,7 +4,7 @@ import { usePayContext } from "../../context/PayContextProvider";
 import { payReady } from "../../service/auth.service";
 
 const Purchase = () => {
-  const { modal, modalHandler } = useUserContext();
+  const { modal, modalHandler, joinUser } = useUserContext();
   const { statePayReady } = usePayContext();
 
   return (
@@ -47,13 +47,13 @@ const Purchase = () => {
               <button
                 className="p-2 ml-5 rounded-full text-white bg-sky-600 "
                 onClick={() => {
-                  payReady(JSON.stringify(statePayReady));
+                  payReady(statePayReady);
                 }}
               >
                 구독하기
               </button>
             </div>
-            <h1>멤버십 혜택</h1>
+            <h1 className="ml-5 underline underline-offset-8">멤버십 혜택</h1>
             <p className="m-4">
               국가는 과학기술의 혁신과 정보 및 인력의 개발을 통하여 국민경제의
               발전에 노력하여야 한다. 국가안전보장회의는 대통령이 주재한다.

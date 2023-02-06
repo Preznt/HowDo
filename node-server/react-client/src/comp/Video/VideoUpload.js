@@ -7,7 +7,7 @@ const VideoUpload = (props) => {
     useVideoContentContext();
   const { open, close } = props;
 
-  const imageUpload = (e) => {
+  const videoUpload = (e) => {
     const videoType = e.target.files[0].type.includes("video");
     const filename = e.target.files[0].name;
 
@@ -42,16 +42,26 @@ const VideoUpload = (props) => {
   };
 
   const onClickHandler = async () => {
-    formData.append("upload", file);
-    formData.append("detail", JSON.stringify(detail));
-    formData.append("shorts", JSON.stringify(shorts));
-    const res = await axios.post("/video/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    const result = await res.json();
-    console.log(result);
+    if (!detail.video) {
+      return alert("업로드할 동영상을 선택해주세요");
+    } else if (!detail.v_title) {
+      console.log(detail.v_category);
+      return alert("제목을 입력해주세요");
+    } else if (detail.v_category === "" || detail.v_category === "none") {
+      return alert("카테고리를 선택해주세요");
+    } else if (!detail.v_detail) {
+      return alert("내용을 입력해주세요");
+    } else {
+      formData.append("upload", file);
+      formData.append("detail", JSON.stringify(detail));
+      formData.append("shorts", JSON.stringify(shorts));
+      const res = await axios.post("/video/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      const result = await res.json();
+    }
   };
   return (
     <div
@@ -74,6 +84,13 @@ const VideoUpload = (props) => {
               />
             ) : (
               <div className="modal h-full">
+                <input
+                  className="modal hidden"
+                  type="file"
+                  id="video_upload"
+                  accept="video/*"
+                  onChange={videoUpload}
+                />
                 <label
                   for="video_upload"
                   className="modal p-6 mt-20 leading-10 border-2 rounded-full inline-block cursor-pointer"
@@ -96,14 +113,6 @@ const VideoUpload = (props) => {
               </div>
             )}
           </div>
-
-          <input
-            className="modal hidden"
-            type="file"
-            id="video_upload"
-            accept="video/*"
-            onChange={imageUpload}
-          />
           <div className="modal block m-auto p-10">
             <input
               onChange={titleOnChangeHandler}
@@ -134,20 +143,47 @@ const VideoUpload = (props) => {
             <label for="v_price" className="modal ">
               가격설정
             </label>
-            <input
-              onChange={v_priceOnChangeHandler}
-              id="v_price"
-              className="modal border-2 w-1/4 mb-10"
-              placeholder="가격을 입력해 주세요"
-              type="number"
-              value={detail.v_price}
-            />
-            <label className="ml-10">쇼츠등록</label>
-            <input
-              type="checkbox"
-              className="shorts"
-              onChange={shortsOnChangeHandler}
-            />
+            {shorts.shorts ? (
+              <div className="modal ">
+                <label for="v_price" className="modal ">
+                  가격설정
+                </label>
+                <input
+                  onChange={v_priceOnChangeHandler}
+                  id="v_price"
+                  className="modal border-2 w-1/4 mb-10"
+                  placeholder="가격을 입력해 주세요"
+                  type="number"
+                  value="0"
+                />
+                <label className="ml-10">쇼츠등록</label>
+                <input
+                  type="checkbox"
+                  className="shorts"
+                  onChange={shortsOnChangeHandler}
+                />
+              </div>
+            ) : (
+              <div className="modal ">
+                <label for="v_price" className="modal ">
+                  가격설정
+                </label>
+                <input
+                  onChange={v_priceOnChangeHandler}
+                  id="v_price"
+                  className="modal border-2 w-1/4 mb-10"
+                  placeholder="가격을 입력해 주세요"
+                  type="number"
+                  value={detail.v_price}
+                />
+                <label className="ml-10">쇼츠등록</label>
+                <input
+                  type="checkbox"
+                  className="shorts"
+                  onChange={shortsOnChangeHandler}
+                />
+              </div>
+            )}
           </div>
           <div className="modal mb-7">
             <button

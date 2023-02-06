@@ -1,7 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import AppSample from "../App";
 import MainPage from "../comp/mainpage/MainPage";
-import MyPageMain from "../comp/mypage/MyPageMain";
+import MyPageMain, {
+  myPageFetch as myPageLoader,
+} from "../comp/mypage/MyPageMain";
 import Join from "../comp/login/Join";
 import Login from "../comp/login/Login";
 import LoginModal from "../comp/login/Login";
@@ -13,7 +15,13 @@ import PostDetail, {
 } from "../comp/community/PostDetail";
 import PostWrite from "../comp/community/PostWrite";
 import Approve from "../comp/purchase/Approve";
-import SearchMain from "../comp/serachPage/SearchMain";
+import SearchMain, { SearchLoader } from "../comp/serachPage/SearchMain";
+import UserPageMain, { userPageFetch } from "../comp/userpage/UserPageMain";
+
+import CreaterMain, {
+  loader as CreaterFetch,
+} from "../comp/userpage/CreaterMain";
+
 
 const router = createBrowserRouter([
   {
@@ -23,7 +31,13 @@ const router = createBrowserRouter([
       { path: "", element: <MainPage /> },
       { path: "/user", element: <Join /> },
       { path: "/user/login", element: <Login /> },
-      { path: "/mypage", element: <MyPageMain /> },
+      { path: "/:id", loader: myPageLoader, element: <MyPageMain /> },
+      { path: "/creater", loader: CreaterFetch, element: <CreaterMain /> },
+      {
+        path: "/creater/:id",
+        loader: userPageFetch,
+        element: <UserPageMain />,
+      },
       { path: "/login", element: <LoginModal /> },
       {
         path: "/community",
@@ -45,7 +59,9 @@ const router = createBrowserRouter([
         ],
       },
       { path: "/approval", element: <Approve /> },
-      { path: "/search", element: <SearchMain /> },
+      { path: "/search/:query", loader: SearchLoader, element: <SearchMain /> },
+      { path: "/video/shorts", element: <ShortsMain /> },
+      { path: "/video/detail/:v_code", element: <VideoDetail /> },
     ],
   },
 ]);
