@@ -33,7 +33,7 @@ const BoardList = ({ data }) => {
   };
 
   return (
-    <section className="commu-list w-full">
+    <section className="commu-list pl-5 pr-5 w-full">
       <ul className="item-wrapper w-full">
         <ListItem />
       </ul>

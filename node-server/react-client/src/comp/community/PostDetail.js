@@ -1,10 +1,6 @@
 // 게시글 상세보기
 import Reply from "./Reply";
-
-import "../../css/community/PostDetail.css";
-
 import "../../css/community/Content.css";
-
 import {
   EyeIcon,
   HandThumbUpIcon,
@@ -18,10 +14,9 @@ import {
   deletePost,
 } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
-
 import { useUserContext } from "../../context/UserContextProvider";
-
 import { useLoaderData, useParams, useNavigate, Link } from "react-router-dom";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 // html tag -> entity -> tag 로 변환하는 과정 필요
 // 자기 자신을 참조하도록 테이블 관계 설정
@@ -61,11 +56,9 @@ const PostDetail = () => {
     })();
   }, []);
 
-  // 임시 username(session context 에서)
-  const username = "polly@gmail.com";
-
   const btnClass01 =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
+  const imgDefault = "inline-block h-10 w-10 text-slate-500";
 
   // 추천 버튼 클릭
   const onClickUpvote = async () => {
@@ -89,11 +82,13 @@ const PostDetail = () => {
   // 예외 처리를 하지 않으면 alert 후 navigation 하기 전 오류 발생
   return (
     <main className="commu-detail w-full p-5 rounded border border-slate-300">
-      <Link className="board p-2" to={`/community/${board?.b_eng}`}>
-        {board?.b_kor}
-      </Link>
-
       <section className="flex p-2 border-b border-slate-300">
+        <Link
+          className="board inline-block px-2 mr-3 border border-blue-700 text-blue-700 rounded hover:bg-blue-700 hover:text-white"
+          to={`/community/${board?.b_eng}`}
+        >
+          {board?.b_kor}
+        </Link>
         <div className="title flex-1 text-xl font-semibold">
           {post?.p_title}
         </div>
@@ -107,15 +102,15 @@ const PostDetail = () => {
       </section>
 
       <section className="p-2">
-        <img className="inline-block w-50" alt="프로필 이미지" />
-        {/* nickname으로 수정 필요 */}
-        <span className="nickname pl-2">{post?.username}</span>
-
-        <img
-          className="inline-block w-50"
-          src={post?.user["profile_image"]}
-          alt="profile"
-        />
+        {post?.user?.profile_image ? (
+          <img
+            className="inline-block w-50"
+            src={post?.user["profile_image"]}
+            alt="profile"
+          />
+        ) : (
+          <UserCircleIcon className={imgDefault} />
+        )}
         <span className="nickname pl-2">{post?.user["nickname"]}</span>
 
         <span className="float-right">{`${post?.p_date} ${post?.p_time}`}</span>
@@ -135,25 +130,11 @@ const PostDetail = () => {
       </section>
 
       {/* 게시글과 세션 username 비교 후 표시 */}
-
-      <section className="button-box flex justify-end w-full">
-        <Link
-          className={`${btnClass01} mr-4`}
-          to={`/community/write/${post?.p_code}`}
-          state={{ data: post, b_eng: board.b_eng }}
-        >
-          수정
-        </Link>
-        <button className={btnClass01} onClick={onClickDelete}>
-          삭제
-        </button>
-      </section>
-
       {userSession?.username === post?.username && (
         <section className="button-box flex justify-end w-full">
           <Link
             className={`${btnClass01} mr-4`}
-            to={`/community/write/${post?.p_code}`}
+            to={`/community/${board?.b_eng}/write/${post?.p_code}`}
             state={{ data: post, b_eng: board?.b_eng }}
           >
             수정

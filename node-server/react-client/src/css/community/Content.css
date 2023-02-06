@@ -45,3 +45,7 @@
   background: rgba(0, 0, 0, 0.05);
   font-weight: 700;
 }
+
+.ck-content {
+  height: 40vh;
+}
