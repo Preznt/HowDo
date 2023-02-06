@@ -1,25 +1,48 @@
+import { useNavigate } from "react-router-dom";
 import { useTransferContext } from "../../context/TransferContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
 const MainContentRow = () => {
   const { contentButton } = useTransferContext();
-  return (
-    <div
-      className={
-        contentButton
-          ? "m-12 flex w-80 h-64 flex-col justify-center items-center shadow-lg p-3"
-          : "hidden"
-      }
-    >
-      <iframe
-        className="w-full h-full columns-1 aspect-video border-black border-1"
-        src="https://youtu.be/9IS-LYyMFGY"
-      ></iframe>
-      <div className="item-left">
-        <img alt="profile"></img>
-        <h3>영상제목1</h3>
-        <h6>작성자</h6>
-        <h6>조회수</h6>
+  const { videoItemList, setVideoDetail, setRelationship, videoDetail } =
+    useVideoContentContext();
+  const nav = useNavigate();
+
+  const videoView = videoItemList.map((video) => {
+    const onClickHandler = async (e) => {
+      const v_code = e.target.dataset.v_code;
+      // console.log(src);
+      const res = await fetch(`/video/detail/${v_code}`);
+      const { video, category } = await res.json();
+      await setVideoDetail({ ...video });
+      await setRelationship([...category]);
+      return nav(`/video/detail/${v_code}`);
+    };
+    return (
+      <div
+        data-v_code={video.v_code}
+        onClick={onClickHandler}
+        className={
+          contentButton
+            ? "m-12 flex w-80 h-64 flex-col justify-center items-center shadow-lg p-3"
+            : "hidden"
+        }
+      >
+        <iframe
+          className="w-full h-full columns-1 aspect-video border-black border-1"
+          src={video.v_src}
+        ></iframe>
+        <div className="item-left">
+          <img data-v_code={video.v_code} alt="profile"></img>
+          <h3 data-v_code={video.v_code}>{video.v_title}</h3>
+          <h6 data-v_code={video.v_code}>{video.username}</h6>
+        </div>
       </div>
+    );
+  });
+
+  return (
+    <div className="w-full text-center ">
+      <div className="grid grid-cols-3">{videoView}</div>
     </div>
   );
 };
