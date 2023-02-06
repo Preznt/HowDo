@@ -82,8 +82,8 @@ router.get("/posts/get", async (req, res) => {
       limit: 5,
       subQuery: false,
       order: [
-        ["p_upvote", "DESC"],
         ["p_date", "DESC"],
+        ["p_time", "DESC"],
       ],
       raw: true,
     });
@@ -105,8 +105,8 @@ router.get("/posts/get", async (req, res) => {
       limit: 5,
       subQuery: false,
       order: [
-        ["p_upvote", "DESC"],
         ["p_date", "DESC"],
+        ["p_time", "DESC"],
       ],
       raw: true,
     });
@@ -147,7 +147,10 @@ router.get("/board/:bEng/get", async (req, res) => {
           attributes: ["nickname"],
         },
       ],
-      order: [["p_date", "DESC"]],
+      order: [
+        ["p_date", "DESC"],
+        ["p_time", "DESC"],
+      ],
       raw: true,
     });
 
