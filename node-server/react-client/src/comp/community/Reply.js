@@ -1,9 +1,12 @@
 import ReplyList from "./ReplyList";
 import { useLayoutEffect } from "react";
+import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { insertReply, getReply } from "../../service/post.service";
+import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 const Reply = ({ code, list, count }) => {
+  const { userSession } = useUserContext();
   const {
     replyData,
     setReplyData,
@@ -33,6 +36,8 @@ const Reply = ({ code, list, count }) => {
       ...replyData,
       p_code: code,
       r_content: e.target.value,
+      username: userSession.username,
+      r_parent_code: null,
     });
   };
 
@@ -52,19 +57,38 @@ const Reply = ({ code, list, count }) => {
     "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded";
   const inputClass =
     "bg-transparent border-b border-blue-700 flex-1 mr-3 py-1 px-2 leading-tight focus:outline-none";
+  const imgDefault = "inline-block h-10 w-10 text-slate-500";
 
   return (
-    <section className="m-5 w-full">
+    <section className="p-5 w-full">
       <div className="text-lg">{`댓글 ${replyCount} 개`}</div>
-      <div className="reply-input-box flex mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
-        {/* 사용자 nickname 필요 */}
+      <div className="reply-input-box flex gap-3 mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
+        {userSession?.profile_image ? (
+          <img
+            className="rounded-full flex items-center w-10 h-10"
+            src={userSession?.profile_image}
+            alt="profile"
+          />
+        ) : (
+          <UserCircleIcon className={imgDefault} />
+        )}
+        <div className="flex items-center">{userSession?.nickname}</div>
         <input
           className={inputClass}
-          type="text"
           value={replyData.r_content}
           onChange={onChangeHandler}
+          placeholder={
+            !userSession?.username
+              ? "로그인 후 이용해주세요."
+              : "댓글을 입력하세요."
+          }
+          disabled={!userSession?.username ? true : false}
         />
-        <button className={btnClass02} onClick={onClickReply}>
+        <button
+          className={btnClass02}
+          onClick={onClickReply}
+          disabled={!userSession?.username || replyData.r_content.length < 1}
+        >
           등록
         </button>
       </div>

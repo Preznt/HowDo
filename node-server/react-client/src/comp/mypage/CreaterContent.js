@@ -10,6 +10,7 @@ import {
   videoNextButton,
   videoNohover,
 } from "../../nav/classNames/ClassNames";
+
 import { useUserContext } from "../../context/UserContextProvider";
 import { useLoaderData } from "react-router-dom";
 /**
@@ -19,7 +20,9 @@ const CreaterContent = () => {
   const result = useLoaderData();
   const { videoContentList, setVideoContentList } = useVideoContentContext();
   const [position, setPosition] = useState(0);
+
   const { userSession } = useUserContext();
+
   const CONTENT_WIDTH = 392;
   const setHover = (v_code, toggle) => {
     setVideoContentList([
@@ -80,6 +83,7 @@ const CreaterContent = () => {
   return (
     <div className={myPageContentMain}>
       <span className={nameLabel}>최근 업로드한 영상</span>
+
       {userSession.username ? (
         <>
           <div className={videoNextButton} onClick={before}>
@@ -91,6 +95,13 @@ const CreaterContent = () => {
         </>
       ) : null}
 
+      <div className={videoNextButton} onClick={before}>
+        앞
+      </div>
+      <div className={videoBeforeButton} onClick={next}>
+        뒤
+      </div>
+
       <div
         className={videoContenView}
         style={{ transform: `translateX(${position}px)` }}
@@ -101,6 +112,10 @@ const CreaterContent = () => {
             <div className={moreButton}>더보기</div>
           </div>
         ) : null}
+
+        <div className="flex">
+          {videoView},<div className={moreButton}>더보기</div>
+        </div>
       </div>
     </div>
   );

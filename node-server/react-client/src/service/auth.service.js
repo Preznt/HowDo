@@ -1,8 +1,4 @@
-import {
-  KAKAO_APP_ADMIN_KEY,
-  READY_URL,
-  APPROVE_URL,
-} from "../config/kakao_config.js";
+import { KAKAO_APP_ADMIN_KEY, URL } from "../config/kakao_config.js";
 
 export const fetchJoin = async (joinUser) => {
   const fetchOption = {
@@ -45,12 +41,14 @@ export const fetchUser = async () => {
 };
 
 // 결제
-// 결제 승인
 
-export const payApprove = async (dataPayApprove) => {
-  const approveFetchOption = {
+// 결제 준비
+export const payReady = async (statePayReady) => {
+  console.log(statePayReady);
+
+  const fetchOption = {
     method: "POST",
-    body: new URLSearchParams(JSON.parse(dataPayApprove)),
+    body: new URLSearchParams(statePayReady),
     headers: {
       Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
       "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
@@ -58,35 +56,78 @@ export const payApprove = async (dataPayApprove) => {
   };
 
   try {
-    const res = await fetch(APPROVE_URL, approveFetchOption);
+    const res = await fetch(URL.READY, fetchOption);
     const result = await res.json();
+    console.log(result);
+    localStorage.setItem("tid", result.tid);
+    document.location.href = result.next_redirect_pc_url;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+// 결제 승인
+
+export const payApprove = async (dataPayApprove) => {
+  console.log(dataPayApprove);
+  const fetchOption = {
+    method: "POST",
+    body: new URLSearchParams(dataPayApprove),
+    headers: {
+      Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
+      "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+    },
+  };
+
+  try {
+    const res = await fetch(URL.APPROVE, fetchOption);
+    const result = await res.json();
+    // console.log(result);
+    return result;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// 정기 결제 승인완료한 데이터 저장하기 위한 fetch
+
+export const subApprovalSave = async (data) => {
+  const fetchOption = {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+  };
+
+  await fetch("/kakao/sub", fetchOption);
+};
+
+// 정기  결제 요청
+
+export const subscriptionPay = async () => {
+  const fetchOption = {
+    method: "POST",
+    body: new URLSearchParams(),
+    headers: {
+      Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
+      "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+    },
+  };
+
+  try {
+    const res = await fetch(URL.SUBSCRIPTION, fetchOption);
+    const result = res.json();
     console.log(result);
   } catch (e) {
     console.log(e);
   }
 };
 
-// 결제 준비
-export const payReady = async (statePayReady) => {
-  const parseStatePayReady = JSON.parse(statePayReady);
-  console.log(parseStatePayReady);
-
-  const kakaoFetchOption = {
-    method: "POST",
-    body: new URLSearchParams(parseStatePayReady),
-    headers: {
-      Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
-      "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-    },
-  };
-
+export const expireUser = async () => {
   try {
-    const res = await fetch(READY_URL, kakaoFetchOption);
-    const result = await res.json();
+    const res = await fetch("/kakao/expire");
+    const result = res.json();
     console.log(result);
-    localStorage.setItem("tid", result.tid);
-    document.location.href = result.next_redirect_pc_url;
   } catch (e) {
-    console.log("kakao error", e);
+    console.log(`expire sql error \n`, e);
   }
 };

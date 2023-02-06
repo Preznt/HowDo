@@ -1,8 +1,10 @@
 CREATE DATABASE howdo;
+DROP DATABASE howdo;
 USE howdo;
+DROP DATABASE howdo;
 
-DROP TABLE image;
-SELECT * FROM user;
+DROP TABLE subscribe;
+SELECT * FROM subscribe;
 
 -- 사용자정보
 CREATE TABLE IF NOT EXISTS user(
@@ -82,6 +84,7 @@ CREATE TABLE IF NOT EXISTS board(
 	b_code	VARCHAR(125),
 	b_eng	VARCHAR(256)	NOT NULL,	
 	b_kor	VARCHAR(256)	NOT NULL,	
+    b_level INT NOT NULL,
 	b_group_code	VARCHAR(125),		
 	b_group_eng	VARCHAR(256),		
 	b_group_kor	VARCHAR(256),
@@ -144,6 +147,18 @@ username	VARCHAR(256),
 v_code	VARCHAR(256),
 i_code	VARCHAR(256),
 h_date	datetime						DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 구독 테이블
+
+CREATE TABLE IF NOT EXISTS subscribe(
+partner_user_id	VARCHAR(256)	,	
+partner_order_id	VARCHAR(256),		
+sid	VARCHAR(20)	NOT NULL	,
+approved_at	VARCHAR(50)	NOT NULL	,
+inactivated_at	VARCHAR(50)		,
+PRIMARY KEY(partner_user_id,partner_order_id)
+
 );
 
 

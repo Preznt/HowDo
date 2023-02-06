@@ -12,8 +12,7 @@ export const EditorModule = ({ data, handler, code }) => {
     constructor(loader) {
       // 업로드 시 사용될 file loader 객체 인스턴스 생성
       this.loader = loader;
-      this.path = "/upload";
-      // application 이 build 되었을 경우 사용 가능
+      this.path = "/community/upload";
     }
 
     // 업로드 method

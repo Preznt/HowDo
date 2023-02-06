@@ -16,6 +16,10 @@ export default (sequelize, DataTypes) => {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: false,
       },
+      b_level: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: false,
+      },
       b_group_code: {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: true,

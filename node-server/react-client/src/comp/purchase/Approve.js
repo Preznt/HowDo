@@ -1,22 +1,37 @@
-import { payApprove } from "../../service/auth.service";
+import { payApprove, subApprovalSave } from "../../service/auth.service";
 import { usePayContext } from "../../context/PayContextProvider";
+import { dataPayApprove, dataSubApprovalSave } from "../../data/Pay";
 import { useEffect } from "react";
 
 const Approve = () => {
-  const { userSession, setPayApprove, statePayApprove } = usePayContext();
+  const { userSession } = usePayContext();
   const query = window.location.search;
   const pg_token = query.substring(10, 30);
   const tid = localStorage.getItem("tid");
 
-  const dataPayApprove = {
-    cid: "TC0ONETIME",
-    tid: tid,
-    partner_order_id: userSession.username,
-    partner_user_id: userSession.username,
-    pg_token: pg_token,
-  };
+  dataPayApprove.tid = tid;
+  dataPayApprove.pg_token = pg_token;
+  dataPayApprove.partner_user_id = userSession.username;
 
-  payApprove(JSON.stringify(dataPayApprove));
+  // 카카오페이 승인 요청
+
+  useEffect(() => {
+    (async () => {
+      const result = await payApprove(dataPayApprove);
+      // console.log(result);
+
+      if (result.sid) {
+        const data = new dataSubApprovalSave(
+          result.partner_user_id,
+          result.partner_order_id,
+          result.sid,
+          result.approved_at
+        );
+        // console.log(data);
+        subApprovalSave(data);
+      }
+    })();
+  });
 
   return (
     <div>

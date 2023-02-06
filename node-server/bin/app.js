@@ -28,6 +28,7 @@ import userRouter from "../routes/user.js";
 import communityRouter from "../routes/community.js";
 import createrAPI from "../routes/createrAPI.js";
 import videoRouter from "../routes/video.js";
+import kakaoRouter from "../routes/kakaoAPI.js";
 // create express framework
 const app = express();
 
@@ -69,7 +70,9 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join("public")));
+app.use(express.static(path.join("react-client/build")));
+// 첫번째 인수 /public 은 미디어 파일 get 경로 설정
+app.use("/public", express.static(path.join("public")));
 
 // router link enable
 app.use("/", indexRouter);
@@ -77,6 +80,7 @@ app.use("/user", userRouter);
 app.use("/community", communityRouter);
 app.use("/mypage", createrAPI);
 app.use("/video", videoRouter);
+app.use("/kakao", kakaoRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

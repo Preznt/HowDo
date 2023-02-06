@@ -28,7 +28,7 @@ const CommRank = ({ data }) => {
             <span>{item.p_replies}</span>
           </div>
           {/* nickname으로 수정 필요 */}
-          <div className="text-left text-sm">{item.username}</div>
+          <div className="text-left text-sm">{item["user.nickname"]}</div>
           <div className="text-right">{item["board.b_kor"]}</div>
         </Link>
       );
