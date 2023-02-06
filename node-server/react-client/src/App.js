@@ -26,8 +26,8 @@ function AppSample() {
           <NavRow />
           <div className="flex flex-row">
             <Nav />
+            <Outlet />
           </div>
-          <Outlet />
         </div>
       )}
     </>

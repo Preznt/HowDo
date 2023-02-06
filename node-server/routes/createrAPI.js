@@ -15,7 +15,19 @@ router.get("/search", async (req, res, next) => {
     return res.json(error);
   }
 });
-
+router.get("/creater", async (req, res, next) => {
+  console.log("여기");
+  try {
+    const result = await USER.findAll({
+      attributes: ["username", "profile_image", "nickname"],
+      order: ["nickname"],
+    });
+    console.log(result);
+    return res.json(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 router.get("/total/:query", async (req, res, next) => {
   const query = req.params.query;
   console.log("object");
@@ -61,7 +73,10 @@ router.get("/creater/:id", async (req, res, next) => {
       limit: 10,
     });
     return res.json({ u_result: id, v_result: result });
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+    return res.json({ u_result: null, v_result: null });
+  }
 });
 router.get("/:username", async (req, res, next) => {
   const nickname = req.params.username;
