@@ -10,7 +10,7 @@ const ShortsMain = () => {
 
   useEffect(() => {
     const item = async () => {
-      const res = await fetch("/video");
+      const res = await fetch("/video/shorts");
       const result = await res.json();
       let tempArray = [...result];
       tempArray.sort(() => Math.random() - 0.5);

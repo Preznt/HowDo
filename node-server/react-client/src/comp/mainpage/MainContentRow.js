@@ -3,18 +3,18 @@ import { useTransferContext } from "../../context/TransferContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
 const MainContentRow = () => {
   const { contentButton } = useTransferContext();
-  const { videoItemList, setVideoDetail, setRelationship, videoDetail } =
+  const { videoItemList, setVideoDetail, setRelationship } =
     useVideoContentContext();
   const nav = useNavigate();
 
   const videoView = videoItemList.map((video) => {
     const onClickHandler = async (e) => {
       const v_code = e.target.dataset.v_code;
-      // console.log(src);
       const res = await fetch(`/video/detail/${v_code}`);
       const { video, category } = await res.json();
       await setVideoDetail({ ...video });
       await setRelationship([...category]);
+      await new Promise((r) => setTimeout(r, 100));
       return nav(`/video/detail/${v_code}`);
     };
     return (
@@ -23,7 +23,7 @@ const MainContentRow = () => {
         onClick={onClickHandler}
         className={
           contentButton
-            ? "m-12 flex w-80 h-64 flex-col justify-center items-center shadow-lg p-3"
+            ? "m-8 flex w-80 h-64 flex-col justify-center items-center shadow-lg p-3"
             : "hidden"
         }
       >
@@ -42,7 +42,7 @@ const MainContentRow = () => {
 
   return (
     <div className="w-full text-center ">
-      <div className="grid grid-cols-3">{videoView}</div>
+      <div className="grid grid-cols-4">{videoView}</div>
     </div>
   );
 };

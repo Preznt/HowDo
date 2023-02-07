@@ -1,19 +1,20 @@
+import { useEffect } from "react";
 import ReactPlayer from "react-player";
-import { useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useUserContext } from "../../context/UserContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
 const VideoDetail = () => {
   const { videoDetail, relationship } = useVideoContentContext();
-  const nav = useNavigate();
-  const relationshipItem = relationship.filter((item) => {
+  const { userSession } = useUserContext();
+  const relationshipItems = relationship.filter((item) => {
     return item.v_code !== videoDetail.v_code;
   });
 
-  const imageStyle = {
-    width: "1350px",
-    height: "600px",
-  };
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  const videoRelationshipView = relationshipItem.map((video) => {
+  const videoRelationshipView = relationshipItems.map((video) => {
     return (
       <div
         data-v_code={video.v_code}
@@ -36,30 +37,44 @@ const VideoDetail = () => {
         <div className="flex-1 ">
           <div className="pb-10 pr-10 block border-b-2">
             <ReactPlayer
-              url={videoDetail.v_src} // 플레이어 url
-              width="1350px" // 플레이어 크기 (가로)
-              height="600px" // 플레이어 크기 (세로)
-              playing={false} // 자동 재생 on
-              muted={false} // 자동 재생 on
-              controls={true} // 플레이어 컨트롤 노출 여부
-              light={false} // 플레이어 모드
-              pip={false} // pip 모드 설정 여부
+              url={videoDetail.v_src}
+              width="1350px"
+              height="600px"
+              playing={false}
+              muted={false}
+              controls={true}
+              light={false}
+              pip={false}
             />
           </div>
           <div>
-            <div className="text-4xl">{videoDetail.v_title}</div>
-            <div>{videoDetail.username}</div>
-            <div>{videoDetail.v_detail}</div>
+            <div>
+              <div className="text-4xl">{videoDetail.v_title}</div>
+              <div>{videoDetail.username}</div>
+              <div>{videoDetail.v_detail}</div>
+            </div>
           </div>
+          {userSession.username === videoDetail.username ? (
+            <div className="flex justify-end">
+              <button className="bg-cyan-600 rounded-md mr-2 text-white p-2 px-3">
+                수정
+              </button>
+              <button className="bg-cyan-600 rounded-md mr-10 text-white p-2 px-3 ">
+                삭제
+              </button>
+            </div>
+          ) : (
+            <></>
+          )}
         </div>
         <aside className="border-l-2 pb-80 flex-1">
           {videoRelationshipView}
         </aside>
       </div>
     );
-  } else if (videoDetail.v_price > 0) {
+  } else if (videoDetail.v_price !== 0) {
     alert("결제가 필요한 동영상 입니다");
-    return nav("/");
+    return <Navigate to="/" />;
   }
 };
 export default VideoDetail;
