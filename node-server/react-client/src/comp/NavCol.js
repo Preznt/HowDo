@@ -1,51 +1,41 @@
 import { Link } from "react-router-dom";
 import { useUserContext } from "../context/UserContextProvider";
 import { navCol } from "../nav/classNames/ClassNames";
+import { FaPenSquare, FaHome } from "react-icons/fa";
+import { FiLogIn, FiLogOut } from "react-icons/fi";
+import { IoPeopleCircleSharp, IoLayersSharp } from "react-icons/io5";
 
 const NavCol = () => {
   const { userSession, logoutHandler } = useUserContext();
+  const regist = "회원\n가입";
   return (
-    <div className="flex flex-col top-15 min-w-fit bg-slate-400/90 h-screen p-1 content-center fixed">
-      <Link
-        className="mt-6 w-full bg-inherit text-white hover:bg-white hover:text-black font-bold py-2 px-4 rounded text-center ring-1 ring-yellow-400"
-        to="/"
-      >
-        <img
-          className="m-auto"
-          src="./image/images.png"
-          width="50px"
-          height="30px"
-          alt="home"
-        />
-        <h3>Home</h3>
+    <div className="flex flex-col p-3 top-15 min-w-fit bg-black/90 h-screen p-1 content-center fixed">
+      <Link className={navCol} to="/">
+        <FaHome size={30} />
       </Link>
 
       <Link className={navCol} to="/community">
-
-        게시판
+        <FaPenSquare size={30} />
       </Link>
       <Link className={navCol} to="/contents">
-        노하우
+        <IoLayersSharp size={30} />
       </Link>
       <Link className={navCol} height="50px" to="/creater">
-        크리에이터
+        <IoPeopleCircleSharp size={30} />
       </Link>
       {userSession.username ? (
-        <Link
-          className="mt-12 max-w-[112px] bg-inherit text-white hover:bg-white hover:text-black font-bold py-2 px-4 rounded text-center ring-1 ring-yellow-400"
-          onClick={logoutHandler}
-          to="#"
-        >
-          {userSession.nickname} 님 로그아웃
+        <Link className={navCol} onClick={logoutHandler} to="#">
+          {userSession.nickname}
+          <FiLogOut siez={20} className="m-auto" />
         </Link>
       ) : (
         <Link className={navCol} to="/user/login">
-          로그인
+          <FiLogIn size={30} />
         </Link>
       )}
       {userSession.username ? null : (
         <Link className={navCol} to="/user">
-          회원가입
+          {regist}
         </Link>
       )}
     </div>

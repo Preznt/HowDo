@@ -6,13 +6,14 @@ import { useUserContext } from "../context/UserContextProvider";
 import MainButton from "./mainpage/MainButton";
 import "../css/mainbar.css";
 import { navRow, navRowMlAuto } from "../nav/classNames/ClassNames";
-
+import { IoMenu, IoSearchOutline } from "react-icons/io5";
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
   const navigate = useNavigate();
   const { currentSearch, onChange, onKeyUp, autoComplete } =
     useAutoSearchContext();
   const { userSession, logoutHandler } = useUserContext();
+  const { searchKeyword, setSearchKeyword } = useAutoSearchContext();
   const searchRef = useRef(null);
 
   const borderStyle = {
@@ -26,6 +27,7 @@ const NavRow = () => {
 
   const onClick = async () => {
     if (currentSearch) {
+      setSearchKeyword(currentSearch);
       navigate(`/search/${currentSearch}`);
     } else {
       alert("검색어를 입력하세요");
@@ -39,6 +41,7 @@ const NavRow = () => {
         alert("검색어를 입력하세요");
         searchRef.current.focus();
       } else {
+        setSearchKeyword(currentSearch);
         navigate(`/search/${currentSearch}`);
       }
     }
@@ -53,26 +56,18 @@ const NavRow = () => {
     return (
       <div
         key={index}
-        className="autocomplete cursor-pointer hover:bg-gray-300 rounded-lg"
+        className="autocomplete cursor-pointer pl-4 mb-1 hover:bg-gray-300 rounded-lg"
       >
         {word}
       </div>
     );
   });
-
+  console.log(autoComplete);
   return (
     <>
-      <div className="mainbar flex bg-slate-400/90 top-0 left-0 right-0 mb-12 fixed pr-2 z-50">
-        <div
-          className="flex w-12 h-8 m-3 mr-0 content-center justify-center cursor-pointer "
-          onClick={openClickHandler}
-        >
-          <img
-            src="./image/burger.png"
-            width="40px"
-            height="50px"
-            alt="burgermenu"
-          />
+      <div className="mainbar flex bg-black/90 top-0 left-0 right-0 mb-12 fixed pr-2 z-50">
+        <div className="flex w-12 h-8 m-3 mr-0 content-center justify-center cursor-pointer ">
+          <IoMenu color="white" size={30} onClick={openClickHandler} />
         </div>
         <div className="ml-auto">
           <MainButton />
@@ -89,22 +84,17 @@ const NavRow = () => {
             style={borderStyle}
           />
           {autoComplete ? (
-            <div className="absolute top-11 left-0 min-h-fit min-w-full bg-white border-black rounded-lg shadow-lg">
+            <div className="absolute top-12 left-0 min-h-fit min-w-[213px] bg-white border-black rounded-lg shadow-lg">
               {autoCompleteView}
             </div>
-          ) : (
-            ""
-          )}
+          ) : null}
 
           <label className="mt-3 bg-white h-8 rounded-full cursor-pointer">
-            <img
+            <IoSearchOutline
               onClick={onClick}
-              src="./image/images.png"
-              alt="searchImage"
-              width="50px"
-              height="30px"
+              size={31}
               className="rounded-full"
-            ></img>
+            />
           </label>
         </div>
         {userSession.username ? null : (
