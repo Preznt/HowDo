@@ -13,6 +13,7 @@ const NavRow = () => {
   const { currentSearch, onChange, onKeyUp, autoComplete } =
     useAutoSearchContext();
   const { userSession, logoutHandler } = useUserContext();
+  const { searchKeyword, setSearchKeyword } = useAutoSearchContext();
   const searchRef = useRef(null);
 
   const borderStyle = {
@@ -26,6 +27,7 @@ const NavRow = () => {
 
   const onClick = async () => {
     if (currentSearch) {
+      setSearchKeyword(currentSearch);
       navigate(`/search/${currentSearch}`);
     } else {
       alert("검색어를 입력하세요");
@@ -39,6 +41,7 @@ const NavRow = () => {
         alert("검색어를 입력하세요");
         searchRef.current.focus();
       } else {
+        setSearchKeyword(currentSearch);
         navigate(`/search/${currentSearch}`);
       }
     }
