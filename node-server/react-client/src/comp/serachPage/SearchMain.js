@@ -1,5 +1,6 @@
 import ReactPlayer from "react-player";
 import { useNavigate, useLoaderData } from "react-router-dom";
+import { useAutoSearchContext } from "../../context/AutoSearchProvider";
 import {
   wrapperDiv,
   nameSpan,
@@ -7,6 +8,7 @@ import {
   searchItemwrap,
 } from "../../nav/classNames/ClassNames";
 
+// search 페이지 진입시 사용하는 데이터 fetch
 export const SearchLoader = async ({ params }) => {
   const currentSearch = params.query;
   const res = await fetch(`/mypage/total/${currentSearch}`);
@@ -15,8 +17,10 @@ export const SearchLoader = async ({ params }) => {
 };
 
 const SearchMain = () => {
+  const { searchKeyword, setSearchKeyword } = useAutoSearchContext();
   const navigate = useNavigate();
   const SearchR = useLoaderData();
+  // 서칭된 아이템 클릭으로 유저 상세 페이지 진입하도록 하는 함수
   const itemClick = (item) => {
     navigate(`/creater/${item.nickname}`);
   };
@@ -42,11 +46,16 @@ const SearchMain = () => {
       <div className={searchItemwrap} key={item.v_code}>
         <ReactPlayer className={videoNohover} src={item.v_src}></ReactPlayer>
         <div className="mt-4 text-center">{item.v_title}</div>
-        <div className="mt-4 text-center">{item.t_views}</div>
+        <div className="mt-4 text-center">{item.v_views}</div>
       </div>
     );
   });
-  const searchNull = <span className="m-auto"> 검색결과가 없습니다</span>;
+  const searchNull = (
+    <span className="m-auto">
+      {" "}
+      "{searchKeyword}"에 관한 검색결과가 없습니다
+    </span>
+  );
 
   return (
     <div className="flex flex-col ml-40 w-full">
@@ -62,8 +71,6 @@ const SearchMain = () => {
       <div className={wrapperDiv}>{searchNull}</div>
       <span className={nameSpan}>댓글 검색 공간입니다</span>
       <div className={wrapperDiv}>{searchNull}</div>
-
-      {SearchR.u_result ? userSearchView : searchNull}
     </div>
   );
 };

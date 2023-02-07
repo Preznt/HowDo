@@ -3,16 +3,18 @@ import CreaterContent from "./CreaterContent";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePayContext } from "../../context/PayContextProvider";
 import Purchase from "../purchase/Purchase";
+import ModifyPopup from "./ModifyPopup";
 
+// mypage 진입시 사용하는 정보 fetch
 export const myPageFetch = async ({ params }) => {
   const username = params.id;
-
   const response = await fetch(`/mypage/${username}`);
   const result = await response?.json();
   return result;
 };
 const MyPageMain = () => {
-  const { userSession, modalHandler } = useUserContext();
+  const { userSession, modalHandler, setModifierOpen, modifierOpen } =
+    useUserContext();
   const { payReadyBody, statePayReady } = usePayContext();
   const navigate = useNavigate();
   const twoClickEvent = () => {
@@ -20,9 +22,10 @@ const MyPageMain = () => {
     payReadyBody();
     console.log(statePayReady);
   };
-
+  // 유저 세션에 username 이 존재할 때 mypage 구현 없으실 home으로 돌아가지도록 설정
   return (
     <>
+      <ModifyPopup />
       {userSession.username ? (
         <div className="w-full">
           <div className="m-12 ml-56 w-full h-60 container border-2 border-black">
@@ -46,12 +49,22 @@ const MyPageMain = () => {
                   : "./image/noimage.png"
               }
               alt="profile"
+              onClick={() => {
+                setModifierOpen(!modifierOpen);
+              }}
             />
-            <div>{userSession.nickname}</div>
-            <div className="ml-auto" onClick={twoClickEvent}>
+            <div className="ml-6 mt-auto mb-auto hover:text-blue-600 hover:cursor-pointer font-bold">
+              {userSession.nickname}
+            </div>
+            <div
+              className="ml-auto hover:text-blue-600 hover:cursor-pointer font-bold"
+              onClick={twoClickEvent}
+            >
               구독
             </div>
-            <div>게시글 작성</div>
+            <div className="ml-6 hover:text-blue-600 hover:cursor-pointer font-bold">
+              게시글 작성
+            </div>
           </div>
           <div className="ml-44">
             <CreaterContent />

@@ -55,12 +55,24 @@ const VideoUpload = (props) => {
       formData.append("upload", file);
       formData.append("detail", JSON.stringify(detail));
       formData.append("shorts", JSON.stringify(shorts));
-      const res = await axios.post("/video/upload", formData, {
+      close();
+      setDetail({
+        url: "",
+        video: false,
+        v_title: "",
+        v_price: 0,
+        v_detail: "",
+        v_category: "none",
+        v_save_file: "",
+      });
+      setShorts({
+        shorts: false,
+      });
+      await axios.post("/video/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      const result = await res.json();
     }
   };
   return (
@@ -84,6 +96,25 @@ const VideoUpload = (props) => {
               />
             ) : (
               <div className="modal h-full">
+                <label
+                  htmlFor="video_upload"
+                  className="modal p-6 mt-20 leading-10 border-2 rounded-full inline-block cursor-pointer"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="modal w-10 h-10"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
+                    />
+                  </svg>
+                </label>
                 <input
                   className="modal hidden"
                   type="file"
@@ -91,25 +122,6 @@ const VideoUpload = (props) => {
                   accept="video/*"
                   onChange={videoUpload}
                 />
-                <label
-                  for="video_upload"
-                  className="modal p-6 mt-20 leading-10 border-2 rounded-full inline-block cursor-pointer"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="modal w-10 h-10"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-                    />
-                  </svg>
-                </label>
               </div>
             )}
           </div>
@@ -117,11 +129,13 @@ const VideoUpload = (props) => {
             <input
               onChange={titleOnChangeHandler}
               placeholder="제목을 입력하세요"
+              value={detail.v_title}
               className="modal border-2 p-0.5 rounded-full w-2/4 p-1.5"
             />
             <select
               onChange={selectOnChangeHandler}
               className="modal p-1.5 border-2 rounded-full w-64 my-1"
+              value={detail.v_category}
             >
               <option value="none">카테고리</option>
               <option value="음악">음악</option>
@@ -130,22 +144,23 @@ const VideoUpload = (props) => {
             </select>
           </div>
           <div className="modal mb-12">
-            <label for="detail" className="block">
+            <label htmlFor="detail" className="block">
               내용
             </label>
             <textarea
               id="detail"
               className="modal w-3/4 border-2"
               onChange={detailOnChangeHandler}
+              value={detail.v_detail}
             ></textarea>
           </div>
           <div className="modal ">
-            <label for="v_price" className="modal ">
+            <label htmlFor="v_price" className="modal ">
               가격설정
             </label>
             {shorts.shorts ? (
               <div className="modal ">
-                <label for="v_price" className="modal ">
+                <label htmlFor="v_price" className="modal ">
                   가격설정
                 </label>
                 <input
@@ -161,11 +176,12 @@ const VideoUpload = (props) => {
                   type="checkbox"
                   className="shorts"
                   onChange={shortsOnChangeHandler}
+                  checked={shorts.shorts}
                 />
               </div>
             ) : (
               <div className="modal ">
-                <label for="v_price" className="modal ">
+                <label htmlFor="v_price" className="modal ">
                   가격설정
                 </label>
                 <input
@@ -181,19 +197,20 @@ const VideoUpload = (props) => {
                   type="checkbox"
                   className="shorts"
                   onChange={shortsOnChangeHandler}
+                  checked={shorts.shorts}
                 />
               </div>
             )}
           </div>
           <div className="modal mb-7">
             <button
-              class="modal px-4 py-2 rounded-l-xl text-white m-0 bg-red-500 hover:bg-red-600 transition"
+              className="modal px-4 py-2 rounded-l-xl text-white m-0 bg-red-500 hover:bg-red-600 transition"
               onClick={onClickHandler}
             >
               저장
             </button>
             <button
-              class="modal px-4 py-2 rounded-r-xl bg-neutral-200 hover:bg-neutral-300 transition mb-16"
+              className="modal px-4 py-2 rounded-r-xl bg-neutral-200 hover:bg-neutral-300 transition mb-16"
               onClick={close}
             >
               돌아가기

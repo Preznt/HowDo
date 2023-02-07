@@ -19,9 +19,9 @@ export const getMainPosts = async () => {
   }
 };
 
-export const getBoardPosts = async (bEng) => {
+export const getBoardPosts = async (bEng, order) => {
   try {
-    const response = await fetch(`/community/board/${bEng}/get`);
+    const response = await fetch(`/community/board/${bEng}/${order}/get`);
     const result = await response.json();
     // board, data;
     return result;

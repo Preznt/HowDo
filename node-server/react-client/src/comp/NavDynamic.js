@@ -25,8 +25,8 @@ const NavDynamic = ({ nOpen, setNOpen }) => {
       <div
         className={
           nOpen
-            ? "fixed w-48 z-50 top-14 -left-20 transition-all duration-700 translate-x-20 bg-black text-white h-screen"
-            : "fixed top-14 -left-24 z_1"
+            ? "fixed w-48 z-50 p-4 top-14 -left-20 transition-all duration-700 translate-x-20 bg-black/100 text-white h-screen"
+            : "fixed top-14 -left-24 z_1 p-4"
         }
       >
         <div>
@@ -35,7 +35,7 @@ const NavDynamic = ({ nOpen, setNOpen }) => {
             src="./image/memo.png"
             alt="post_upload"
           ></img>
-          <div className="mb-12">게시글 업로드</div>
+          <div className="text-center mb-12 ">게시글 업로드</div>
         </div>
         <div>
           <img
@@ -44,7 +44,10 @@ const NavDynamic = ({ nOpen, setNOpen }) => {
             src="./image/clapperboard.png"
             alt="video_upload"
           ></img>
-          <div className="mb-12" onClick={() => ModelHandler("video")}>
+          <div
+            className="mb-12 text-center"
+            onClick={() => ModelHandler("video")}
+          >
             동영상 업로드
           </div>
         </div>
@@ -54,7 +57,7 @@ const NavDynamic = ({ nOpen, setNOpen }) => {
             src="./image/photo.png"
             alt="image_upload"
           ></img>
-          <div className="mb-12">이미지 업로드</div>
+          <div className="mb-12 text-center">이미지 업로드</div>
         </div>
         <div>
           <img
@@ -62,7 +65,7 @@ const NavDynamic = ({ nOpen, setNOpen }) => {
             src="./image/subscribe.png"
             alt="subscribe"
           ></img>
-          <div className="mb-12">구독 관리</div>
+          <div className="mb-12 text-center">구독 관리</div>
         </div>
       </div>
     </>

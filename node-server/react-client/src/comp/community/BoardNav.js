@@ -6,13 +6,21 @@ const BoardNav = ({ data }) => {
     return data.map((item) => {
       if (item.b_group_code === "B1") {
         return (
-          <NavLink className="board-link" to={`/community/${item.b_eng}`}>
+          <NavLink
+            key={item.b_code}
+            className="board-link"
+            to={`/community/${item.b_eng}`}
+          >
             {item.b_kor}
           </NavLink>
         );
       } else {
         return (
-          <NavLink className="board-link" to={`/community/${item.b_eng}`}>
+          <NavLink
+            key={item.b_code}
+            className="board-link"
+            to={`/community/${item.b_eng}`}
+          >
             {item.b_kor}
           </NavLink>
         );

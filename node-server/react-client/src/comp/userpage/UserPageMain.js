@@ -3,6 +3,7 @@ import { usePayContext } from "../../context/PayContextProvider";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import Purchase from "../purchase/Purchase";
 import CreaterPageContent from "./CreaterPageContent";
+import { useEffect } from "react";
 
 export const userPageFetch = async ({ params }) => {
   const username = params.id;
@@ -14,13 +15,25 @@ const UserPageMain = () => {
   const { userSession, modalHandler } = useUserContext();
   const { payReadyBody, statePayReady } = usePayContext();
   const createrResult = useLoaderData();
+  const navigate = useNavigate();
   const twoClickEvent = () => {
     modalHandler();
     payReadyBody(createrResult?.u_result?.username);
     console.log(statePayReady);
   };
-  const navigate = useNavigate();
-  console.log(createrResult);
+
+  // const returnHome = () => {
+  // console.log(createrResult?.u_result?.username);
+  // console.log(userSession);
+  // if (createrResult?.u_result?.username === userSession.username) {
+  // navigate(`/${userSession.nickname}`);
+  // }
+  // return false;
+  // };
+  // useEffect(() => {
+  // returnHome();
+  // }, []);
+
   return (
     <>
       {createrResult.u_result ? (
@@ -47,11 +60,18 @@ const UserPageMain = () => {
               }
               alt="profile"
             />
-            <div>{createrResult?.u_result?.nickname}</div>
-            <div className="ml-auto" onClick={twoClickEvent}>
+            <div className="ml-6 mt-auto mb-auto hover:text-blue-600 hover:cursor-pointer">
+              {createrResult?.u_result?.nickname}
+            </div>
+            <div
+              className="ml-auto hover:text-blue-600 hover:cursor-pointer"
+              onClick={twoClickEvent}
+            >
               구독
             </div>
-            <div>게시글 작성</div>
+            {createrResult?.u_result?.username === userSession.username ? (
+              <div>게시글 작성</div>
+            ) : null}
           </div>
           <div className="ml-44">
             <CreaterPageContent />

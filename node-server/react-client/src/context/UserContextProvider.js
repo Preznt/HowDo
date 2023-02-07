@@ -12,7 +12,7 @@ export const useUserContext = () => {
 
 export const UserContextProvider = ({ children }) => {
   const [creater, setCreater] = useState();
-
+  const [modifierOpen, setModifierOpen] = useState(false);
   const [joinUser, setJoinUser] = useState(new User());
   const [login, setLogin] = useState(new Login());
   const [error, setError] = useState({});
@@ -86,6 +86,8 @@ export const UserContextProvider = ({ children }) => {
 
     creater,
     setCreater,
+    modifierOpen,
+    setModifierOpen,
   };
 
   return <UserContext.Provider value={props}>{children}</UserContext.Provider>;

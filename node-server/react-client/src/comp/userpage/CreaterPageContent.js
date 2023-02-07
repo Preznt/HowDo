@@ -12,12 +12,14 @@ import {
   videoNextButton,
   videoNohover,
 } from "../../nav/classNames/ClassNames";
-
+import {
+  IoArrowForwardCircleSharp,
+  IoArrowBackCircleSharp,
+} from "react-icons/io5";
 const CreaterPageContent = () => {
   const createrResult = useLoaderData();
   const { videoContentList, setVideoContentList } = useVideoContentContext();
   const [position, setPosition] = useState(0);
-  const { userSession } = useUserContext();
   const CONTENT_WIDTH = 392;
   useEffect(() => {
     setVideoContentList(createrResult.v_result);
@@ -40,7 +42,7 @@ const CreaterPageContent = () => {
 
   const before = () => {
     let newPosition = position - CONTENT_WIDTH;
-    if (position <= (CONTENT_WIDTH * createrResult.v_result.length - 1) * -1) {
+    if (position <= (CONTENT_WIDTH * videoContentList.length - 1) * -1) {
       newPosition = 0;
     }
     setPosition(newPosition);
@@ -49,7 +51,7 @@ const CreaterPageContent = () => {
   const next = () => {
     let newPosition = position + CONTENT_WIDTH;
     if (position === 0) {
-      newPosition = CONTENT_WIDTH * (createrResult.v_result.length - 1) * -1;
+      newPosition = CONTENT_WIDTH * (videoContentList.length - 1) * -1;
     }
     setPosition(newPosition);
   };
@@ -81,14 +83,18 @@ const CreaterPageContent = () => {
   return (
     <div className={myPageContentMain}>
       <span className={nameLabel}>최근 업로드한 영상</span>
-      {createrResult.v_result[0] ? (
+      {createrResult?.v_result[0] ? (
         <>
-          <div className={videoNextButton} onClick={before}>
-            앞
-          </div>
-          <div className={videoBeforeButton} onClick={next}>
-            뒤
-          </div>
+          <IoArrowBackCircleSharp
+            className={videoNextButton}
+            onClick={before}
+            size={40}
+          />
+          <IoArrowForwardCircleSharp
+            className={videoBeforeButton}
+            onClick={next}
+            size={40}
+          />
           <div
             className={videoContenView}
             style={{ transform: `translateX(${position}px)` }}

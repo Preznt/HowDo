@@ -23,7 +23,7 @@ import VideoDetail from "../comp/Video/VideoDetail";
 import CreaterMain, {
   loader as CreaterFetch,
 } from "../comp/userpage/CreaterMain";
-import ShortsMain from "../comp/Video/ShortsVideo";
+import ShortMain from "../comp/Video/Main";
 import VideoDetail from "../comp/Video/VideoDetail";
 
 const router = createBrowserRouter([
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
       },
       { path: "/approval", element: <Approve /> },
       { path: "/search/:query", loader: SearchLoader, element: <SearchMain /> },
-      { path: "/video/shorts", element: <ShortsMain /> },
+      { path: "/video/shorts", element: <ShortMain /> },
       { path: "/video/detail/:v_code", element: <VideoDetail /> },
     ],
   },
