@@ -57,10 +57,14 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: 0,
       },
-      p_upvote: {
+      p_upvotes: {
         type: Sequelize.DataTypes.BIGINT,
         allowNull: true,
         defaultValue: 0,
+      },
+      p_thumb: {
+        type: Sequelize.DataTypes.STRING(256),
+        allowNull: true,
       },
       b_group_code: {
         type: Sequelize.DataTypes.STRING(125),

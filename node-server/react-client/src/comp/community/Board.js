@@ -19,7 +19,7 @@ const Board = () => {
   const { data, board } = useLoaderData();
   const orderList = [
     { o_eng: "latest", o_kor: "최신순" },
-    { o_eng: "upvote", o_kor: "추천순" },
+    { o_eng: "upvotes", o_kor: "추천순" },
     { o_eng: "replies", o_kor: "댓글순" },
     { o_eng: "views", o_kor: "조회순" },
   ];
@@ -61,6 +61,7 @@ const Board = () => {
         <button
           className={`search-select relative w-30 ${selectClass}`}
           onClick={onClickShowOrder}
+          onBlur={onClickShowOrder}
         >
           <BarsArrowDownIcon className="inline-block mr-3 h-5 w-5 text-slate-500" />
           {orderValue}

@@ -63,7 +63,7 @@ router.get("/posts/get", async (req, res) => {
         limit: 5,
         subQuery: false,
         order: [
-          ["p_upvote", "DESC"],
+          ["p_upvotes", "DESC"],
           ["p_date", "DESC"],
         ],
         raw: true,
@@ -126,8 +126,8 @@ router.get("/board/:bEng/:order/get", async (req, res) => {
       ["p_date", "DESC"],
       ["p_time", "DESC"],
     ],
-    upvote: [
-      ["p_upvote", "DESC"],
+    upvotes: [
+      ["p_upvotes", "DESC"],
       ["p_date", "DESC"],
       ["p_time", "DESC"],
     ],
@@ -155,7 +155,7 @@ router.get("/board/:bEng/:order/get", async (req, res) => {
         "p_date",
         "p_time",
         "p_views",
-        "p_upvote",
+        "p_upvotes",
       ],
       where: { [Op.and]: [{ b_code: board.b_code }, { p_deleted: null }] },
       include: [
@@ -286,7 +286,7 @@ router.get("/post/:pCode/delete", async (req, res, next) => {
   // });
 });
 
-router.patch("/post/upvote", async (req, res, next) => {
+router.patch("/post/upvotes", async (req, res, next) => {
   const data = req.body;
   try {
     await UPVOTE.create(data);
@@ -296,8 +296,12 @@ router.patch("/post/upvote", async (req, res, next) => {
   }
   try {
     const result = await POST.update(
-      { p_upvote: sequelize.literal("p_upvote + 1") },
+      { p_upvotes: sequelize.literal("p_upvotes + 1") },
       { where: { p_code: req.body.p_code } }
+    );
+    await USER.update(
+      { upvotes: sequelize.literal("upvotes + 1") },
+      { where: { username: req.body.username } }
     );
     return res.send(result);
   } catch (err) {
@@ -323,7 +327,6 @@ router.get("/reply/:pCode/get", async (req, res) => {
         { model: USER, attributes: ["nickname", "profile_image"] },
       ],
     });
-    console.log(replyList);
     // 게시글의 최상위 댓글 수
     const replyCount = await POST.findOne({
       attributes: ["p_replies"],
@@ -339,6 +342,7 @@ router.post("/reply/insert", async (req, res) => {
   const data = req.body;
   try {
     const result = await REPLY.create(data);
+    console.log(result);
     // r_parent_code 가 null 일 경우(최상위 댓글일 경우)
     if (result && !data.r_parent_code) {
       await POST.update(

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getReply, insertReply, deleteReply } from "../../service/post.service";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
@@ -6,7 +6,6 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 const ReplyItem = ({ item, index }) => {
   const { userSession } = useUserContext();
-  console.log("item", item);
   const { setReplyList, setReplyCount, initReply, cReplyData, setCReplyData } =
     usePostContext();
   const [inputValues, setInputValues] = useState([]);
@@ -25,19 +24,21 @@ const ReplyItem = ({ item, index }) => {
     setInputValues(values);
   };
 
-  // cf) eventHandler 에 값을 전달해야 할 경우 중첩 callback 을 사용해야 한다.
-  // cf) 함수의 코드가 전부 실행된 이후에 state의 값이 변경된다.
-  // 문제1. insert 함수 실행 전 setState 해야
-  // 문제2. 대댓글 표시 방법
-  const onClickCReply = async (index) => {
-    await setCReplyData({
+  useEffect(() => {
+    setCReplyData({
       ...cReplyData,
       username: userSession.username,
       p_code: item.p_code,
       r_content: inputValues[index],
       r_parent_code: item.r_code,
     });
-    console.log(cReplyData);
+  }, [inputValues]);
+
+  // cf) eventHandler 에 값을 전달해야 할 경우 중첩 callback 을 사용해야 한다.
+  // cf) 함수의 코드가 전부 실행된 이후에 state의 값이 변경된다.
+  // 문제1. insert 함수 실행 전 setState 해야
+  // 문제2. 대댓글 표시 방법
+  const onClickCReply = async () => {
     await insertReply(cReplyData);
     let data = await getReply(cReplyData.p_code);
     if (data) {
@@ -134,11 +135,9 @@ const ReplyItem = ({ item, index }) => {
           <button
             className={btnClass02}
             disabled={
-              !userSession?.username && cReplyData.r_content.length < 1
-                ? true
-                : false
+              !userSession?.username || inputValues[index] < 1 ? true : false
             }
-            onClick={() => onClickCReply(index)}
+            onClick={() => onClickCReply()}
           >
             등록
           </button>

@@ -21,7 +21,7 @@ const CommRank = ({ data }) => {
             <EyeIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
             <span className="mr-2">{item.p_views}</span>
             <HandThumbUpIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
-            <span className="mr-2">{item.p_upvote}</span>
+            <span className="mr-2">{item.p_upvotes}</span>
             <ChatBubbleOvalLeftEllipsisIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
             <span>{item.p_replies}</span>
           </div>

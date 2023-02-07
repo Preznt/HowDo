@@ -76,6 +76,8 @@ const PostWrite = () => {
 
   return (
     <form className="post-editor">
+      {/* 게시판 리스트 버튼 나열 */}
+      <div></div>
       <input
         className="title w-full p-1 pl-2 mb-2 border border-[#ccced1] focus:outline-none focus:border-[#2977ff]"
         name="p_title"

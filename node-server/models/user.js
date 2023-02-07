@@ -41,6 +41,11 @@ export default (sequelize) => {
         type: Sequelize.DataTypes.INTEGER,
         allowNull: true,
       },
+      upvote: {
+        type: Sequelize.DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+      },
       title_image: {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
