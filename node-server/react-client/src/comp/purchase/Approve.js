@@ -8,30 +8,31 @@ const Approve = () => {
   const query = window.location.search;
   const pg_token = query.substring(10, 30);
   const tid = localStorage.getItem("tid");
+  const order_id = localStorage.getItem("order_id");
 
   dataPayApprove.tid = tid;
   dataPayApprove.pg_token = pg_token;
   dataPayApprove.partner_user_id = userSession.username;
-  dataPayApprove.partner_order_id =
-    // 카카오페이 승인 요청
+  dataPayApprove.partner_order_id = order_id;
+  // 카카오페이 승인 요청
 
-    useEffect(() => {
-      (async () => {
-        const result = await payApprove(dataPayApprove);
-        // console.log(result);
+  useEffect(() => {
+    (async () => {
+      const result = await payApprove(dataPayApprove);
+      // console.log(result);
 
-        if (result.sid) {
-          const data = new dataSubApprovalSave(
-            result.partner_user_id,
-            result.partner_order_id,
-            result.sid,
-            result.approved_at
-          );
-          // console.log(data);
-          subApprovalSave(data);
-        }
-      })();
-    });
+      if (result.sid) {
+        const data = new dataSubApprovalSave(
+          result.partner_user_id,
+          result.partner_order_id,
+          result.sid,
+          result.approved_at
+        );
+        // console.log(data);
+        subApprovalSave(data);
+      }
+    })();
+  });
 
   return (
     <div>

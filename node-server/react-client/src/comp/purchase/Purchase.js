@@ -46,9 +46,8 @@ const Purchase = () => {
               <h2>₩{userSession.price}/월</h2>
               <button
                 className="p-2 ml-5 rounded-full text-white bg-sky-600 hover:bg-sky-700"
-                onClick={async () => {
-                  const approveData = await payReady(statePayReady);
-                  console.log(approveData);
+                onClick={() => {
+                  payReady(statePayReady);
                 }}
               >
                 구독하기

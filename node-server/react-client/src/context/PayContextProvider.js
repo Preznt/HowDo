@@ -21,6 +21,7 @@ export const PayContextProvider = ({ children }) => {
       partner_order_id: orderUser,
       item_name: orderUser,
     });
+    localStorage.setItem("order_id", orderUser);
   };
 
   const props = {
