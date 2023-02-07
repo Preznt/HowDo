@@ -301,7 +301,7 @@ router.patch("/post/upvote", async (req, res, next) => {
     );
     await USER.update(
       { upvote: sequelize.literal("upvote + 1") },
-      { where: { username: req.body.username } }
+      { where: { username: req.body.p_user } }
     );
     console.log(req.body.username);
     return res.send(result);

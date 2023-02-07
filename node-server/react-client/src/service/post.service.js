@@ -90,12 +90,16 @@ export const deletePost = async (pCode) => {
     }
 };
 
-export const upvotePost = async (pCode, username) => {
+export const upvotePost = async (pCode, pUser, username) => {
   try {
     const fetchOption = {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ p_code: pCode, username: username }),
+      body: JSON.stringify({
+        p_code: pCode,
+        p_user: pUser,
+        username: username,
+      }),
     };
     const response = await fetch(`/community/post/upvote`, fetchOption);
     const result = await response.json();

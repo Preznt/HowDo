@@ -66,7 +66,11 @@ const PostDetail = () => {
       alert("로그인 후 이용해주세요.");
       return null;
     }
-    const result = await upvotePost(post.p_code, userSession?.username);
+    const result = await upvotePost(
+      post.p_code,
+      post.username,
+      userSession?.username
+    );
 
     if (result) setUpvotes(upvotes + result[0]);
   };
