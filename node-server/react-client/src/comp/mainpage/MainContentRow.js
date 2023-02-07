@@ -20,6 +20,7 @@ const MainContentRow = () => {
     return (
       <div
         data-v_code={video.v_code}
+        key={video.v_code}
         onClick={onClickHandler}
         className={
           contentButton
