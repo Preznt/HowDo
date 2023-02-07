@@ -17,11 +17,11 @@ import PostWrite from "../comp/community/PostWrite";
 import Approve from "../comp/purchase/Approve";
 import SearchMain, { SearchLoader } from "../comp/serachPage/SearchMain";
 import UserPageMain, { userPageFetch } from "../comp/userpage/UserPageMain";
-import ShortsVideo from "../comp/Video/ShortsVideo";
 import VideoDetail from "../comp/Video/VideoDetail";
 import CreaterMain, {
   loader as CreaterFetch,
 } from "../comp/userpage/CreaterMain";
+import ShortsMain from "../comp/Video/Main";
 
 const router = createBrowserRouter([
   {
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
       },
       { path: "/approval", element: <Approve /> },
       { path: "/search/:query", loader: SearchLoader, element: <SearchMain /> },
-      { path: "/video/shorts", element: <ShortsVideo /> },
+      { path: "/video/shorts", element: <ShortsMain /> },
       { path: "/video/detail/:v_code", element: <VideoDetail /> },
     ],
   },
