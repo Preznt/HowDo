@@ -1,4 +1,9 @@
 export const KAKAO_APP_ADMIN_KEY = "";
 
-export const READY_URL = "https://kapi.kakao.com/v1/payment/ready";
-export const APPROVE_URL = "https://kapi.kakao.com/v1/payment/approve";
+export const URL = {
+  READY: "https://kapi.kakao.com/v1/payment/ready",
+  APPROVE: "https://kapi.kakao.com/v1/payment/approve",
+  SUBSCRIPTION: "https://kapi.kakao.com/v1/payment/subscription",
+  SUBSCRIPTION_INACTIVE:
+    "https://kapi.kakao.com/v1/payment/manage/subscription/inactive",
+};
