@@ -91,7 +91,6 @@ const CreaterContent = () => {
   return (
     <div className={myPageContentMain}>
       <span className={nameLabel}>최근 업로드한 영상</span>
-
       {result?.recent[0] ? (
         <>
           <IoArrowBackCircleSharp

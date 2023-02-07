@@ -60,8 +60,13 @@ const UserPageMain = () => {
               }
               alt="profile"
             />
-            <div>{createrResult?.u_result?.nickname}</div>
-            <div className="ml-auto" onClick={twoClickEvent}>
+            <div className="ml-6 mt-auto mb-auto hover:text-blue-600 hover:cursor-pointer">
+              {createrResult?.u_result?.nickname}
+            </div>
+            <div
+              className="ml-auto hover:text-blue-600 hover:cursor-pointer"
+              onClick={twoClickEvent}
+            >
               구독
             </div>
             {createrResult?.u_result?.username === userSession.username ? (

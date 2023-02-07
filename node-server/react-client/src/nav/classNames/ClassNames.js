@@ -60,3 +60,7 @@ export const moreButton = classNames(
 export const videoNohover = classNames(
   "m-9 mt-10 p-7 flex w-80 h-64 flex-col justify-center items-center shadow-lg border-2 border-black "
 );
+
+export const Modifier = classNames(
+  "absolute flex left-0 top-0 right-0 bottom-0 bg-black/10 z-50"
+);
