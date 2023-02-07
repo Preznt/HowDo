@@ -40,7 +40,7 @@ const PostDetail = () => {
   const bEng = useParams().board;
   const { detail, reply } = useLoaderData();
   const { replyCount, setReplyCount } = usePostContext();
-  const [upvote, setUpvote] = useState();
+  const [upvotes, setUpvotes] = useState();
   let board = detail?.board;
   let post = detail?.post;
   let list = reply?.list;
@@ -51,7 +51,7 @@ const PostDetail = () => {
       if (detail.ERROR) {
         nav(`/community/${bEng}`, { replace: true });
       }
-      setUpvote(post?.p_upvote);
+      setUpvotes(post?.p_upvotes);
       setReplyCount(count);
     })();
   }, []);
@@ -66,9 +66,13 @@ const PostDetail = () => {
       alert("로그인 후 이용해주세요.");
       return null;
     }
-    const result = await upvotePost(post.p_code, userSession?.username);
+    const result = await upvotePost(
+      post.p_code,
+      post.username,
+      userSession?.username
+    );
 
-    if (result) setUpvote(upvote + result[0]);
+    if (result) setUpvotes(upvotes + result[0]);
   };
 
   // 삭제 버튼 클릭
@@ -81,7 +85,7 @@ const PostDetail = () => {
 
   // 예외 처리를 하지 않으면 alert 후 navigation 하기 전 오류 발생
   return (
-    <main className="commu-detail w-full p-5 rounded border border-slate-300">
+    <main className="commu-detail w-full p-5 mb-10 rounded border border-slate-300">
       <section className="flex p-2 border-b border-slate-300">
         <Link
           className="board inline-block px-2 mr-3 border border-blue-700 text-blue-700 rounded hover:bg-blue-700 hover:text-white"
@@ -96,7 +100,7 @@ const PostDetail = () => {
         {/* 게시글 열람하면 조회수가 그대로인데 새로고침, 뒤로가기 하면 올라가는 이유?.. */}
         <span className="mr-4">{post?.p_views}</span>
         <HandThumbUpIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
-        <span className="mr-4">{upvote}</span>
+        <span className="mr-4">{upvotes}</span>
         <ChatBubbleOvalLeftEllipsisIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
         <span>{replyCount}</span>
       </section>
@@ -123,7 +127,7 @@ const PostDetail = () => {
         ></div>
 
         <button className={btnClass01} onClick={onClickUpvote}>
-          <div className="text-xl">{upvote}</div>
+          <div className="text-xl">{upvotes}</div>
           <HandThumbUpIcon className="inline-block m-1 mb-2 h-5 w-5" />
           추천
         </button>

@@ -6,7 +6,6 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 const ReplyItem = ({ item, index }) => {
   const { userSession } = useUserContext();
-  console.log("item", item);
   const { setReplyList, setReplyCount, initReply, cReplyData, setCReplyData } =
     usePostContext();
   const [inputValues, setInputValues] = useState([]);
@@ -27,24 +26,29 @@ const ReplyItem = ({ item, index }) => {
 
   // cf) eventHandler 에 값을 전달해야 할 경우 중첩 callback 을 사용해야 한다.
   // cf) 함수의 코드가 전부 실행된 이후에 state의 값이 변경된다.
-  // 문제1. insert 함수 실행 전 setState 해야
-  // 문제2. 대댓글 표시 방법
+  // !! state 값이 setting 되기 전에 함수가 먼저 호출되는 문제 !! => function updater 로 해결
   const onClickCReply = async (index) => {
-    await setCReplyData({
-      ...cReplyData,
-      username: userSession.username,
-      p_code: item.p_code,
-      r_content: inputValues[index],
-      r_parent_code: item.r_code,
+    // cf) function updater
+    // setState 내에서 callback 실행
+    // 매개변수는 현재 state 값, callback 에서 return 되는 값은 state 에 저장될 값
+    // 현재 값에 바로 setting 한 뒤 fetch 함수를 호출했다.
+    setCReplyData(async (reply) => {
+      reply = {
+        ...cReplyData,
+        username: userSession.username,
+        p_code: item.p_code,
+        r_content: inputValues[index],
+        r_parent_code: item.r_code,
+      };
+      await insertReply(reply);
+      let data = await getReply(reply.p_code);
+      if (data) {
+        setReplyList([...data.list]);
+        setReplyCount(data.count);
+        setCReplyData(initReply);
+      }
+      return reply;
     });
-    console.log(cReplyData);
-    await insertReply(cReplyData);
-    let data = await getReply(cReplyData.p_code);
-    if (data) {
-      setReplyList([...data.list]);
-      setReplyCount(data.count);
-      setCReplyData(initReply);
-    }
   };
 
   const onClickDelete = async () => {
@@ -134,9 +138,7 @@ const ReplyItem = ({ item, index }) => {
           <button
             className={btnClass02}
             disabled={
-              !userSession?.username && cReplyData.r_content.length < 1
-                ? true
-                : false
+              !userSession?.username || inputValues[index] < 1 ? true : false
             }
             onClick={() => onClickCReply(index)}
           >

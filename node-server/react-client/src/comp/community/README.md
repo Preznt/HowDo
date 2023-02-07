@@ -34,7 +34,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
    https://ckeditor.com/docs/ckeditor5/latest/installation/frameworks/react.html
 
    - Integrating a build from the online builder 항목
-   - !!! config={Editor.defaultConfig} 로 값 변경(해당 경로: ckeditor5/src/ckeditor.js) !
+   - media embed 가 필요없다면 config={Editor.defaultConfig} 로 값 변경(해당 경로: ckeditor5/src/ckeditor.js)
 
 ## 추가 설정
 
@@ -53,7 +53,7 @@ config={{
 
 2. style 별도 지정
 
-- blockquote, ul, ol, li, figure, table 등
+- ul, ol, li, blockquote, figcaption, table, image 등
 - text-huge 등 text size 관련 className
 
 3. "widget toolbar no items" {toolbarId: 'mediaEmbed'} 오류가 생길 경우  
@@ -65,6 +65,7 @@ removePlugins: ["MediaEmbedToolbar"],
 
 ## 기타
 
-- 다시 build 해야 할 경우 NodeJS 폴더에서 node_modules 폴더, package-lock.json 삭제 후 install
+- 다시 build 해야 할 경우 NodeJS 폴더에서 node_modules 폴더 삭제 후 install
+- 만약 git merge master 를 반복해서 ckeditor 폴더에 필요없는 파일이 쌓일 경우 해당 폴더 삭제 후 새로운 폴더를 복사, node_modules 폴더 삭제 후 install
 - https://ckeditor.com/docs/ckeditor5/latest/features/images/image-upload/image-upload.html  
   서버에서 임시(에디터에만 업로드),영구 이미지 저장 로직 구현해야

@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS user(
 	level	INT,		
 	credit	INT,		
 	delete_date	VARCHAR(256),		
-	price	INT,		
+	price	INT,
+    upvote INT DEFAULT 0,
+    title_image VARCHAR(256),
 	PRIMARY KEY(username)	
 );
 
@@ -104,7 +106,8 @@ CREATE TABLE IF NOT EXISTS post(
 	p_deleted	VARCHAR(125),		
 	p_views	BIGINT		DEFAULT 0,
 	p_replies	BIGINT		DEFAULT 0,
-	p_upvote	BIGINT		DEFAULT 0,
+	p_upvotes	BIGINT		DEFAULT 0,
+    p_thumb VARCHAR(256),
 	b_group_code	VARCHAR(125),
 	PRIMARY KEY(p_code)
 );
