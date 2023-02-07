@@ -1,11 +1,11 @@
-import Video from "./Video";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import { useEffect } from "react";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
+import ShortsVideo from "./ShortsVideo";
 
-const VideoMain = () => {
+const ShortsMain = () => {
   const { setVideoItemList, videoItemList } = useVideoContentContext();
 
   useEffect(() => {
@@ -20,17 +20,18 @@ const VideoMain = () => {
   }, []);
 
   const videoView = videoItemList.map((video) => {
-    console.log(video);
-    return <Video video={video.v_src} key={video.v_src} />;
+    return <ShortsVideo video={video.sh_src} key={video.v_src} />;
   });
 
+  const shortsStyle = {
+    marginLeft: "120px",
+    width: "92%",
+  };
+
   return (
-    <div className="text-center bg-black py-32">
-      <Slider infinite={false}>
-        {videoView}
-        <div />
-      </Slider>
+    <div style={shortsStyle} className="text-center mt-10">
+      <Slider infinite={false}>{videoView}</Slider>
     </div>
   );
 };
-export default VideoMain;
+export default ShortsMain;

@@ -7,10 +7,8 @@ import MyPageMain, {
 import Join from "../comp/login/Join";
 import Login from "../comp/login/Login";
 import LoginModal from "../comp/login/Login";
-import CommMain from "../comp/community/CommMain";
-
 import CommIndex, { loader as CommLoader } from "../comp/community/CommIndex";
-
+import CommMain, { loader as CommMainLoader } from "../comp/community/CommMain";
 import Board, { loader as BoardLoader } from "../comp/community/Board";
 import PostDetail, {
   loader as DetailLoader,
@@ -19,9 +17,11 @@ import PostWrite from "../comp/community/PostWrite";
 import Approve from "../comp/purchase/Approve";
 import SearchMain, { SearchLoader } from "../comp/serachPage/SearchMain";
 import UserPageMain, { userPageFetch } from "../comp/userpage/UserPageMain";
+
 import CreaterMain, {
   loader as CreaterFetch,
 } from "../comp/userpage/CreaterMain";
+
 
 const router = createBrowserRouter([
   {
@@ -44,7 +44,7 @@ const router = createBrowserRouter([
         loader: CommLoader,
         element: <CommIndex />,
         children: [
-          { path: "", element: <CommMain /> },
+          { path: "", loader: CommMainLoader, element: <CommMain /> },
           {
             path: ":board",
             loader: BoardLoader,
@@ -60,6 +60,8 @@ const router = createBrowserRouter([
       },
       { path: "/approval", element: <Approve /> },
       { path: "/search/:query", loader: SearchLoader, element: <SearchMain /> },
+      { path: "/video/shorts", element: <ShortsMain /> },
+      { path: "/video/detail/:v_code", element: <VideoDetail /> },
     ],
   },
 ]);

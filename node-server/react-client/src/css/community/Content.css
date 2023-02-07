@@ -47,5 +47,15 @@
 }
 
 .ck-content {
-  height: 40vh;
+  height: 70vh;
+}
+
+.thumb-select img {
+  width: 15%;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.thumb-select img:hover {
+  opacity: 1;
 }

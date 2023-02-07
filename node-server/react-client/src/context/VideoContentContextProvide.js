@@ -32,6 +32,8 @@ export const VideoContentContextProvider = ({ children }) => {
     v_category: "",
     v_save_file: "",
   });
+  const [videoDetail, setVideoDetail] = useState({});
+  const [relationship, setRelationship] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -64,6 +66,10 @@ export const VideoContentContextProvider = ({ children }) => {
 
     loading,
     setLoading,
+    videoDetail,
+    setVideoDetail,
+    relationship,
+    setRelationship,
   };
 
   return (

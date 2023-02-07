@@ -1,8 +1,6 @@
 import { NavLink } from "react-router-dom";
 
 const BoardNav = ({ data }) => {
-  console.log(data);
-
   // 그룹별로
   const BoardItem = () => {
     return data.map((item) => {

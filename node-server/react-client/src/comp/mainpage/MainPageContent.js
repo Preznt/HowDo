@@ -22,6 +22,12 @@ const MainPageContent = () => {
       <Link to="#" className="rounded-full p-2 m-1.5 bg-black text-white">
         컨텐츠 주제 6
       </Link>
+      <Link
+        to="/video/shorts"
+        className="rounded-full p-2 m-1.5 bg-black text-white"
+      >
+        Shorts
+      </Link>
     </div>
   );
 };
