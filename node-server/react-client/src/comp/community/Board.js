@@ -30,7 +30,7 @@ const Board = () => {
   // 정렬기준 선택에 따라 게시글 리스트를 변경해야 함
   useLayoutEffect(() => {
     setPostList([...data]);
-  }, []);
+  }, [data]);
 
   const onClickSetOrder = async (value, text) => {
     const { data } = await getBoardPosts(board.b_eng, value);
