@@ -12,7 +12,7 @@ i_detail	TEXT	,
 i_category	VARCHAR(50)						,
 i_views	BIGINT,						
 i_price	INT	,					
-i_reg_date	DATETIME		default current_timestamp,
+i_reg_date	DATETIME	NOT NULL		default current_timestamp,
 i_start_date	DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 i_delete_date	VARCHAR(125)
 
@@ -30,9 +30,12 @@ i_delete_date
 VALUES(
 "src","title","detail","category",12,13000,"deletedate");
 
-UPDATE image SET i_src = "update src", i_price = "5000" WHERE i_code = 1;
-    
-		
 
-
-
+INSERT INTO subscribe(
+partner_user_id,
+partner_order_id,
+sid,
+approved_at
+)
+VALUES(
+"src","title","detail","category",12,13000,"deletedate");

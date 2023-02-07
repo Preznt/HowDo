@@ -21,7 +21,8 @@ import UserPageMain, { userPageFetch } from "../comp/userpage/UserPageMain";
 import CreaterMain, {
   loader as CreaterFetch,
 } from "../comp/userpage/CreaterMain";
-
+import ShortsMain from "../comp/Video/ShortsVideo";
+import VideoDetail from "../comp/Video/VideoDetail";
 
 const router = createBrowserRouter([
   {

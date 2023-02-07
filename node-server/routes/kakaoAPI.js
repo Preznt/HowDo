@@ -5,6 +5,7 @@ import schedule from "node-schedule";
 import moment from "moment";
 
 const SUBSCRIBE = DB.models.subscribe;
+const USER = DB.models.user;
 
 const router = express.Router();
 
@@ -20,20 +21,24 @@ router.post("/sub", async (req, res) => {
 //  날마다? "0 0 * * *"
 const job = schedule.scheduleJob("*/10 * * * * *", async () => {
   console.log("매 15초마다 실행");
-  const now = moment().format("YYYY/MM/DD HH:mm:ss");
+  const now = moment().format("YYYY/MM/DD");
   const MonthLater = moment().add(30, "d").format("YYYY/MM/DD HH:mm:ss");
   console.log(now);
   console.log(MonthLater);
 
   try {
-    const result = await SUBSCRIBE.findAll({});
+    const result = await SUBSCRIBE.findAll({
+      attributes: ["partner_user_id", "partner_order_id", "sid"],
+      where: { approved_at: now },
+      include: { model: USER, as: "f_sub_user", attributes: ["price"] },
+    });
     console.log(result);
   } catch (e) {
     console.log(`${SYSTEM_RES.SQL_ERROR} \n`, e);
   }
 });
 
-// job.cancel();
+job.cancel();
 
 router.get("/expire", async (req, res) => {});
 
