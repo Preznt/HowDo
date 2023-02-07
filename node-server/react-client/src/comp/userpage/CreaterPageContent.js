@@ -12,7 +12,10 @@ import {
   videoNextButton,
   videoNohover,
 } from "../../nav/classNames/ClassNames";
-
+import {
+  IoArrowForwardCircleSharp,
+  IoArrowBackCircleSharp,
+} from "react-icons/io5";
 const CreaterPageContent = () => {
   const createrResult = useLoaderData();
   const { videoContentList, setVideoContentList } = useVideoContentContext();
@@ -82,12 +85,16 @@ const CreaterPageContent = () => {
       <span className={nameLabel}>최근 업로드한 영상</span>
       {createrResult?.v_result[0] ? (
         <>
-          <div className={videoNextButton} onClick={before}>
-            앞
-          </div>
-          <div className={videoBeforeButton} onClick={next}>
-            뒤
-          </div>
+          <IoArrowBackCircleSharp
+            className={videoNextButton}
+            onClick={before}
+            size={40}
+          />
+          <IoArrowForwardCircleSharp
+            className={videoBeforeButton}
+            onClick={next}
+            size={40}
+          />
           <div
             className={videoContenView}
             style={{ transform: `translateX(${position}px)` }}
