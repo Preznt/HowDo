@@ -20,7 +20,7 @@ import UserPageMain, { userPageFetch } from "../comp/userpage/UserPageMain";
 import CreaterMain, {
   loader as CreaterFetch,
 } from "../comp/userpage/CreaterMain";
-import ShortMain from "../comp/Video/ShortsVideo";
+import ShortMain from "../comp/Video/Main";
 import VideoDetail from "../comp/Video/VideoDetail";
 
 const router = createBrowserRouter([

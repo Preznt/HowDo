@@ -118,13 +118,34 @@ router.get("/posts/get", async (req, res) => {
 });
 
 // community board fetch
-router.get("/board/:bEng/get", async (req, res) => {
+router.get("/board/:bEng/:order/get", async (req, res) => {
   const bEng = req.params.bEng;
+  const order = req.params.order;
+  const orderOption = {
+    latest: [
+      ["p_date", "DESC"],
+      ["p_time", "DESC"],
+    ],
+    upvote: [
+      ["p_upvote", "DESC"],
+      ["p_date", "DESC"],
+      ["p_time", "DESC"],
+    ],
+    replies: [
+      ["p_replies", "DESC"],
+      ["p_date", "DESC"],
+      ["p_time", "DESC"],
+    ],
+    views: [
+      ["p_views", "DESC"],
+      ["p_date", "DESC"],
+      ["p_time", "DESC"],
+    ],
+  };
   try {
     const board = await BOARD.findOne({
       where: { b_eng: bEng },
     });
-
     const data = await POST.findAll({
       attributes: [
         "p_code",
@@ -147,14 +168,9 @@ router.get("/board/:bEng/get", async (req, res) => {
           attributes: ["nickname"],
         },
       ],
-      order: [
-        ["p_date", "DESC"],
-        ["p_time", "DESC"],
-      ],
+      order: orderOption[`${order}`],
       raw: true,
     });
-
-    console.log(data);
     return res.status(200).send({ board, data });
   } catch (err) {
     console.error(err);
@@ -165,21 +181,23 @@ router.get("/board/:bEng/get", async (req, res) => {
 router.get("/post/:pCode/get", async (req, res) => {
   try {
     const pCode = req.params?.pCode;
-    const result = await POST.findByPk(pCode, {
+    await POST.update(
+      { p_views: sequelize.literal("p_views + 1") },
+      { where: { p_code: pCode } }
+    );
+    const post = await POST.findByPk(pCode, {
       include: {
         model: USER,
         attributes: ["nickname", "profile_image"],
       },
     });
-    const board = await BOARD.findByPk(result.toJSON().b_code);
-    if (result.toJSON().p_deleted) {
+    const board = await BOARD.findByPk(post.toJSON().b_code);
+    if (post.toJSON().p_deleted) {
       return res.send({
         ERROR: "삭제된 게시글입니다.",
         bEng: board.toJSON().b_eng,
       });
     }
-    let post = await result.increment("p_views", { by: 1 });
-    post = post.toJSON();
     return res.status(200).send({ post, board });
   } catch (err) {
     console.error(err);
