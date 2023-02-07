@@ -62,8 +62,6 @@ const SearchMain = () => {
       <div className={wrapperDiv}>{searchNull}</div>
       <span className={nameSpan}>댓글 검색 공간입니다</span>
       <div className={wrapperDiv}>{searchNull}</div>
-
-      {SearchR.u_result ? userSearchView : searchNull}
     </div>
   );
 };
