@@ -5,11 +5,12 @@ import { getBoardPosts } from "../../service/post.service";
 import { useLoaderData, Link } from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
 import { BarsArrowDownIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
 
 export const loader = async ({ params }) => {
   const bEng = params.board;
-  const { data, board } = await getBoardPosts(bEng);
+  const order = "latest";
+  const { data, board } = await getBoardPosts(bEng, order);
   return { data, board };
 };
 
@@ -18,15 +19,23 @@ const Board = () => {
   const { data, board } = useLoaderData();
   const orderList = [
     { o_eng: "latest", o_kor: "최신순" },
-    { o_eng: "upvotes", o_kor: "추천순" },
+    { o_eng: "upvote", o_kor: "추천순" },
     { o_eng: "replies", o_kor: "댓글순" },
     { o_eng: "views", o_kor: "조회순" },
   ];
+  const [postList, setPostList] = useState([]);
   const [showOrder, setShowOrder] = useState(false);
   const [orderValue, setOrderValue] = useState(`${orderList[0].o_kor}`);
 
-  const onClickSetOrder = (value) => {
-    setOrderValue(value);
+  // 정렬기준 선택에 따라 게시글 리스트를 변경해야 함
+  useLayoutEffect(() => {
+    setPostList([...data]);
+  }, [data]);
+
+  const onClickSetOrder = async (value, text) => {
+    const { data } = await getBoardPosts(board.b_eng, value);
+    setPostList([...data]);
+    setOrderValue(text);
   };
 
   const onClickShowOrder = () => {
@@ -61,14 +70,16 @@ const Board = () => {
           >
             {orderList.map((order) => {
               return (
-                <checkbox
+                <div
+                  key={order.o_eng}
+                  type="checkbox"
                   className={`${optionClass}`}
                   name="order"
                   value={order.o_eng}
-                  onClick={() => onClickSetOrder(order.o_kor)}
+                  onClick={() => onClickSetOrder(order.o_eng, order.o_kor)}
                 >
                   {order.o_kor}
-                </checkbox>
+                </div>
               );
             })}
           </div>
@@ -92,7 +103,7 @@ const Board = () => {
           </Link>
         )}
       </section>
-      <BoardList data={data} />
+      <BoardList data={postList} />
     </main>
   );
 };
