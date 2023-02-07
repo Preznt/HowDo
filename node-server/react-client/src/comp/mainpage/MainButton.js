@@ -1,8 +1,18 @@
 import { useTransferContext } from "../../context/TransferContextProvider";
 import { button } from "../../nav/classNames/ClassNames";
+import { useVideoContentContext } from "../../context/VideoContentContextProvide";
 
 const MainButton = () => {
   const context = useTransferContext();
+  const { setVideoItemList } = useVideoContentContext();
+
+  const item = async () => {
+    const res = await fetch("/video/main");
+    const result = await res.json();
+    let tempArray = [...result];
+    tempArray.sort(() => Math.random() - 0.5);
+    setVideoItemList([...tempArray]);
+  };
 
   const bbsOpen = () => {
     if (context.contentButton) context.setContentButton(false);
@@ -11,7 +21,8 @@ const MainButton = () => {
 
     // console.log(context.bbsButton);
   };
-  const contentOpen = () => {
+  const contentOpen = async () => {
+    await item();
     if (context.bbsButton) context.setBbsButton(false);
     if (!context.bbsButton) context.setContentButton(true);
     else context.setContentButton(!context.contentButton);

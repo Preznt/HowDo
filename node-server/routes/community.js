@@ -41,7 +41,7 @@ router.get("/posts/get", async (req, res) => {
       group: "b_group_code",
     });
 
-    let boardList = [];
+    const boardList = [];
     for (let board of notGeneral) {
       let items = {};
       items.b_group_code = `${board.b_group_code}`;
@@ -71,17 +71,14 @@ router.get("/posts/get", async (req, res) => {
       boardList.push(items);
     }
 
-    const noticeList = POST.findAll({
+    const noticeList = {};
+    noticeList.b_code = `B11`;
+    noticeList.b_kor = `공지`;
+    noticeList.list = await POST.findAll({
       where: {
         [Op.and]: [{ b_code: `B11` }, { p_deleted: null }],
       },
-      include: [
-        { model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] },
-        {
-          model: USER,
-          attributes: ["nickname"],
-        },
-      ],
+      include: [{ model: BOARD, attributes: ["b_code", "b_kor", "b_eng"] }],
       limit: 5,
       subQuery: false,
       order: [
@@ -91,7 +88,10 @@ router.get("/posts/get", async (req, res) => {
       raw: true,
     });
 
-    const freeList = POST.findAll({
+    const freeList = {};
+    freeList.b_code = `B12`;
+    freeList.b_kor = `자유게시판`;
+    freeList.list = await POST.findAll({
       where: {
         [Op.and]: [{ b_code: `B12` }, { p_deleted: null }],
       },
