@@ -4,7 +4,7 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { fetchLogin } from "../../service/auth.service";
 
 const Login = () => {
-  const { login, setLogin, error, setError, onClickHandler } = useUserContext();
+  const { login, setLogin, loginError, onClickHandler } = useUserContext();
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -67,8 +67,8 @@ const Login = () => {
                 비밀번호 찾기
               </a>
             </div> */}
-            {error.CODE ? (
-              <p className="text-red-500 text-right">{error.MESSAGE}</p>
+            {loginError.CODE ? (
+              <p className="text-red-500 text-right">{loginError.MESSAGE}</p>
             ) : (
               ""
             )}

@@ -31,6 +31,7 @@ const job = schedule.scheduleJob("*/10 * * * * *", async () => {
       attributes: ["partner_user_id", "partner_order_id", "sid"],
       where: { approved_at: now },
       include: { model: USER, as: "f_sub_user", attributes: ["price"] },
+      // where: { approved_at: now },
     });
     console.log(result);
   } catch (e) {

@@ -67,7 +67,7 @@ export const chkJoin = async (info) => {
   }
 
   // 인서트하기
-  if (info.button)
+  if (info.name === "BUTTON") {
     try {
       await USER.create(info);
       return info.username;
@@ -75,6 +75,7 @@ export const chkJoin = async (info) => {
       console.log(e.message);
       throw new Error(JSON.stringify(USER_JOIN_RES.USER_NOT_CREATE));
     }
+  }
 };
 
 export const chkLogin = async (info) => {

@@ -3,30 +3,32 @@ import { fetchJoin } from "../../service/auth.service";
 const Join = () => {
   const { joinUser, setJoinUser, error, setError, inputRef } = useUserContext();
 
-  const onChangeHandler = (e) => {
+  const onChangeHandler = async (e) => {
+    const tagName = e.target.tagName;
     const { name, value } = e.target;
-
-    setJoinUser({ ...joinUser, [name]: value });
+    await setJoinUser({ ...joinUser, [name]: value, name: tagName });
+    console.log(joinUser);
   };
 
   const onClickHandler = async (e) => {
-    if (e.target.tagName === "BUTTON") {
-      setJoinUser({ ...joinUser, button: true });
+    const tagName = e.target.tagName;
+    if (tagName === "BUTTON") {
+      await setJoinUser({ ...joinUser, name: tagName });
     }
-
     const result = await fetchJoin(joinUser);
     if (result.CODE) {
       setError({ ...result });
     }
-    if (result == joinUser.username && e.target.tagName === "BUTTON") {
+    if (result == joinUser.username && tagName === "BUTTON") {
       document.location.href = "/";
     }
     console.log(result);
   };
 
-  const twoEvent = (e) => {
-    onChangeHandler(e);
-    onClickHandler(e);
+  const twoEvent = async (e) => {
+    await onChangeHandler(e);
+    await new Promise((r) => setTimeout(r, 200));
+    await onClickHandler(e);
   };
 
   const submitHandler = (e) => {
@@ -65,6 +67,7 @@ const Join = () => {
                       name="username"
                       id="username"
                       onChange={twoEvent}
+                      onBlur={twoEvent}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_USERNAME" ? (
@@ -90,6 +93,7 @@ const Join = () => {
                       name="nickname"
                       id="nickname"
                       onChange={twoEvent}
+                      onBlur={twoEvent}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_NICKNAME" ? (
@@ -114,14 +118,15 @@ const Join = () => {
                       type="password"
                       name="password"
                       id="password"
-                      onChange={twoEvent}
+                      onChange={onChangeHandler}
+                      onBlur={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
-                    {error.CODE === "REQ_PASSWORD" ? (
+                    {joinUser.password ? null : (
                       <p className="text-red-500 mb-2 text-center">
                         비밀번호를 입력해 주세요
                       </p>
-                    ) : null}
+                    )}
                   </div>
 
                   <div className="col-span-6 sm:col-span-3">
@@ -135,16 +140,22 @@ const Join = () => {
                       type="password"
                       name="re_password"
                       id="re_password"
-                      onChange={twoEvent}
+                      onChange={onChangeHandler}
+                      onBlur={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_RE_PASSWORD" ? (
                       <p className="text-red-500 mb-2 text-center">
                         비밀번호 확인을 입력해 주세요
                       </p>
-                    ) : error.CODE === "MATCH_NOT_RE_PASSWORD" ? (
+                    ) : joinUser.password &&
+                      joinUser.password === joinUser.re_password ? (
+                      <p className="text-green-500 mb-2 text-center">
+                        비밀번호가 일치합니다
+                      </p>
+                    ) : joinUser.password !== joinUser.re_password ? (
                       <p className="text-red-500 mb-2 text-center">
-                        비밀번호와 비밀번호 확인이 일치하지 않습니다
+                        비밀번호가 일치하지 않습니다
                       </p>
                     ) : null}
                   </div>

@@ -4,7 +4,7 @@ import { usePayContext } from "../../context/PayContextProvider";
 import { payReady } from "../../service/auth.service";
 
 const Purchase = () => {
-  const { modal, modalHandler, joinUser } = useUserContext();
+  const { modal, modalHandler, userSession } = useUserContext();
   const { statePayReady } = usePayContext();
 
   return (
@@ -37,17 +37,18 @@ const Purchase = () => {
               src="https://yt3.ggpht.com/Uk6ujyzSetiuHYpEaEPzscAjGx_a4Vd2j3zQ-z_ciFySagb23eiD2-YzRxr18xK1bMedCNhxEg=s256-c-k-c0x00ffffff-no-rj"
             />
             <div>
-              <h1 className="text-2xl m-2">김메주와 고양이들</h1>
+              <h1 className="text-2xl m-2">{userSession.nickname}</h1>
               <p>구독혜택 이용해보기</p>
             </div>
           </div>
           <div>
             <div className="flex items-center justify-end m-4">
-              <h2>₩3,000/월</h2>
+              <h2>₩{userSession.price}/월</h2>
               <button
-                className="p-2 ml-5 rounded-full text-white bg-sky-600 "
-                onClick={() => {
-                  payReady(statePayReady);
+                className="p-2 ml-5 rounded-full text-white bg-sky-600 hover:bg-sky-700"
+                onClick={async () => {
+                  const approveData = await payReady(statePayReady);
+                  console.log(approveData);
                 }}
               >
                 구독하기

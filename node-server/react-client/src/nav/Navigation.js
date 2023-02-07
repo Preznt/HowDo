@@ -17,6 +17,8 @@ import PostWrite from "../comp/community/PostWrite";
 import Approve from "../comp/purchase/Approve";
 import SearchMain, { SearchLoader } from "../comp/serachPage/SearchMain";
 import UserPageMain, { userPageFetch } from "../comp/userpage/UserPageMain";
+import ShortsMain from "../comp/Video/Main";
+import VideoDetail from "../comp/Video/VideoDetail";
 
 import CreaterMain, {
   loader as CreaterFetch,
