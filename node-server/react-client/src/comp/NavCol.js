@@ -15,11 +15,7 @@ const NavCol = () => {
       </Link>
 
       <Link className={navCol} to="/community">
-<<<<<<< HEAD
-        게시판
-=======
         <FaPenSquare size={30} />
->>>>>>> master
       </Link>
       <Link className={navCol} to="/contents">
         <IoLayersSharp size={30} />

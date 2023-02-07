@@ -4,23 +4,24 @@ const Join = () => {
   const { joinUser, setJoinUser, error, setError, inputRef } = useUserContext();
 
   const onChangeHandler = async (e) => {
-    const tagName = e.target.tagName;
+    // const tagName = e.target.tagName;
     const { name, value } = e.target;
-    await setJoinUser({ ...joinUser, [name]: value, name: tagName });
+    await setJoinUser({ ...joinUser, [name]: value });
     console.log(joinUser);
   };
 
   const onClickHandler = async (e) => {
-    const tagName = e.target.tagName;
-    if (tagName === "BUTTON") {
-      await setJoinUser({ ...joinUser, name: tagName });
-    }
+    // const tagName = e.target.tagName;
+    // if (tagName === "BUTTON") {
+    //   await setJoinUser({ ...joinUser, name: tagName });
+    // }
     const result = await fetchJoin(joinUser);
     if (result.CODE) {
       setError({ ...result });
     }
-    if (result == joinUser.username && tagName === "BUTTON") {
+    if (result === joinUser.username) {
       document.location.href = "/";
+      alert("회원가입이 완료되었습니다");
     }
     console.log(result);
   };
@@ -119,10 +120,10 @@ const Join = () => {
                       name="password"
                       id="password"
                       onChange={onChangeHandler}
-                      onBlur={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
-                    {joinUser.password ? null : (
+                    {error.CODE !== "REQ_PASSWORD" ||
+                    joinUser.password ? null : (
                       <p className="text-red-500 mb-2 text-center">
                         비밀번호를 입력해 주세요
                       </p>
@@ -141,7 +142,6 @@ const Join = () => {
                       name="re_password"
                       id="re_password"
                       onChange={onChangeHandler}
-                      onBlur={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_RE_PASSWORD" ? (
@@ -153,7 +153,8 @@ const Join = () => {
                       <p className="text-green-500 mb-2 text-center">
                         비밀번호가 일치합니다
                       </p>
-                    ) : joinUser.password !== joinUser.re_password ? (
+                    ) : joinUser.password &&
+                      joinUser.password !== joinUser.re_password ? (
                       <p className="text-red-500 mb-2 text-center">
                         비밀번호가 일치하지 않습니다
                       </p>
