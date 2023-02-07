@@ -21,7 +21,6 @@ const NavCol = () => {
       </Link>
 
       <Link className={navCol} to="/community">
-
         게시판
       </Link>
       <Link className={navCol} to="/contents">

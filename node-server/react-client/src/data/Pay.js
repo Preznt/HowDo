@@ -1,8 +1,8 @@
 export const dataPayReady = {
   cid: "TCSUBSCRIP",
-  partner_order_id: "dd@gmail.com",
+  partner_order_id: "",
   partner_user_id: "",
-  item_name: "dd@gmail.com",
+  item_name: "",
   quantity: 1,
   total_amount: 2500,
   tax_free_amount: 0,
@@ -14,7 +14,7 @@ export const dataPayReady = {
 export const dataPayApprove = {
   cid: "TCSUBSCRIP",
   tid: "",
-  partner_order_id: "dd@gmail.com",
+  partner_order_id: "",
   partner_user_id: "",
   pg_token: "",
 };

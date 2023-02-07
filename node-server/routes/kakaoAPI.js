@@ -26,14 +26,17 @@ const job = schedule.scheduleJob("*/10 * * * * *", async () => {
   console.log(MonthLater);
 
   try {
-    const result = await SUBSCRIBE.findAll({});
+    const result = await SUBSCRIBE.findAll({
+      attributes: ["partner_user_id", "partner_order_id", "sid"],
+      // where: { approved_at: now },
+    });
     console.log(result);
   } catch (e) {
     console.log(`${SYSTEM_RES.SQL_ERROR} \n`, e);
   }
 });
 
-// job.cancel();
+job.cancel();
 
 router.get("/expire", async (req, res) => {});
 
