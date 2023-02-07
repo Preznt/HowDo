@@ -286,7 +286,7 @@ router.get("/post/:pCode/delete", async (req, res, next) => {
   // });
 });
 
-router.patch("/post/upvotes", async (req, res, next) => {
+router.patch("/post/upvote", async (req, res, next) => {
   const data = req.body;
   try {
     await UPVOTE.create(data);
@@ -300,9 +300,10 @@ router.patch("/post/upvotes", async (req, res, next) => {
       { where: { p_code: req.body.p_code } }
     );
     await USER.update(
-      { upvotes: sequelize.literal("upvotes + 1") },
+      { upvote: sequelize.literal("upvote + 1") },
       { where: { username: req.body.username } }
     );
+    console.log(req.body.username);
     return res.send(result);
   } catch (err) {
     console.error(err);

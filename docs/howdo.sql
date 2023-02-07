@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS user(
 	credit	INT,		
 	delete_date	VARCHAR(256),		
 	price	INT,
-    upvotes INT DEFAULT 0,
+    upvote INT DEFAULT 0,
     title_image VARCHAR(256),
 	PRIMARY KEY(username)	
 );
