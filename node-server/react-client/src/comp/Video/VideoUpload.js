@@ -55,12 +55,24 @@ const VideoUpload = (props) => {
       formData.append("upload", file);
       formData.append("detail", JSON.stringify(detail));
       formData.append("shorts", JSON.stringify(shorts));
-      const res = await axios.post("/video/upload", formData, {
+      close();
+      setDetail({
+        url: "",
+        video: false,
+        v_title: "",
+        v_price: 0,
+        v_detail: "",
+        v_category: "none",
+        v_save_file: "",
+      });
+      setShorts({
+        shorts: false,
+      });
+      await axios.post("/video/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      const result = await res.json();
     }
   };
   return (
@@ -84,13 +96,6 @@ const VideoUpload = (props) => {
               />
             ) : (
               <div className="modal h-full">
-                <input
-                  className="modal hidden"
-                  type="file"
-                  id="video_upload"
-                  accept="video/*"
-                  onChange={videoUpload}
-                />
                 <label
                   for="video_upload"
                   className="modal p-6 mt-20 leading-10 border-2 rounded-full inline-block cursor-pointer"
@@ -110,6 +115,13 @@ const VideoUpload = (props) => {
                     />
                   </svg>
                 </label>
+                <input
+                  className="modal hidden"
+                  type="file"
+                  id="video_upload"
+                  accept="video/*"
+                  onChange={videoUpload}
+                />
               </div>
             )}
           </div>
@@ -117,11 +129,13 @@ const VideoUpload = (props) => {
             <input
               onChange={titleOnChangeHandler}
               placeholder="제목을 입력하세요"
+              value={detail.v_title}
               className="modal border-2 p-0.5 rounded-full w-2/4 p-1.5"
             />
             <select
               onChange={selectOnChangeHandler}
               className="modal p-1.5 border-2 rounded-full w-64 my-1"
+              value={detail.v_category}
             >
               <option value="none">카테고리</option>
               <option value="음악">음악</option>
@@ -137,6 +151,7 @@ const VideoUpload = (props) => {
               id="detail"
               className="modal w-3/4 border-2"
               onChange={detailOnChangeHandler}
+              value={detail.v_detail}
             ></textarea>
           </div>
           <div className="modal ">
@@ -161,6 +176,7 @@ const VideoUpload = (props) => {
                   type="checkbox"
                   className="shorts"
                   onChange={shortsOnChangeHandler}
+                  checked={shorts.shorts}
                 />
               </div>
             ) : (
@@ -181,6 +197,7 @@ const VideoUpload = (props) => {
                   type="checkbox"
                   className="shorts"
                   onChange={shortsOnChangeHandler}
+                  checked={shorts.shorts}
                 />
               </div>
             )}
