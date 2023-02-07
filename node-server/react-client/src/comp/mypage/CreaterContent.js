@@ -13,6 +13,10 @@ import {
 
 import { useUserContext } from "../../context/UserContextProvider";
 import { useLoaderData } from "react-router-dom";
+import {
+  IoArrowForwardCircleSharp,
+  IoArrowBackCircleSharp,
+} from "react-icons/io5";
 /**
  * map 을 이용한 컨텐츠 시리즈별 carousel 제작
  */
@@ -90,12 +94,16 @@ const CreaterContent = () => {
 
       {result?.recent[0] ? (
         <>
-          <div className={videoNextButton} onClick={before}>
-            앞
-          </div>
-          <div className={videoBeforeButton} onClick={next}>
-            뒤
-          </div>
+          <IoArrowBackCircleSharp
+            className={videoNextButton}
+            onClick={before}
+            size={40}
+          />
+          <IoArrowForwardCircleSharp
+            className={videoBeforeButton}
+            onClick={next}
+            size={40}
+          />
         </>
       ) : null}
 

@@ -8,8 +8,8 @@ export const useAutoSearchContext = () => {
 export const AutoSearchContextProvider = ({ children }) => {
   const [currentSearch, setCurrentSearch] = useState("");
   const [savedKeyword, setSavedKeyword] = useState("");
-  const [autoComplete, setAutoComplete] = useState([null]);
-  const [searchedData, setSearchedData] = useState(null);
+  const [autoComplete, setAutoComplete] = useState([]);
+  const [searchedData, setSearchedData] = useState("");
   const [searchKeyword, setSearchKeyword] = useState("");
   // 입력창 value 변경 함수
   const onChange = (e) => {
@@ -49,7 +49,7 @@ export const AutoSearchContextProvider = ({ children }) => {
       setCurrentSearch(e.target.innerHTML);
       setAutoComplete([null]);
     }
-    setAutoComplete([null]);
+    setAutoComplete([]);
   };
   const props = {
     currentSearch,
