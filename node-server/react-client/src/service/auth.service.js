@@ -125,7 +125,8 @@ export const subscriptionPay = async () => {
 export const expireUser = async () => {
   try {
     const res = await fetch("/kakao/expire");
-    const result = res.json();
+    const result = await res.json();
+    return result;
     console.log(result);
   } catch (e) {
     console.log(`expire sql error \n`, e);

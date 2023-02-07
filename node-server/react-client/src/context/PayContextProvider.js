@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { dataPayApprove, dataPayReady } from "../data/Pay";
 import { useUserContext } from "./UserContextProvider";
+import { expireUser } from "../service/auth.service";
 
 const PayContext = createContext();
 
@@ -13,11 +14,14 @@ export const PayContextProvider = ({ children }) => {
   const [statePayReady, setPayReady] = useState(dataPayReady);
   // const [statePayApprove, setPayApprove] = useState(dataPayApprove);
 
-  const payReadyBody = () => {
+  const payReadyBody = (orderUser) => {
     setPayReady({
       ...statePayReady,
       partner_user_id: userSession.username,
+      partner_order_id: orderUser,
+      item_name: orderUser,
     });
+    localStorage.setItem("order_id", orderUser);
   };
 
   const props = {

@@ -18,7 +18,7 @@ const UserPageMain = () => {
   const navigate = useNavigate();
   const twoClickEvent = () => {
     modalHandler();
-    payReadyBody();
+    payReadyBody(createrResult?.u_result?.username);
     console.log(statePayReady);
   };
 
