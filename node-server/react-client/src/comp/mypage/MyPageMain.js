@@ -4,9 +4,9 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { usePayContext } from "../../context/PayContextProvider";
 import Purchase from "../purchase/Purchase";
 
+// mypage 진입시 사용하는 정보 fetch
 export const myPageFetch = async ({ params }) => {
   const username = params.id;
-
   const response = await fetch(`/mypage/${username}`);
   const result = await response?.json();
   return result;
@@ -20,7 +20,7 @@ const MyPageMain = () => {
     payReadyBody();
     console.log(statePayReady);
   };
-
+  // 유저 세션에 username 이 존재할 때 mypage 구현 없으실 home으로 돌아가지도록 설정
   return (
     <>
       {userSession.username ? (

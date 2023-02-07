@@ -17,8 +17,10 @@ import { useLoaderData } from "react-router-dom";
  * map 을 이용한 컨텐츠 시리즈별 carousel 제작
  */
 const CreaterContent = () => {
+  const { videoContentList, setVideoContentList, loading, setLoading } =
+    useVideoContentContext();
   const result = useLoaderData();
-  const { videoContentList, setVideoContentList } = useVideoContentContext();
+
   const [position, setPosition] = useState(0);
 
   const { userSession } = useUserContext();

@@ -10,7 +10,7 @@ export const AutoSearchContextProvider = ({ children }) => {
   const [savedKeyword, setSavedKeyword] = useState("");
   const [autoComplete, setAutoComplete] = useState([null]);
   const [searchedData, setSearchedData] = useState(null);
-
+  const [searchKeyword, setSearchKeyword] = useState("");
   // 입력창 value 변경 함수
   const onChange = (e) => {
     setCurrentSearch(e.target.value);
@@ -62,6 +62,8 @@ export const AutoSearchContextProvider = ({ children }) => {
     setSavedKeyword,
     autoClick,
     setSearchedData,
+    searchKeyword,
+    setSearchKeyword,
   };
   return (
     <AutoSearchContext.Provider value={props}>

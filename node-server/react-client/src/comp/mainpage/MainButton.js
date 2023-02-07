@@ -1,8 +1,9 @@
 import { useTransferContext } from "../../context/TransferContextProvider";
 import { button } from "../../nav/classNames/ClassNames";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
-
+import { useNavigate } from "react-router-dom";
 const MainButton = () => {
+  const navigate = useNavigate();
   const context = useTransferContext();
   const { setVideoItemList } = useVideoContentContext();
 
@@ -15,6 +16,7 @@ const MainButton = () => {
   };
 
   const bbsOpen = () => {
+    navigate("/");
     if (context.contentButton) context.setContentButton(false);
     if (!context.contentButton) context.setBbsButton(true);
     else context.setBbsButton(!context.bbsButton);
@@ -22,6 +24,7 @@ const MainButton = () => {
     // console.log(context.bbsButton);
   };
   const contentOpen = async () => {
+    navigate("/");
     await item();
     if (context.bbsButton) context.setBbsButton(false);
     if (!context.bbsButton) context.setContentButton(true);
