@@ -16,6 +16,7 @@ export const UserContextProvider = ({ children }) => {
   const [joinUser, setJoinUser] = useState(new User());
   const [login, setLogin] = useState(new Login());
   const [error, setError] = useState({});
+  const [loginError, setLoginError] = useState({});
   const [userSession, setUserSession] = useState(new UserSession());
   const [modal, setModal] = useState({
     open: false,
@@ -30,7 +31,7 @@ export const UserContextProvider = ({ children }) => {
   const onClickHandler = async () => {
     const result = await fetchLogin(login);
     if (result.CODE) {
-      setError({ ...result });
+      setLoginError({ ...result });
     }
     setUserSession(result);
     if (result.username) document.location.href = "/";
@@ -51,6 +52,8 @@ export const UserContextProvider = ({ children }) => {
     console.log(userSession);
   };
 
+  let dataExpireUser;
+
   useEffect(() => {
     (async () => {
       const loginUser = await fetchUser();
@@ -69,6 +72,8 @@ export const UserContextProvider = ({ children }) => {
     inputRef,
     error,
     setError,
+    loginError,
+    setLoginError,
     login,
     setLogin,
     userSession,

@@ -8,11 +8,12 @@ const Approve = () => {
   const query = window.location.search;
   const pg_token = query.substring(10, 30);
   const tid = localStorage.getItem("tid");
+  const order_id = localStorage.getItem("order_id");
 
   dataPayApprove.tid = tid;
   dataPayApprove.pg_token = pg_token;
   dataPayApprove.partner_user_id = userSession.username;
-
+  dataPayApprove.partner_order_id = order_id;
   // 카카오페이 승인 요청
 
   useEffect(() => {
@@ -35,7 +36,9 @@ const Approve = () => {
 
   return (
     <div>
-      <h1>여기는 승인 화면</h1>
+      <div>
+        <h1>결제가 완료되었습니다</h1>
+      </div>
     </div>
   );
 };

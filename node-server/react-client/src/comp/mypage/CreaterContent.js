@@ -28,8 +28,10 @@ const CreaterContent = () => {
   const [position, setPosition] = useState(0);
 
   const { userSession } = useUserContext();
+
   useEffect(() => {
     setVideoContentList(result.recent);
+    console.log(videoContentList);
   }, []);
   const CONTENT_WIDTH = 392;
   const setHover = (v_code, toggle) => {
