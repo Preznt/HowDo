@@ -47,6 +47,7 @@ const ReplyItem = ({ item, index }) => {
         setReplyCount(data.count);
         setCReplyData(initReply);
       }
+      console.log(data.list);
       return reply;
     });
   };
