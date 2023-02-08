@@ -47,6 +47,11 @@ export default (sequelize, DataTypes) => {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
       },
+      r_children: {
+        type: Sequelize.DataTypes.BIGINT,
+        allowNull: true,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,

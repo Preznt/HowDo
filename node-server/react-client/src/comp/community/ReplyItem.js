@@ -1,15 +1,22 @@
 import { useState } from "react";
-import { getReply, insertReply, deleteReply } from "../../service/post.service";
+import {
+  getReply,
+  getCReply,
+  insertReply,
+  deleteReply,
+} from "../../service/post.service";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 
 const ReplyItem = ({ item, index }) => {
   const { userSession } = useUserContext();
-  const { setReplyList, setReplyCount, initReply, cReplyData, setCReplyData } =
-    usePostContext();
-  const [inputValues, setInputValues] = useState([]);
+  const { initReply, setReplyList, setReplyCount } = usePostContext();
   const [showChild, setShowChild] = useState(false);
+  const [inputValues, setInputValues] = useState([]);
+  const [cReplyInput, setCReplyInput] = useState(initReply);
+  const [cReplyList, setCReplyList] = useState([]);
+  const [cReplyCount, setCReplyCount] = useState(item.r_children);
 
   const btnClass02 =
     "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded";
@@ -31,42 +38,58 @@ const ReplyItem = ({ item, index }) => {
     // cf) function updater
     // setState 내에서 callback 실행
     // 매개변수는 현재 state 값, callback 에서 return 되는 값은 state 에 저장될 값
-    // 현재 값에 바로 setting 한 뒤 fetch 함수를 호출했다.
-    setCReplyData(async (reply) => {
+    // 저장할 값을 변수로 선언하고 fetch 함수를 호출했다.
+    setCReplyInput(async (reply) => {
       reply = {
-        ...cReplyData,
+        ...cReplyInput,
         username: userSession.username,
         p_code: item.p_code,
         r_content: inputValues[index],
         r_parent_code: item.r_code,
       };
       await insertReply(reply);
-      let data = await getReply(reply.p_code);
+      let data = await getCReply(reply.r_parent_code);
       if (data) {
-        setReplyList([...data.list]);
-        setReplyCount(data.count);
-        setCReplyData(initReply);
+        setCReplyList([...data]);
+        setCReplyInput(initReply);
+        setCReplyCount(cReplyCount + 1);
+        setInputValues([]);
       }
-      console.log(data.list);
       return reply;
     });
+    setShowChild(true);
   };
 
   const onClickDelete = async () => {
-    await deleteReply(item.r_code, item.p_code);
-    let data = await getReply(item.p_code);
-    if (data) {
-      setReplyList([...data.list]);
-      setReplyCount(data.count);
+    await deleteReply(item.r_code);
+    if (item.r_parent_code) {
+      let data = await getCReply(item.r_parent_code);
+      console.log(data);
+      // 왜 setting 이 안되지??
+      if (data) {
+        setCReplyList([...data]);
+        setCReplyCount(data.r_children);
+      }
+    }
+    if (!item.r_parent_code) {
+      let data = await getReply(item.p_code);
+      if (data) {
+        setReplyList([...data.list]);
+        setReplyCount(data.count);
+      }
     }
   };
 
-  const ShowChildReply = () => {
-    setShowChild(!showChild);
+  const ShowChildReply = async (rCode) => {
+    let data = await getCReply(rCode);
+    if (data) {
+      setCReplyList([...data]);
+      setShowChild(!showChild);
+    }
   };
 
   return (
-    <li className="list-none w-full p-5 border-b border-gray-200 first:border-t">
+    <li className="list-none w-full px-10 pt-5 border-gray-200 last:border-b-0 border-b">
       <div className="flex">
         {item?.user?.profile_image ? (
           <img
@@ -92,9 +115,14 @@ const ReplyItem = ({ item, index }) => {
         </div>
       )}
 
-      <button className="hover:text-blue-700" onClick={ShowChildReply}>
-        {item.r_count
-          ? `${item.r_count} 개의 댓글`
+      <button
+        className={`hover:text-blue-700 mb-5 ${
+          showChild ? "text-blue-700" : ""
+        }`}
+        onClick={() => ShowChildReply(item.r_code)}
+      >
+        {cReplyCount
+          ? `${cReplyCount} 개의 댓글`
           : userSession?.username
           ? "댓글 입력"
           : ""}
@@ -105,12 +133,8 @@ const ReplyItem = ({ item, index }) => {
           display: showChild === true ? "block" : "none",
         }}
       >
-        {item?.reply_child?.map((child, index) => {
-          <ReplyItem item={child} index={index} />;
-        })}
-
         <div
-          className="reply-input-box gap-3 w-full mt-5"
+          className="reply-input-box gap-3 w-full p-5 mb-5 border border-gray-300 rounded"
           style={{
             display: userSession?.username && item.r_content ? "flex" : "none",
           }}
@@ -146,6 +170,9 @@ const ReplyItem = ({ item, index }) => {
             등록
           </button>
         </div>
+        {cReplyList?.map((child, index) => (
+          <ReplyItem key={child.r_code} item={child} index={index} />
+        ))}
       </section>
     </li>
   );

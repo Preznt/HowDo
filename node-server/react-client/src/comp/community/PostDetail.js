@@ -13,10 +13,10 @@ import {
   upvotePost,
   deletePost,
 } from "../../service/post.service";
-import { usePostContext } from "../../context/PostContextProvider";
 import { useUserContext } from "../../context/UserContextProvider";
 import { useLoaderData, useParams, useNavigate, Link } from "react-router-dom";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { usePostContext } from "../../context/PostContextProvider";
 
 // html tag -> entity -> tag 로 변환하는 과정 필요
 // 자기 자신을 참조하도록 테이블 관계 설정
@@ -34,13 +34,13 @@ export const loader = async ({ params }) => {
 };
 
 const PostDetail = () => {
+  const { detail, reply } = useLoaderData();
   const { userSession } = useUserContext();
-
+  const { replyCount, setReplyCount } = usePostContext();
   const nav = useNavigate();
   const bEng = useParams().board;
-  const { detail, reply } = useLoaderData();
-  const { replyCount, setReplyCount } = usePostContext();
   const [upvotes, setUpvotes] = useState();
+
   let board = detail?.board;
   let post = detail?.post;
   let list = reply?.list;
@@ -149,7 +149,12 @@ const PostDetail = () => {
         </section>
       )}
 
-      <Reply code={post?.p_code} list={list} count={replyCount} />
+      <Reply
+        code={post?.p_code}
+        list={list}
+        replyCount={replyCount}
+        setReplyCount={setReplyCount}
+      />
     </main>
   );
 };

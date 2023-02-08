@@ -116,13 +116,23 @@ export const upvotePost = async (pCode, pUser, username) => {
 
 export const getReply = async (pCode) => {
   try {
-    const response = await fetch(`/community/reply/${pCode}/get`);
+    const response = await fetch(`/community/preply/${pCode}/get`);
     const result = await response.json();
     const data = {
-      list: result.replyList,
+      list: result.pReplyList,
       count: result.replyCount.p_replies,
     };
     return data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const getCReply = async (rCode) => {
+  try {
+    const response = await fetch(`/community/creply/${rCode}/get`);
+    const result = await response.json();
+    return result;
   } catch (err) {
     return null;
   }
@@ -147,10 +157,10 @@ export const insertReply = async (data) => {
   }
 };
 
-export const deleteReply = async (rCode, pCode) => {
+export const deleteReply = async (rCode) => {
   if (window.confirm("이 댓글을 삭제할까요?"))
     try {
-      const response = await fetch(`/community/reply/${rCode}/${pCode}/delete`);
+      const response = await fetch(`/community/reply/${rCode}/delete`);
       const result = await response.json();
       if (result.ERROR) {
         alert(result.ERROR);
