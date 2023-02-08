@@ -82,15 +82,6 @@ const initModels = (sequelize) => {
   user.belongsToMany(image, { through: i_authority, foreignKey: "username" });
   image.belongsToMany(user, { through: i_authority, foreignKey: "i_code" });
 
-  user.hasMany(upvote, { foreignKey: "username" });
-  upvote.belongsTo(user, { foreignKey: "username" });
-
-  post.hasMany(upvote, { foreignKey: "p_code" });
-  upvote.belongsTo(post, { foreignKey: "p_code" });
-
-  user.hasMany(post, { foreignKey: "username" });
-  post.belongsTo(user, { foreignKey: "username" });
-
   user.belongsToMany(user, {
     as: "f_sub_user",
     through: subscribe,
@@ -102,6 +93,23 @@ const initModels = (sequelize) => {
     foreignKey: "partner_order_id",
   });
 
+  subscribe.belongsTo(user, { foreignKey: "partner_user_id" });
+  subscribe.belongsTo(user, { foreignKey: "partner_order_id" });
+
+  user.hasMany(upvote, { foreignKey: "username" });
+  upvote.belongsTo(user, { foreignKey: "username" });
+
+  post.hasMany(upvote, { foreignKey: "p_code" });
+  upvote.belongsTo(post, { foreignKey: "p_code" });
+
+  user.hasMany(post, { foreignKey: "username" });
+  post.belongsTo(user, { foreignKey: "username" });
+
+  // user.belongsToMany(user, {
+  //   as: "f_sub",
+  //   through: subscribe,
+  //   foreignKey: "username",
+  // });
   // post.hasMany(attach, { as: "attachs", foreignKey: "p_code" });
   // attach.belongsTo(post, {
   //   as: "rel_post",

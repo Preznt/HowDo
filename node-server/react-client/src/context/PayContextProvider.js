@@ -14,12 +14,13 @@ export const PayContextProvider = ({ children }) => {
   const [statePayReady, setPayReady] = useState(dataPayReady);
   // const [statePayApprove, setPayApprove] = useState(dataPayApprove);
 
-  const payReadyBody = (orderUser) => {
+  const payReadyBody = (orderUser, price) => {
     setPayReady({
       ...statePayReady,
       partner_user_id: userSession.username,
       partner_order_id: orderUser,
       item_name: orderUser,
+      total_amount: price,
     });
     localStorage.setItem("order_id", orderUser);
   };

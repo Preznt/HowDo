@@ -17,8 +17,10 @@ const UserPageMain = () => {
   const createrResult = useLoaderData();
   const navigate = useNavigate();
   const twoClickEvent = () => {
+    const orderUser = createrResult?.u_result?.username;
+    const price = createrResult?.u_result?.price;
     modalHandler();
-    payReadyBody(createrResult?.u_result?.username);
+    payReadyBody(orderUser, price);
     console.log(statePayReady);
   };
 

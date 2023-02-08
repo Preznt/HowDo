@@ -26,9 +26,10 @@ const Approve = () => {
           result.partner_user_id,
           result.partner_order_id,
           result.sid,
-          result.approved_at
+          result.approved_at.substr(0, 10),
+          result.approved_at.substr(0, 10)
         );
-        // console.log(data);
+        console.log(data);
         subApprovalSave(data);
       }
     })();

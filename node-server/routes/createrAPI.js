@@ -63,7 +63,13 @@ router.get("/creater/:id", async (req, res, next) => {
   let userid;
   try {
     const id = await USER.findOne({
-      attributes: ["profile_image", "title_image", "nickname", "username"],
+      attributes: [
+        "profile_image",
+        "title_image",
+        "nickname",
+        "username",
+        "price",
+      ],
       where: { nickname: nickname },
       raw: true,
     });
