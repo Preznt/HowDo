@@ -405,9 +405,9 @@ router.get("/reply/:rCode/delete", async (req, res) => {
         );
       }
       if (data.r_parent_code) {
-        await REPLY.update(
+        const asdf = await REPLY.update(
           { r_children: sequelize.literal("r_children - 1") },
-          { where: { p_code: data.r_parent_code } }
+          { where: { r_code: data.r_parent_code } }
         );
       }
     } catch (err) {

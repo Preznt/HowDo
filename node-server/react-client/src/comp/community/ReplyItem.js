@@ -65,10 +65,10 @@ const ReplyItem = ({ item, index }) => {
     if (item.r_parent_code) {
       let data = await getCReply(item.r_parent_code);
       console.log(data);
-      // 왜 setting 이 안되지??
+      // 부모 댓글의 데이터가 업데이트 되는 것이 아니라 선택된 댓글 기준으로 되는 듯??
       if (data) {
         setCReplyList([...data]);
-        setCReplyCount(data.r_children);
+        setCReplyCount(cReplyCount - 1);
       }
     }
     if (!item.r_parent_code) {
