@@ -6,7 +6,6 @@ const VideoUpload = (props) => {
   const { setDetail, detail, file, setFile, shorts, setShorts } =
     useVideoContentContext();
   const { open, close } = props;
-
   const videoUpload = (e) => {
     const videoType = e.target.files[0].type.includes("video");
     const filename = e.target.files[0].name;

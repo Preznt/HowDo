@@ -41,7 +41,7 @@ router.get("/total/:query", async (req, res, next) => {
       where: { nickname: { [Op.like]: `%${query}%` } },
     });
     const p_result = await POST.findAll({
-      attributes: ["p_title", "p_code", "p_replies", "p_views", "p_upvote"],
+      attributes: ["p_title", "p_code", "p_replies", "p_views", "p_upvotes"],
       where: { p_title: { [Op.like]: `%${query}%` } },
     });
     // const r_result = await REPLY.findAll({
@@ -92,12 +92,12 @@ router.get("/:username", async (req, res, next) => {
       where: { username: userid },
       limit: 10,
     });
-    const group = await V_CONTENT.findAll({
-      group: "v_series",
-    });
-    const count = await V_CONTENT.count({
-      group: "v_series",
-    });
+    // const group = await V_CONTENT.findAll({
+    // group: "v_series",
+    // });
+    // const count = await V_CONTENT.count({
+    // group: "v_series",
+    // });
     // console.log(group, count);
     // console.log(result);
     //  const favorite = await V_CONTENT.findAll({ order: ["v_views", "DESC"] });
@@ -106,10 +106,12 @@ router.get("/:username", async (req, res, next) => {
     return res.json({
       STATUS: 200,
       recent: result,
-      group: group,
-      count: count,
+      // group: group,
+      // count: count,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 export default router;

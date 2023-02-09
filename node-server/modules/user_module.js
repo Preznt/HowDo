@@ -105,3 +105,11 @@ export const chkLogin = async (info) => {
 
   return resultUser;
 };
+
+export const profileImageUpdate = async (id, image) => {
+  const result = await USER.update(
+    { profile_image: image },
+    { where: { username: id } }
+  );
+  return result;
+};

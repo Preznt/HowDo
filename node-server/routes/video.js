@@ -32,6 +32,7 @@ router.post("/upload", fileUp.single("upload"), async (req, res, next) => {
   if (shorts) {
     v_price = 0;
   }
+
   const uploadFileInfo = {
     v_code,
     username: user.username,
