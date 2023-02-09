@@ -6,6 +6,8 @@ const V_CONTENT = DB.models.video;
 const USER = DB.models.user;
 const POST = DB.models.post;
 const REPLY = DB.models.reply;
+const SUBSCRIBE = DB.models.subscribe;
+
 router.get("/search", async (req, res, next) => {
   try {
     const v_result = await V_CONTENT.findAll({ attributes: ["v_title"] });
@@ -59,11 +61,18 @@ router.get("/total/:query", async (req, res, next) => {
 });
 router.get("/creater/:id", async (req, res, next) => {
   const nickname = req.params.id;
+  const username = req?.session?.user.username;
   console.log(nickname);
   let userid;
   try {
     const id = await USER.findOne({
-      attributes: ["profile_image", "title_image", "nickname", "username"],
+      attributes: [
+        "profile_image",
+        "title_image",
+        "nickname",
+        "username",
+        "price",
+      ],
       where: { nickname: nickname },
       raw: true,
     });
@@ -72,6 +81,13 @@ router.get("/creater/:id", async (req, res, next) => {
       where: { username: userid },
       limit: 10,
     });
+
+    const sub = await SUBSCRIBE.findAll({
+      attributes: ["partner_order_id"],
+      where: { partner_user_id: username },
+    });
+    console.log(sub);
+
     return res.json({ u_result: id, v_result: result });
   } catch (err) {
     console.log(err);

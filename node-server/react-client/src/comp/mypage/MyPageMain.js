@@ -65,13 +65,13 @@ const MyPageMain = () => {
                 <div className="ml-6 mt-auto mb-auto hover:text-blue-600 hover:cursor-pointer font-bold">
                   {userSession.nickname}
                 </div>
-                <div
-                  className="ml-auto hover:text-blue-600 hover:cursor-pointer font-bold"
+                {/* <div
+                  className="hover:text-blue-600 hover:cursor-pointer font-bold"
                   onClick={twoClickEvent}
                 >
                   구독
-                </div>
-                <div className="ml-6 hover:text-blue-600 hover:cursor-pointer font-bold">
+                </div> */}
+                <div className="ml-auto hover:text-blue-600 hover:cursor-pointer font-bold">
                   게시글 작성
                 </div>
               </div>

@@ -164,6 +164,3 @@ inactivated_at	VARCHAR(50)		,
 PRIMARY KEY(partner_user_id,partner_order_id)
 
 );
-
-
-
