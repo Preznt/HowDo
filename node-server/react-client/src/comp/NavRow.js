@@ -10,12 +10,12 @@ import { IoMenu, IoSearchOutline } from "react-icons/io5";
 const NavRow = () => {
   const [nOpen, setNOpen] = useState(false);
   const navigate = useNavigate();
-  const { currentSearch, onChange, onKeyUp, autoComplete } =
+  const { currentSearch, onChange, onKeyUp, autoComplete, setCurrentSearch } =
     useAutoSearchContext();
   const { userSession, logoutHandler } = useUserContext();
   const { searchKeyword, setSearchKeyword } = useAutoSearchContext();
   const searchRef = useRef(null);
-
+  const searchParentRef = useRef();
   const borderStyle = {
     padding: "1rem",
     borderBottomWidth: "2px",
@@ -36,33 +36,37 @@ const NavRow = () => {
   };
 
   const pressEnter = async (e) => {
-    if (e.keyCode === 13) {
-      if (!currentSearch) {
-        alert("검색어를 입력하세요");
-        searchRef.current.focus();
-      } else {
-        setSearchKeyword(currentSearch);
-        navigate(`/search/${currentSearch}`);
-      }
+    console.log(searchParentRef);
+    if (e.keyCode === 38) {
     }
+    if (e.keyCode === 40)
+      if (e.keyCode === 13) {
+        if (!currentSearch) {
+          alert("검색어를 입력하세요");
+          searchRef.current.focus();
+        } else {
+          setSearchKeyword(currentSearch);
+          navigate(`/search/${currentSearch}`);
+        }
+      }
   };
 
   const openClickHandler = () => {
     setNOpen(!nOpen);
-    console.log(nOpen);
+    // console.log(nOpen);
   };
 
   const autoCompleteView = autoComplete?.map((word, index) => {
     return (
       <div
         key={index}
+        ref={searchParentRef}
         className="autocomplete cursor-pointer pl-4 mb-1 hover:bg-gray-300 rounded-lg"
       >
         {word}
       </div>
     );
   });
-  console.log(autoComplete);
   return (
     <>
       <div className="mainbar flex bg-black/90 top-0 left-0 right-0 mb-12 fixed pr-2 z-50">
