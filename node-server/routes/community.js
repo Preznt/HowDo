@@ -310,75 +310,37 @@ router.patch("/post/upvote", async (req, res, next) => {
   }
 });
 
-router.get("/preply/:pCode/get", async (req, res) => {
+router.get("/reply/:pCode/get", async (req, res) => {
   const pCode = req.params.pCode;
   try {
-    // 게시글의 모든 부모 댓글
-    const pReplyList = await REPLY.findAll({
+    // 게시글의 모든 댓글
+    // 삭제된 댓글의 자식 댓글 처리 방법?
+    const replyList = await REPLY.findAll({
       where: {
-        [Op.and]: [
-          { p_code: pCode },
-          { r_deleted: null },
-          { r_parent_code: null },
-        ],
+        [Op.and]: [{ p_code: pCode }, { r_deleted: null }],
       },
       order: [
         ["r_date", "DESC"],
         ["r_time", "DESC"],
       ],
-      include: [{ model: USER, attributes: ["nickname", "profile_image"] }],
+      include: [
+        {
+          model: REPLY,
+          as: "reply_child",
+          required: false,
+          where: { r_deleted: null },
+          include: { model: USER, attributes: ["nickname", "profile_image"] },
+        },
+        { model: USER, attributes: ["nickname", "profile_image"] },
+      ],
     });
+
     // 게시글의 최상위 댓글 수
     const replyCount = await POST.findOne({
       attributes: ["p_replies"],
       where: { p_code: pCode },
     });
-
-    return res.send({ pReplyList, replyCount });
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-router.get("/creply/:rCode/get", async (req, res) => {
-  const rCode = req.params.rCode;
-  try {
-    // 부모 댓글의 모든 자식 댓글
-    const cReplyList = await REPLY.findAll({
-      where: {
-        [Op.and]: [{ r_parent_code: rCode }, { r_deleted: null }],
-      },
-      order: [
-        ["r_date", "DESC"],
-        ["r_time", "DESC"],
-      ],
-      include: [{ model: USER, attributes: ["nickname", "profile_image"] }],
-    });
-    return res.send(cReplyList);
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-// 자식 댓글 코드로 부모 댓글 찾은 뒤 대댓글 표시
-router.get("/creply/:rCode/sibling/get", async (req, res) => {
-  const rCode = req.params.rCode;
-  try {
-    const cReply = await REPLY.findByPk(rCode);
-    const cReplyList = await REPLY.findAll({
-      where: {
-        [Op.and]: [
-          { r_parent_code: cReply.toJSON().r_parent_code },
-          { r_deleted: null },
-        ],
-      },
-      order: [
-        ["r_date", "DESC"],
-        ["r_time", "DESC"],
-      ],
-      include: [{ model: USER, attributes: ["nickname", "profile_image"] }],
-    });
-    return res.send(cReplyList);
+    return res.send({ replyList, replyCount });
   } catch (err) {
     console.error(err);
   }

@@ -1,10 +1,5 @@
-import { useLayoutEffect, useState } from "react";
-import {
-  getReply,
-  getCReply,
-  insertReply,
-  deleteReply,
-} from "../../service/post.service";
+import { useState } from "react";
+import { getReply, insertReply, deleteReply } from "../../service/post.service";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
@@ -15,27 +10,7 @@ const ReplyItem = ({ item, index }) => {
   const [showChild, setShowChild] = useState(false);
   const [inputValues, setInputValues] = useState([]);
   const [cReplyInput, setCReplyInput] = useState(initReply);
-  const [cReplyList, setCReplyList] = useState([]);
   const [cReplyCount, setCReplyCount] = useState(item.r_children);
-
-  const adf = async () => {
-    if (window?.location?.hash) {
-      const rCode = window.location.hash.slice(1);
-      let data = await fetch(`/community/creply/${rCode}/sibling/get`);
-      data = await data.json();
-      console.log(data);
-
-      // !! how to manage state variable of recursive component !!
-      // if (data) {
-      //   setCReplyList([...data]);
-      //   setShowChild(true);
-      // }
-    }
-  };
-
-  useLayoutEffect(() => {
-    adf();
-  }, []);
 
   const btnClass02 =
     "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded";
@@ -67,48 +42,31 @@ const ReplyItem = ({ item, index }) => {
         r_parent_code: item.r_code,
       };
       await insertReply(reply);
-      let data = await getCReply(reply.r_parent_code);
+      let data = await getReply(reply.p_code);
       if (data) {
-        setCReplyList([...data]);
-        setCReplyInput(initReply);
-        setCReplyCount(cReplyCount + 1);
+        setReplyList([...data.list]);
+        setReplyCount(data.count);
         setInputValues([]);
       }
-      return reply;
+      return initReply;
     });
-    setShowChild(true);
   };
 
   const onClickDelete = async () => {
     await deleteReply(item.r_code);
-    if (item.r_parent_code) {
-      let data = await getCReply(item.r_parent_code);
-      console.log(data);
-      // 부모 댓글의 데이터가 업데이트 되는 것이 아니라 선택된 댓글 기준으로 되는 듯??
-      if (data) {
-        setCReplyList([...data]);
-        setCReplyCount(cReplyCount - 1);
-      }
-    }
-    if (!item.r_parent_code) {
-      let data = await getReply(item.p_code);
-      if (data) {
-        setReplyList([...data.list]);
-        setReplyCount(data.count);
-      }
+    const data = await getReply(item.p_code);
+    if (data) {
+      setReplyList([...data.list]);
+      setReplyCount(data.count);
     }
   };
 
-  const ShowChildReply = async (rCode) => {
-    let data = await getCReply(rCode);
-    if (data) {
-      setCReplyList([...data]);
-      setShowChild(!showChild);
-    }
+  const ShowChildReply = async () => {
+    setShowChild(!showChild);
   };
 
   return (
-    <li
+    <section
       className="list-none w-full px-10 pt-5 border-gray-200 last:border-b-0 border-b"
       id={item?.r_code}
       style={{
@@ -141,17 +99,15 @@ const ReplyItem = ({ item, index }) => {
         </div>
       )}
 
+      <span>{cReplyCount ? `${cReplyCount} 개의 댓글` : ""}</span>
       <button
         className={`hover:text-blue-700 mb-5 ${
           showChild ? "text-blue-700" : ""
         }`}
         onClick={() => ShowChildReply(item.r_code)}
+        disabled={!userSession?.username ? true : false}
       >
-        {cReplyCount
-          ? `${cReplyCount} 개의 댓글`
-          : userSession?.username
-          ? "댓글 입력"
-          : ""}
+        {userSession?.username && "댓글 쓰기"}
       </button>
 
       <section
@@ -196,11 +152,11 @@ const ReplyItem = ({ item, index }) => {
             등록
           </button>
         </div>
-        {cReplyList?.map((child, index) => (
-          <ReplyItem key={child.r_code} item={child} index={index} />
-        ))}
       </section>
-    </li>
+      {item?.reply_child?.map((child, index) => (
+        <ReplyItem key={child.r_code} item={child} index={index} />
+      ))}
+    </section>
   );
 };
 
