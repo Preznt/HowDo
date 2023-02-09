@@ -223,8 +223,8 @@ router.post("/upload", fileUp.single("upload"), async (req, res, next) => {
       a_save_name: file.filename,
       a_ext: file.mimetype,
     };
-    await ATTACH.create(uploadFileInfo);
-
+    const asdf = await ATTACH.create(uploadFileInfo);
+    console.log(asdf);
     return res.json({
       uploaded: true,
       url: uploadFileInfo.a_save_name,
@@ -343,10 +343,34 @@ router.get("/preply/:pCode/get", async (req, res) => {
 router.get("/creply/:rCode/get", async (req, res) => {
   const rCode = req.params.rCode;
   try {
-    // 게시글의 모든 자식 댓글
+    // 부모 댓글의 모든 자식 댓글
     const cReplyList = await REPLY.findAll({
       where: {
         [Op.and]: [{ r_parent_code: rCode }, { r_deleted: null }],
+      },
+      order: [
+        ["r_date", "DESC"],
+        ["r_time", "DESC"],
+      ],
+      include: [{ model: USER, attributes: ["nickname", "profile_image"] }],
+    });
+    return res.send(cReplyList);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// 자식 댓글 코드로 부모 댓글 찾은 뒤 대댓글 표시
+router.get("/creply/:rCode/sibling/get", async (req, res) => {
+  const rCode = req.params.rCode;
+  try {
+    const cReply = await REPLY.findByPk(rCode);
+    const cReplyList = await REPLY.findAll({
+      where: {
+        [Op.and]: [
+          { r_parent_code: cReply.toJSON().r_parent_code },
+          { r_deleted: null },
+        ],
       },
       order: [
         ["r_date", "DESC"],

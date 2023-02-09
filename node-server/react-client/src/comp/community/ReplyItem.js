@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import {
   getReply,
   getCReply,
@@ -17,6 +17,25 @@ const ReplyItem = ({ item, index }) => {
   const [cReplyInput, setCReplyInput] = useState(initReply);
   const [cReplyList, setCReplyList] = useState([]);
   const [cReplyCount, setCReplyCount] = useState(item.r_children);
+
+  const adf = async () => {
+    if (window?.location?.hash) {
+      const rCode = window.location.hash.slice(1);
+      let data = await fetch(`/community/creply/${rCode}/sibling/get`);
+      data = await data.json();
+      console.log(data);
+
+      // !! how to manage state variable of recursive component !!
+      // if (data) {
+      //   setCReplyList([...data]);
+      //   setShowChild(true);
+      // }
+    }
+  };
+
+  useLayoutEffect(() => {
+    adf();
+  }, []);
 
   const btnClass02 =
     "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded";
@@ -89,7 +108,14 @@ const ReplyItem = ({ item, index }) => {
   };
 
   return (
-    <li className="list-none w-full px-10 pt-5 border-gray-200 last:border-b-0 border-b">
+    <li
+      className="list-none w-full px-10 pt-5 border-gray-200 last:border-b-0 border-b"
+      id={item?.r_code}
+      style={{
+        backgroundColor:
+          window?.location?.hash === `#${item?.r_code}` && "#fbf9f6",
+      }}
+    >
       <div className="flex">
         {item?.user?.profile_image ? (
           <img
