@@ -3,26 +3,24 @@ import "../../css/community/Content.css";
 import { submitPost } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
 import { useUserContext } from "../../context/UserContextProvider";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useRef, useLayoutEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 const PostWrite = () => {
   const nav = useNavigate();
   const { userSession } = useUserContext();
   const { initPost, postData, setPostData } = usePostContext();
-  const [urlData, setUrlData] = useState({ url: "", tag: "" });
-  const [urlList, setUrlList] = useState([]);
-  const [thumbList, setThumbList] = useState([]);
   const location = useLocation();
   const { b_code, b_eng, b_group_code } = location?.state;
   const data = location?.state?.data;
   const pCode = useParams().post;
   const btnClass =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
+  const titleRef = useRef(null);
 
   useLayoutEffect(() => {
     // setState 를 같은 함수 내에서 여러 번 실행하면
-    // 가장 마지막 setState 만 실행된다.
+    // 가장 마지막 setState 만 화면에 반영된다(batch update).
 
     // insert
     if (!pCode) {
@@ -40,20 +38,6 @@ const PostWrite = () => {
     }
   }, []);
 
-  useEffect(() => {
-    setThumbList([...thumbList, urlData.tag]);
-    setUrlList([...urlList, urlData.url]);
-  }, [urlData, setUrlData]);
-
-  // useEffect(() => {
-  //   for (let url of urlList) {
-  //     console.log(url);
-  //     const data = [...postData.p_content];
-  //     const isExist = data.indexOf(url);
-  //     console.log(isExist);
-  //   }
-  // }, [postData]);
-
   const onChangeHandler = (e) => {
     setPostData({ ...postData, [e.target.name]: e.target.value });
   };
@@ -64,14 +48,39 @@ const PostWrite = () => {
   };
 
   const onClickHandler = async () => {
+    console.log("title", postData.p_title.length);
+    console.log("content", postData.p_content.length);
+    if (postData.p_title.length < 1) {
+      alert("제목을 입력하세요.");
+      titleRef.current.focus();
+      return null;
+    }
+    if (postData.p_content.length < 1) {
+      alert("내용을 입력하세요.");
+      return null;
+    }
+    if (!userSession?.username) {
+      alert("세션이 만료되었습니다.\n로그인 후 다시 시도해주세요.");
+      return null;
+    }
     let result;
+    let data;
+    const image = document?.querySelector(".ck-content img");
+    if (image) {
+      const index = Array?.from(image?.src).lastIndexOf("/");
+      const url = image?.src?.slice(index + 1);
+      data = { ...postData, p_thumb: url };
+    } else {
+      data = { ...postData, p_thumb: null };
+    }
     // insert
-    if (!pCode) result = await submitPost(postData);
+    if (!pCode) result = await submitPost(data);
     // update
-    if (pCode) result = await submitPost(postData, pCode);
+    if (pCode) result = await submitPost(data, pCode);
     if (result.MESSAGE) {
       nav(`/community/${b_eng}`, { replace: true });
     }
+    return null;
   };
 
   return (
@@ -84,27 +93,18 @@ const PostWrite = () => {
         placeholder="제목"
         value={postData.p_title}
         onChange={onChangeHandler}
+        ref={titleRef}
       />
       <EditorModule
         data={postData.p_content}
         handler={onChangeContentHandler}
         code={postData.p_code}
-        setUrlData={setUrlData}
       />
-      <section className="write-thumb mt-2 p-2 pl-4 w-full border border-[#ccced1]">
-        <span className="select-none">대표 이미지</span>
-        <div className="thumb-select w-full h-40 flex items-center gap-5">
-          {thumbList}
-        </div>
-      </section>
       <button
         id="submit"
         className={`m-6 float-right ${btnClass}`}
         type="button"
         onClick={onClickHandler}
-        disabled={
-          postData.p_title.length < 0 || postData.p_content < 0 ? true : false
-        }
       >
         등록
       </button>

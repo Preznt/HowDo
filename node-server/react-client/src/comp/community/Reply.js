@@ -1,27 +1,20 @@
 import ReplyList from "./ReplyList";
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useState } from "react";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { insertReply, getReply } from "../../service/post.service";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 
-const Reply = ({ code, list, count }) => {
+const Reply = ({ code, list }) => {
   const { userSession } = useUserContext();
-  const {
-    replyData,
-    setReplyData,
-    initReply,
-    replyList,
-    setReplyList,
-    replyCount,
-    setReplyCount,
-  } = usePostContext();
+  const { initReply, replyList, setReplyList, replyCount, setReplyCount } =
+    usePostContext();
+  const [replyInput, setReplyInput] = useState(initReply);
 
   useLayoutEffect(() => {
     (async () => {
       setReplyList([...list]);
-      setReplyCount(count);
-      setReplyData(initReply);
+      setReplyInput(initReply);
     })();
   }, []);
 
@@ -32,8 +25,8 @@ const Reply = ({ code, list, count }) => {
 
   // 댓글 입력 데이터 갱신
   const onChangeHandler = (e) => {
-    setReplyData({
-      ...replyData,
+    setReplyInput({
+      ...replyInput,
       p_code: code,
       r_content: e.target.value,
       username: userSession.username,
@@ -43,13 +36,13 @@ const Reply = ({ code, list, count }) => {
 
   // 댓글 등록 버튼 클릭 시 fetch 및 reRendering
   const onClickReply = async () => {
-    setReplyData(initReply);
-    await insertReply(replyData);
-    let data = await getReply(replyData.p_code);
+    setReplyInput(initReply);
+    await insertReply(replyInput);
+    let data = await getReply(replyInput.p_code);
     if (data) {
       setReplyList([...data.list]);
       setReplyCount(data.count);
-      setReplyData(initReply);
+      setReplyInput(initReply);
     }
   };
 
@@ -75,7 +68,7 @@ const Reply = ({ code, list, count }) => {
         <div className="flex items-center">{userSession?.nickname}</div>
         <input
           className={inputClass}
-          value={replyData.r_content}
+          value={replyInput.r_content}
           onChange={onChangeHandler}
           placeholder={
             !userSession?.username
@@ -87,7 +80,7 @@ const Reply = ({ code, list, count }) => {
         <button
           className={btnClass02}
           onClick={onClickReply}
-          disabled={!userSession?.username || replyData.r_content.length < 1}
+          disabled={!userSession?.username || replyInput.r_content.length < 1}
         >
           등록
         </button>

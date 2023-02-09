@@ -1,5 +1,5 @@
 import express from "express";
-import sequelize from "sequelize";
+import sequelize, { Sequelize } from "sequelize";
 import { Op } from "sequelize";
 import fileUp from "../modules/file_upload.js";
 import DB from "../models/index.js";
@@ -310,30 +310,51 @@ router.patch("/post/upvote", async (req, res, next) => {
   }
 });
 
-router.get("/reply/:pCode/get", async (req, res) => {
+router.get("/preply/:pCode/get", async (req, res) => {
   const pCode = req.params.pCode;
   try {
-    // 게시글의 모든 댓글
-    const replyList = await REPLY.findAll({
-      where: { [Op.and]: [{ p_code: pCode }, { r_deleted: null }] },
+    // 게시글의 모든 부모 댓글
+    const pReplyList = await REPLY.findAll({
+      where: {
+        [Op.and]: [
+          { p_code: pCode },
+          { r_deleted: null },
+          { r_parent_code: null },
+        ],
+      },
       order: [
         ["r_date", "DESC"],
         ["r_time", "DESC"],
       ],
-      include: [
-        {
-          model: REPLY,
-          as: "reply_child",
-        },
-        { model: USER, attributes: ["nickname", "profile_image"] },
-      ],
+      include: [{ model: USER, attributes: ["nickname", "profile_image"] }],
     });
     // 게시글의 최상위 댓글 수
     const replyCount = await POST.findOne({
       attributes: ["p_replies"],
       where: { p_code: pCode },
     });
-    return res.send({ replyList, replyCount });
+
+    return res.send({ pReplyList, replyCount });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+router.get("/creply/:rCode/get", async (req, res) => {
+  const rCode = req.params.rCode;
+  try {
+    // 게시글의 모든 자식 댓글
+    const cReplyList = await REPLY.findAll({
+      where: {
+        [Op.and]: [{ r_parent_code: rCode }, { r_deleted: null }],
+      },
+      order: [
+        ["r_date", "DESC"],
+        ["r_time", "DESC"],
+      ],
+      include: [{ model: USER, attributes: ["nickname", "profile_image"] }],
+    });
+    return res.send(cReplyList);
   } catch (err) {
     console.error(err);
   }
@@ -343,13 +364,24 @@ router.post("/reply/insert", async (req, res) => {
   const data = req.body;
   try {
     const result = await REPLY.create(data);
-    console.log(result);
-    // r_parent_code 가 null 일 경우(최상위 댓글일 경우)
-    if (result && !data.r_parent_code) {
-      await POST.update(
-        { p_replies: sequelize.literal("p_replies + 1") },
-        { where: { p_code: req.body.p_code } }
-      );
+    try {
+      // r_parent_code 가 있을 경우(대댓글일 경우)
+      if (data.r_parent_code) {
+        await REPLY.update(
+          { r_children: sequelize.literal("r_children + 1") },
+          { where: { r_code: req.body.r_parent_code } }
+        );
+      }
+      // r_parent_code 가 null 일 경우(최상위 댓글일 경우)
+      if (!data.r_parent_code) {
+        await POST.update(
+          { p_replies: sequelize.literal("p_replies + 1") },
+          { where: { p_code: req.body.p_code } }
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      return res.send({ ERROR: "댓글 게시 중 오류가 발생했습니다." });
     }
     return res.send(result);
   } catch (err) {
@@ -358,21 +390,29 @@ router.post("/reply/insert", async (req, res) => {
   }
 });
 
-router.get("/reply/:rCode/:pCode/delete", async (req, res) => {
+router.get("/reply/:rCode/delete", async (req, res) => {
   const rCode = req.params.rCode;
-  const pCode = req.params.pCode;
   try {
     const date = moment().format("YYYY[-]MM[-]DD HH:mm:ss");
-    const result = await REPLY.update(
-      { r_deleted: date },
-      { where: { r_code: rCode } }
-    );
-    console.log(result);
-    if (result) {
-      await POST.update(
-        { p_replies: sequelize.literal("p_replies - 1") },
-        { where: { p_code: pCode } }
-      );
+    await REPLY.update({ r_deleted: date }, { where: { r_code: rCode } });
+    try {
+      // 최상위 댓글일 경우 post 댓글 수 - 1
+      const data = await REPLY.findByPk(rCode);
+      if (!data.r_parent_code) {
+        await POST.update(
+          { p_replies: sequelize.literal("p_replies - 1") },
+          { where: { p_code: data.p_code } }
+        );
+      }
+      if (data.r_parent_code) {
+        const asdf = await REPLY.update(
+          { r_children: sequelize.literal("r_children - 1") },
+          { where: { r_code: data.r_parent_code } }
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      return res.send({ ERROR: "댓글 삭제 중 문제가 발생했습니다." });
     }
     return res.send({ MESSAGE: "댓글이 삭제되었습니다." });
   } catch (err) {
