@@ -82,13 +82,17 @@ router.get("/creater/:id", async (req, res, next) => {
       limit: 10,
     });
 
+    // 사용자가 구독하고 있는 크리에이터
     const sub = await SUBSCRIBE.findAll({
       attributes: ["partner_order_id"],
       where: { partner_user_id: username },
+      raw: true,
     });
-    console.log(sub);
 
-    return res.json({ u_result: id, v_result: result });
+    const chkSub = sub.filter((s) => s.partner_order_id === id.username);
+    console.log(chkSub);
+
+    return res.json({ u_result: id, v_result: result, chkSub });
   } catch (err) {
     console.log(err);
     return res.json({ u_result: null, v_result: null });
