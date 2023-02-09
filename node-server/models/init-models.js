@@ -32,6 +32,9 @@ const initModels = (sequelize) => {
   user.belongsToMany(video, { through: v_authority, foreignKey: "username" });
   video.belongsToMany(user, { through: v_authority, foreignKey: "v_code" });
 
+  v_authority.belongsTo(user, { foreignKey: "username" });
+  v_authority.belongsTo(video, { foreignKey: "v_code" });
+
   user.belongsToMany(video, {
     as: "f_video",
     through: view_history,
@@ -42,6 +45,9 @@ const initModels = (sequelize) => {
     through: view_history,
     foreignKey: "v_code",
   });
+
+  view_history.belongsTo(user, { foreignKey: "username" });
+  view_history.belongsTo(video, { foreignKey: "v_code" });
 
   user.belongsToMany(video, {
     as: "f_purchase_video",
@@ -55,6 +61,9 @@ const initModels = (sequelize) => {
     foreignKey: "v_code",
   });
 
+  purchase.belongsTo(user, { foreignKey: "username" });
+  purchase.belongsTo(video, { foreignKey: "v_code" });
+
   user.belongsToMany(image, {
     as: "f_image",
     through: view_history,
@@ -66,6 +75,9 @@ const initModels = (sequelize) => {
     through: view_history,
     foreignKey: "i_code",
   });
+
+  // view_history.belongsTo(user, { foreignKey: "username" });
+  view_history.belongsTo(image, { foreignKey: "i_code" });
 
   user.belongsToMany(image, {
     as: "f_purchase_image",
@@ -79,8 +91,14 @@ const initModels = (sequelize) => {
     foreignKey: "i_code",
   });
 
+  // purchase.belongsTo(user, { foreignKey: "username" });
+  purchase.belongsTo(image, { foreignKey: "i_code" });
+
   user.belongsToMany(image, { through: i_authority, foreignKey: "username" });
   image.belongsToMany(user, { through: i_authority, foreignKey: "i_code" });
+
+  i_authority.belongsTo(user, { foreignKey: "username" });
+  i_authority.belongsTo(image, { foreignKey: "i_code" });
 
   user.belongsToMany(user, {
     as: "f_sub_user",

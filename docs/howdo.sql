@@ -6,6 +6,9 @@ DROP DATABASE howdo;
 DROP TABLE subscribe;
 SELECT * FROM subscribe;
 
+UPDATE user SET price = 3000 WHERE username='bjw1403@gmail.com';
+UPDATE subscribe SET approved_at = "2023-02-08" WHERE partner_order_id='kpkp@naver.com';
+
 -- 사용자정보
 CREATE TABLE IF NOT EXISTS user(
 	username	VARCHAR(256),
