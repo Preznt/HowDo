@@ -11,6 +11,7 @@ export const userPageFetch = async ({ params }) => {
   const createrResult = await response?.json();
   return createrResult;
 };
+
 const UserPageMain = () => {
   const { userSession, modalHandler } = useUserContext();
   const { payReadyBody, statePayReady } = usePayContext();
@@ -65,12 +66,19 @@ const UserPageMain = () => {
             <div className="ml-6 mt-auto mb-auto hover:text-blue-600 hover:cursor-pointer">
               {createrResult?.u_result?.nickname}
             </div>
-            <div
-              className="ml-auto hover:text-blue-600 hover:cursor-pointer"
-              onClick={twoClickEvent}
-            >
-              구독
-            </div>
+            {createrResult.chkSub[0] ? (
+              <div className="ml-auto hover:text-blue-600 hover:cursor-pointer">
+                구독 중
+              </div>
+            ) : (
+              <div
+                className="ml-auto hover:text-blue-600 hover:cursor-pointer"
+                onClick={twoClickEvent}
+              >
+                구독
+              </div>
+            )}
+
             {createrResult?.u_result?.username === userSession.username ? (
               <div>게시글 작성</div>
             ) : null}

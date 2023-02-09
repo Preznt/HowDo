@@ -102,15 +102,3 @@
 .ck-content {
   height: 70vh;
 }
-
-/* thumbnail select box */
-.thumb-select img {
-  width: 15%;
-  cursor: pointer;
-  opacity: 0.5;
-  margin: 0.5rem;
-}
-
-.thumb-select img:hover {
-  opacity: 1;
-}

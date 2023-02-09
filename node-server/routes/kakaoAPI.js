@@ -1,8 +1,7 @@
 import express from "express";
 import DB from "../models/index.js";
-import { Op } from "sequelize";
 import { SYSTEM_RES } from "../config/api_res_code.js";
-import { KAKAO_APP_ADMIN_KEY, URL } from "../config/kakao_config.js";
+import { subPayReq } from "../modules/pay_module.js";
 import schedule from "node-schedule";
 import moment from "moment";
 
@@ -21,11 +20,9 @@ router.post("/sub", async (req, res) => {
   }
 });
 
-//  날마다? "0 0 * * *"
 // 날마다 만료된 유저 정보 가져오기
-const job = schedule.scheduleJob("10 * * * * *", async () => {
-  console.log("매 15초마다 실행");
-  const MonthLater = moment().subtract(15, "s").format("YYYY-MM-DD");
+const job = schedule.scheduleJob("0 0 * * *", async () => {
+  const MonthLater = moment().subtract(1, "d").format("YYYY-MM-DD");
   console.log(MonthLater);
   let result;
   try {
@@ -40,46 +37,27 @@ const job = schedule.scheduleJob("10 * * * * *", async () => {
     console.log(`${SYSTEM_RES.SQL_ERROR} \n`, e);
   }
 
-  const subPayBody = {
-    cid: "TCSUBSCRIP",
-    sid: result[0].sid,
-    partner_order_id: result[0].partner_order_id,
-    partner_user_id: result[0].partner_user_id,
-    item_name: result[0].partner_order_id,
-    quantity: 1,
-    total_amount: result[0]["user.price"],
-    tax_free_amount: 0,
-    vat_amount: Math.round((result[0]["user.price"] - 0) / 11),
-  };
+  // 배열로 카카오페이에 요청할 데이터 만들기
+  if (result[0]) {
+    const subPayBody = await result?.map((r) => {
+      return {
+        cid: "TCSUBSCRIP",
+        sid: r.sid,
+        partner_order_id: r.partner_order_id,
+        partner_user_id: r.partner_user_id,
+        item_name: r.partner_order_id,
+        quantity: 1,
+        total_amount: r["user.price"],
+        tax_free_amount: 0,
+        vat_amount: Math.round((r["user.price"] - 0) / 11),
+      };
+    });
 
-  console.log(subPayBody);
-
-  const fetchOption = {
-    method: "POST",
-    body: new URLSearchParams(subPayBody),
-    headers: {
-      Authorization: `KakaoAK ${KAKAO_APP_ADMIN_KEY}`,
-      "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
-    },
-  };
-
-  try {
-    const res = await fetch(URL.SUBSCRIPTION, fetchOption);
-    const result = await res.json();
-    console.log(result);
-    await SUBSCRIBE.update(
-      { approved_at: result.approved_at.substr(0, 10) },
-      {
-        where: {
-          [Op.and]: [
-            { partner_user_id: result.partner_user_id },
-            { partner_order_id: result.partner_order_id },
-          ],
-        },
-      }
-    );
-  } catch (e) {
-    console.log("정기결제 승인 날짜 수정 실패", e);
+    console.log(subPayBody);
+    // 배열에 있는 개수만큼 결제 요청
+    for (let i = 0; i < subPayBody.length; i++) {
+      await subPayReq(subPayBody, i);
+    }
   }
 });
 
