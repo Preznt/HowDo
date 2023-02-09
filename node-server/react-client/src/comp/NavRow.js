@@ -14,6 +14,8 @@ const NavRow = () => {
     useAutoSearchContext();
   const { userSession, logoutHandler } = useUserContext();
   const { searchKeyword, setSearchKeyword } = useAutoSearchContext();
+  const [idx, setIdx] = useState(0);
+  const [temp, setTemp] = useState();
   const searchRef = useRef(null);
   const searchParentRef = useRef();
   const borderStyle = {
@@ -35,20 +37,46 @@ const NavRow = () => {
     }
   };
 
-  const pressEnter = async (e) => {
-    console.log(searchParentRef);
-    if (e.keyCode === 38) {
+  const pressEnter = (e) => {
+    setIdx(0);
+    const word = searchParentRef?.current?.children;
+    if (!currentSearch && e.keyCode === 13) {
+      alert("검색어를 입력하세요");
+      searchRef.current.focus();
     }
-    if (e.keyCode === 40)
-      if (e.keyCode === 13) {
-        if (!currentSearch) {
-          alert("검색어를 입력하세요");
-          searchRef.current.focus();
-        } else {
-          setSearchKeyword(currentSearch);
+    if (currentSearch) {
+      switch (e.keyCode) {
+        case 38:
+          if (idx - 1 === -1) {
+            setIdx(searchParentRef.current.childElementCount - 1);
+          } else setIdx(idx - 1);
+
+          console.log(idx);
+
+          setTemp(word[idx]?.innerText);
+          console.log(temp);
+
+          break;
+        case 40:
+          console.log(idx);
+          setIdx(idx + 1);
+          setTemp(word[idx]?.innerText);
+          console.log(temp);
+          if (searchParentRef.current.childElementCount === idx + 1) setIdx(0);
+
+          break;
+        case 27:
+          setIdx(0);
+          setCurrentSearch();
+          break;
+        case 13:
+          if (temp) setCurrentSearch(temp);
+          else setCurrentSearch(currentSearch);
           navigate(`/search/${currentSearch}`);
-        }
+          setCurrentSearch();
+          break;
       }
+    }
   };
 
   const openClickHandler = () => {
@@ -58,13 +86,23 @@ const NavRow = () => {
 
   const autoCompleteView = autoComplete?.map((word, index) => {
     return (
-      <div
-        key={index}
-        ref={searchParentRef}
-        className="autocomplete cursor-pointer pl-4 mb-1 hover:bg-gray-300 rounded-lg"
-      >
-        {word}
-      </div>
+      <>
+        {idx === index ? (
+          <div
+            key={index}
+            className="autocomplete cursor-pointer pl-4 mb-1 hover:bg-gray-300 rounded-lg bg-gray-300"
+          >
+            {word}
+          </div>
+        ) : (
+          <div
+            key={index}
+            className="autocomplete cursor-pointer pl-4 mb-1 hover:bg-gray-300 rounded-lg"
+          >
+            {word}
+          </div>
+        )}
+      </>
     );
   });
   return (
@@ -88,7 +126,10 @@ const NavRow = () => {
             style={borderStyle}
           />
           {autoComplete ? (
-            <div className="absolute top-12 left-0 min-h-fit min-w-[213px] bg-white border-black rounded-lg shadow-lg">
+            <div
+              className="absolute top-12 left-0 min-h-fit min-w-[213px] bg-white border-black rounded-lg shadow-lg"
+              ref={searchParentRef}
+            >
               {autoCompleteView}
             </div>
           ) : null}

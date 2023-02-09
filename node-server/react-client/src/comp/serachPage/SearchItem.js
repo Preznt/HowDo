@@ -15,10 +15,10 @@ export const SearchItem = () => {
   const itemClick = (item) => {
     navigate(`/creater/${item.nickname}`);
   };
-  console.log(SearchR);
+  // console.log(SearchR);
 
   const userSearchView = SearchR?.u_result?.map((item) => {
-    console.log(item.profile_image);
+    // console.log(item.profile_image);
     return (
       <div
         className={searchItemwrap}
