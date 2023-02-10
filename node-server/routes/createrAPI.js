@@ -61,7 +61,7 @@ router.get("/total/:query", async (req, res, next) => {
 });
 router.get("/creater/:id", async (req, res, next) => {
   const nickname = req.params.id;
-  const username = req?.session?.user.username;
+  const username = req?.session?.user?.username;
   console.log(nickname);
   let userid;
   try {
@@ -82,11 +82,11 @@ router.get("/creater/:id", async (req, res, next) => {
       limit: 10,
     });
 
-    const sub = await SUBSCRIBE.findAll({
-      attributes: ["partner_order_id"],
-      where: { partner_user_id: username },
-    });
-    console.log(sub);
+    // const sub = await SUBSCRIBE.findAll({
+    // attributes: ["partner_order_id"],
+    // where: { partner_user_id: username },
+    // });
+    // console.log(sub);
 
     return res.json({ u_result: id, v_result: result });
   } catch (err) {

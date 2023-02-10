@@ -81,7 +81,7 @@ const UserPageMain = () => {
           <Purchase />{" "}
         </div>
       ) : (
-        (alert("존재하지 않는 회원입니다"), navigate("/"))
+        (alert("존재하지 않는 회원입니다."), navigate("/"))
       )}
     </>
   );

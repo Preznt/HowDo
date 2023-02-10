@@ -15,6 +15,7 @@ const Join = () => {
     // if (tagName === "BUTTON") {
     //   await setJoinUser({ ...joinUser, name: tagName });
     // }
+    console.log(joinUser.username);
     const result = await fetchJoin(joinUser);
     if (result.CODE) {
       setError({ ...result });
@@ -28,14 +29,12 @@ const Join = () => {
 
   const twoEvent = async (e) => {
     await onChangeHandler(e);
-    await new Promise((r) => setTimeout(r, 200));
-    await onClickHandler(e);
   };
 
   const submitHandler = (e) => {
     e.preventDefault();
   };
-
+  console.log(joinUser.username);
   return (
     <div className="w-3/5 m-auto">
       <div className="hidden sm:block" aria-hidden="true">
@@ -67,8 +66,8 @@ const Join = () => {
                       type="email"
                       name="username"
                       id="username"
+                      value={joinUser.username}
                       onChange={twoEvent}
-                      onBlur={twoEvent}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_USERNAME" ? (

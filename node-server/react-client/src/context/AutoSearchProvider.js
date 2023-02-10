@@ -24,7 +24,7 @@ export const AutoSearchContextProvider = ({ children }) => {
     sleep(500).then(async () => {
       const result = await fetch(`/mypage/search`);
       const keyword = await result?.json();
-      setSavedKeyword([...keyword.keyword_v, ...keyword.keyword_u]);
+      setSavedKeyword([...keyword?.keyword_v, ...keyword?.keyword_u]);
 
       if (currentSearch) {
         const result = savedKeyword
@@ -38,7 +38,7 @@ export const AutoSearchContextProvider = ({ children }) => {
             return Object.values(keyword)[0];
           });
         setAutoComplete([...result]);
-      } else return setAutoComplete([null]);
+      } else return setAutoComplete();
     });
   };
 
