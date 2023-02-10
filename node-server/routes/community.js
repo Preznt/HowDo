@@ -329,6 +329,10 @@ router.get("/reply/:pCode/get", async (req, res) => {
           as: "reply_child",
           required: false,
           where: { r_deleted: null },
+          order: [
+            ["r_date", "DESC"],
+            ["r_time", "DESC"],
+          ],
           include: { model: USER, attributes: ["nickname", "profile_image"] },
         },
         { model: USER, attributes: ["nickname", "profile_image"] },

@@ -30,7 +30,6 @@ export const loader = async ({ params }) => {
   const pCode = params.post;
   const detail = await getDetailPost(pCode);
   const reply = await getReply(pCode);
-  // window.scrollTo(0, 0);
   return { detail, reply };
 };
 

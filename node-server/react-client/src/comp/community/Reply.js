@@ -1,5 +1,5 @@
 import ReplyList from "./ReplyList";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { insertReply, getReply } from "../../service/post.service";
@@ -11,11 +11,12 @@ const Reply = ({ code, list }) => {
     usePostContext();
   const [replyInput, setReplyInput] = useState(initReply);
 
-  useLayoutEffect(() => {
-    (async () => {
-      setReplyList([...list]);
-      setReplyInput(initReply);
-    })();
+  useEffect(() => {
+    setReplyList([...list]);
+    setReplyInput(initReply);
+    if (!window?.location?.hash) {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   /**
