@@ -1,5 +1,5 @@
 import ReplyList from "./ReplyList";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { insertReply, getReply } from "../../service/post.service";
@@ -11,16 +11,16 @@ const Reply = ({ code, list }) => {
     usePostContext();
   const [replyInput, setReplyInput] = useState(initReply);
 
-  useLayoutEffect(() => {
-    (async () => {
-      setReplyList([...list]);
-      setReplyInput(initReply);
-    })();
+  useEffect(() => {
+    setReplyList([...list]);
+    setReplyInput(initReply);
+    if (!window?.location?.hash) {
+      window.scrollTo(0, 0);
+    }
   }, []);
 
   /**
    * Reply 를 재사용 가능한 컴포넌트로...
-   * 칼럼명을 포함한 데이터와 fetch 함수를 어떻게 해야 할까?
    */
 
   // 댓글 입력 데이터 갱신

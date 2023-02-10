@@ -1,13 +1,8 @@
 import { useState } from "react";
-import {
-  getReply,
-  getCReply,
-  insertReply,
-  deleteReply,
-} from "../../service/post.service";
+import { getReply, insertReply, deleteReply } from "../../service/post.service";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
-import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 const ReplyItem = ({ item, index }) => {
   const { userSession } = useUserContext();
@@ -15,7 +10,6 @@ const ReplyItem = ({ item, index }) => {
   const [showChild, setShowChild] = useState(false);
   const [inputValues, setInputValues] = useState([]);
   const [cReplyInput, setCReplyInput] = useState(initReply);
-  const [cReplyList, setCReplyList] = useState([]);
   const [cReplyCount, setCReplyCount] = useState(item.r_children);
 
   const btnClass02 =
@@ -48,133 +42,149 @@ const ReplyItem = ({ item, index }) => {
         r_parent_code: item.r_code,
       };
       await insertReply(reply);
-      let data = await getCReply(reply.r_parent_code);
+      let data = await getReply(reply.p_code);
       if (data) {
-        setCReplyList([...data]);
-        setCReplyInput(initReply);
-        setCReplyCount(cReplyCount + 1);
+        setReplyList([...data.list]);
+        setReplyCount(data.count);
         setInputValues([]);
       }
-      return reply;
+      return initReply;
     });
-    setShowChild(true);
   };
 
   const onClickDelete = async () => {
     await deleteReply(item.r_code);
-    if (item.r_parent_code) {
-      let data = await getCReply(item.r_parent_code);
-      console.log(data);
-      // 부모 댓글의 데이터가 업데이트 되는 것이 아니라 선택된 댓글 기준으로 되는 듯??
-      if (data) {
-        setCReplyList([...data]);
-        setCReplyCount(cReplyCount - 1);
-      }
-    }
-    if (!item.r_parent_code) {
-      let data = await getReply(item.p_code);
-      if (data) {
-        setReplyList([...data.list]);
-        setReplyCount(data.count);
-      }
-    }
-  };
-
-  const ShowChildReply = async (rCode) => {
-    let data = await getCReply(rCode);
+    const data = await getReply(item.p_code);
     if (data) {
-      setCReplyList([...data]);
-      setShowChild(!showChild);
+      setReplyList([...data.list]);
+      setReplyCount(data.count);
     }
   };
 
+  const ShowChildReply = async () => {
+    setShowChild(!showChild);
+  };
+
+  // cf) anchor 와 id 의 hash(#) 를 이용해 scroll 위치 이동...
+  // 만약 상단 nav 밑으로 요소가 가려질 경우 css 로 해결한다.
+  // 부모 요소에 scroll-snap-type 을 주고
+  // id 가 있는 해당 요소에 scroll-margin-top 을 줄 것
+  // 일반적인 스크롤에 영향을 주지 않는다.
   return (
-    <li className="list-none w-full px-10 pt-5 border-gray-200 last:border-b-0 border-b">
-      <div className="flex">
-        {item?.user?.profile_image ? (
-          <img
-            className="inline-block mr-3 w-10 h-10"
-            src={item["user.profile_image"]}
-            alt="profile"
-          />
-        ) : (
-          <UserCircleIcon className={imgDefault} />
-        )}
-        <span className="flex items-center flex-1 ml-3">
-          {item?.user["nickname"]}
-        </span>
-        <span>{`${item.r_date} ${item.r_time}`}</span>
-      </div>
-      <div className="pt-5 pb-5">{item.r_content || "삭제된 댓글입니다."}</div>
-
-      {userSession?.username === item?.username && (
-        <div className="w-full flex justify-end">
-          <button className="hover:text-blue-700" onClick={onClickDelete}>
-            삭제
-          </button>
-        </div>
-      )}
-
-      <button
-        className={`hover:text-blue-700 mb-5 ${
-          showChild ? "text-blue-700" : ""
-        }`}
-        onClick={() => ShowChildReply(item.r_code)}
-      >
-        {cReplyCount
-          ? `${cReplyCount} 개의 댓글`
-          : userSession?.username
-          ? "댓글 입력"
-          : ""}
-      </button>
-
-      <section
-        style={{
-          display: showChild === true ? "block" : "none",
-        }}
-      >
+    <section className="flex w-full border-gray-200 border-t first:border-t-0 snap-mandatory">
+      <ChevronRightIcon
+        className="ml-10 mt-7 w-6 h-6 text-slate-500"
+        style={{ display: item.r_parent_code ? "inline-block" : "none" }}
+      />
+      <div className="w-full">
         <div
-          className="reply-input-box gap-3 w-full p-5 mb-5 border border-gray-300 rounded"
+          className="w-full p-5 scroll-mt-16"
+          id={item?.r_code}
           style={{
-            display: userSession?.username && item.r_content ? "flex" : "none",
+            backgroundColor:
+              window?.location?.hash === `#${item?.r_code}` && "#EFE7DB",
           }}
         >
-          {userSession?.profile_image ? (
-            <img
-              className="rounded-full flex items-center w-10 h-10"
-              src={userSession?.profile_image}
-              alt="profile"
-            />
-          ) : (
-            <UserCircleIcon className={imgDefault} />
+          <div className="flex">
+            {item?.user?.profile_image ? (
+              <img
+                className="inline-block mr-3 w-10 h-10"
+                src={item["user.profile_image"]}
+                alt="profile"
+              />
+            ) : (
+              <UserCircleIcon className={imgDefault} />
+            )}
+            <span className="flex items-center flex-1 ml-3">
+              {item?.user["nickname"]}
+            </span>
+            <span>{`${item.r_date} ${item.r_time}`}</span>
+          </div>
+          <div className="pt-5 pb-5">
+            {item.r_content || "삭제된 댓글입니다."}
+          </div>
+
+          {userSession?.username === item?.username && (
+            <div className="w-full flex justify-end">
+              <button className="hover:text-blue-700" onClick={onClickDelete}>
+                삭제
+              </button>
+            </div>
           )}
-          <div className="flex items-center">{userSession?.nickname}</div>
-          <input
-            onChange={(event) => onChangeCReply(event, index)}
-            className={inputClass}
-            value={inputValues[index] || ""}
-            placeholder={
-              !userSession?.username
-                ? "로그인 후 이용해주세요."
-                : "댓글을 입력하세요."
-            }
-            disabled={!userSession?.username ? true : false}
-          />
-          <button
-            className={btnClass02}
-            disabled={
-              !userSession?.username || inputValues[index] < 1 ? true : false
-            }
-            onClick={() => onClickCReply(index)}
+
+          <div className="px-3">
+            <span
+              className="mr-5 text-slate-500"
+              style={{ display: cReplyCount ? "inline-block" : "none" }}
+            >
+              {cReplyCount && `${cReplyCount} 개의 댓글`}
+            </span>
+            <button
+              className={`hover:text-blue-700 ${
+                showChild ? "text-blue-700" : ""
+              }`}
+              style={{
+                display: userSession?.username ? "inline-block" : "none",
+              }}
+              onClick={() => ShowChildReply(item.r_code)}
+              disabled={!userSession?.username ? true : false}
+            >
+              {userSession?.username && "댓글 쓰기"}
+            </button>
+          </div>
+
+          <div
+            style={{
+              display: showChild === true ? "block" : "none",
+            }}
           >
-            등록
-          </button>
+            <div
+              className="reply-input-box gap-3 w-full p-5 my-5 border border-gray-300 rounded"
+              style={{
+                display:
+                  userSession?.username && item.r_content ? "flex" : "none",
+              }}
+            >
+              {userSession?.profile_image ? (
+                <img
+                  className="rounded-full flex items-center w-10 h-10"
+                  src={userSession?.profile_image}
+                  alt="profile"
+                />
+              ) : (
+                <UserCircleIcon className={imgDefault} />
+              )}
+              <div className="flex items-center">{userSession?.nickname}</div>
+              <input
+                onChange={(event) => onChangeCReply(event, index)}
+                className={inputClass}
+                value={inputValues[index] || ""}
+                placeholder={
+                  !userSession?.username
+                    ? "로그인 후 이용해주세요."
+                    : "댓글을 입력하세요."
+                }
+                disabled={!userSession?.username ? true : false}
+              />
+              <button
+                className={btnClass02}
+                disabled={
+                  !userSession?.username || inputValues[index] < 1
+                    ? true
+                    : false
+                }
+                onClick={() => onClickCReply(index)}
+              >
+                등록
+              </button>
+            </div>
+          </div>
         </div>
-        {cReplyList?.map((child, index) => (
+        {item?.reply_child?.map((child, index) => (
           <ReplyItem key={child.r_code} item={child} index={index} />
         ))}
-      </section>
-    </li>
+      </div>
+    </section>
   );
 };
 

@@ -48,8 +48,6 @@ const PostWrite = () => {
   };
 
   const onClickHandler = async () => {
-    console.log("title", postData.p_title.length);
-    console.log("content", postData.p_content.length);
     if (postData.p_title.length < 1) {
       alert("제목을 입력하세요.");
       titleRef.current.focus();

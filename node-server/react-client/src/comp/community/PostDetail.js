@@ -97,7 +97,6 @@ const PostDetail = () => {
           {post?.p_title}
         </div>
         <EyeIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
-        {/* 게시글 열람하면 조회수가 그대로인데 새로고침, 뒤로가기 하면 올라가는 이유?.. */}
         <span className="mr-4">{post?.p_views}</span>
         <HandThumbUpIcon className="inline-block pt-1 h-5 w-5 text-slate-500" />
         <span className="mr-4">{upvotes}</span>
@@ -116,7 +115,6 @@ const PostDetail = () => {
           <UserCircleIcon className={imgDefault} />
         )}
         <span className="nickname pl-2">{post?.user["nickname"]}</span>
-
         <span className="float-right">{`${post?.p_date} ${post?.p_time}`}</span>
       </section>
 

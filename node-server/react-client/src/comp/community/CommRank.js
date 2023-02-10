@@ -6,8 +6,6 @@ import {
 import { Link } from "react-router-dom";
 
 const CommRank = ({ data }) => {
-  console.log(data);
-
   const Rank = () => {
     return data.map((item) => {
       return (
