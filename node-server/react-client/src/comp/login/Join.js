@@ -5,18 +5,21 @@ const Join = () => {
   const { joinUser, setJoinUser, error, setError, inputRef } = useUserContext();
 
   const onChangeHandler = async (e) => {
-    // const tagName = e.target.tagName;
+    const tagName = e.target.tagName;
     const { name, value } = e.target;
-    await setJoinUser({ ...joinUser, [name]: value });
+    await setJoinUser({ ...joinUser, [name]: value, name: tagName });
     console.log(joinUser);
   };
 
-  useEffect(
+  const onClickHandler = async (e) => {
+    const tagName = e.target.tagName;
+    if (tagName === "BUTTON") {
+      await setJoinUser({ ...joinUser, name: tagName });
+    }
+  };
+
+  useEffect(() => {
     (async () => {
-      // const tagName = e.target.tagName;
-      // if (tagName === "BUTTON") {
-      //   await setJoinUser({ ...joinUser, name: tagName });
-      // }
       const result = await fetchJoin(joinUser);
       if (result.CODE) {
         setError({ ...result });
@@ -26,15 +29,8 @@ const Join = () => {
         alert("회원가입이 완료되었습니다");
       }
       console.log(result);
-    })(),
-    [joinUser]
-  );
-
-  const twoEvent = async (e) => {
-    await onChangeHandler(e);
-    await new Promise((r) => setTimeout(r, 200));
-    // await onClickHandler(e);
-  };
+    })();
+  }, [joinUser]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -72,7 +68,6 @@ const Join = () => {
                       name="username"
                       id="username"
                       onChange={onChangeHandler}
-                      // onBlur={twoEvent}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_USERNAME" ? (
@@ -97,8 +92,7 @@ const Join = () => {
                       type="text"
                       name="nickname"
                       id="nickname"
-                      onChange={twoEvent}
-                      // onBlur={twoEvent}
+                      onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
                     {error.CODE === "REQ_NICKNAME" ? (
@@ -184,7 +178,7 @@ const Join = () => {
               </div>
               <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                 <button
-                  // onClick={onClickHandler}
+                  onClick={onClickHandler}
                   className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                 >
                   가입하기

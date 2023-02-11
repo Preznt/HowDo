@@ -1,11 +1,12 @@
 export default {
   development: {
     username: "root",
-    password: "!Bizz8080",
+    password: "!Biz8080",
     database: "howdo",
     host: "127.0.0.1",
     dialect: "mysql",
     logging: true,
+    port: "3307",
     timezone: "+09:00",
   },
   test: {
