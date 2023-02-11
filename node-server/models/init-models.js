@@ -135,7 +135,7 @@ const initModels = (sequelize) => {
   // });
 
   // child reply
-  reply.belongsTo(reply, { as: "reply_child", foreignKey: "r_parent_code" });
+  reply.hasMany(reply, { as: "reply_child", foreignKey: "r_parent_code" });
 
   // import board data
   board.hasMany(post, { foreignKey: "b_code" });

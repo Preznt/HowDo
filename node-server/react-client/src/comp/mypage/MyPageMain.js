@@ -26,7 +26,7 @@ const MyPageMain = () => {
     console.log(statePayReady);
   };
   const result = useLoaderData();
-
+  console.log(userSession);
   // 유저 세션에 username 이 존재할 때 mypage 구현 없으실 home으로 돌아가지도록 설정
   return (
     <>

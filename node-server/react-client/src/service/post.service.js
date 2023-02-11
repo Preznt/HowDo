@@ -116,23 +116,13 @@ export const upvotePost = async (pCode, pUser, username) => {
 
 export const getReply = async (pCode) => {
   try {
-    const response = await fetch(`/community/preply/${pCode}/get`);
+    const response = await fetch(`/community/reply/${pCode}/get`);
     const result = await response.json();
     const data = {
-      list: result.pReplyList,
+      list: result.replyList,
       count: result.replyCount.p_replies,
     };
     return data;
-  } catch (err) {
-    return null;
-  }
-};
-
-export const getCReply = async (rCode) => {
-  try {
-    const response = await fetch(`/community/creply/${rCode}/get`);
-    const result = await response.json();
-    return result;
   } catch (err) {
     return null;
   }
