@@ -4,7 +4,8 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { UserCircleIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
-const ReplyItem = ({ item, index }) => {
+const ReplyItem = ({ writer, item, index }) => {
+  console.log(writer);
   const { userSession } = useUserContext();
   const { initReply, setReplyList, setReplyCount } = usePostContext();
   const [showChild, setShowChild] = useState(false);
@@ -95,9 +96,12 @@ const ReplyItem = ({ item, index }) => {
             ) : (
               <UserCircleIcon className={imgDefault} />
             )}
-            <span className="flex items-center flex-1 ml-3">
-              {item?.user["nickname"]}
-            </span>
+            <div className="flex items-center flex-1 ml-3">
+              <span>{item?.user["nickname"]}</span>
+              <span className="ml-3 p-1 text-xs text-slate-500 border border-slate-500 rounded-lg">
+                {item?.user["nickname"] === writer && "작성자"}
+              </span>
+            </div>
             <span>{`${item.r_date} ${item.r_time}`}</span>
           </div>
           <div className="pt-5 pb-5">
@@ -181,7 +185,12 @@ const ReplyItem = ({ item, index }) => {
           </div>
         </div>
         {item?.reply_child?.map((child, index) => (
-          <ReplyItem key={child.r_code} item={child} index={index} />
+          <ReplyItem
+            key={child.r_code}
+            writer={writer}
+            item={child}
+            index={index}
+          />
         ))}
       </div>
     </section>

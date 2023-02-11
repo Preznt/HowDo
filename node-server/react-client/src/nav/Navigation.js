@@ -13,7 +13,7 @@ import Board, { loader as BoardLoader } from "../comp/community/Board";
 import PostDetail, {
   loader as DetailLoader,
 } from "../comp/community/PostDetail";
-import PostWrite from "../comp/community/PostWrite";
+import PostWrite, { PostLoader } from "../comp/community/PostWrite";
 import Approve from "../comp/purchase/Approve";
 import SearchMain, { SearchLoader } from "../comp/serachPage/SearchMain";
 import UserPageMain, { userPageFetch } from "../comp/userpage/UserPageMain";
@@ -56,9 +56,14 @@ const router = createBrowserRouter([
             loader: DetailLoader,
             element: <PostDetail />,
           },
-          { path: ":board/write/:post?", element: <PostWrite /> },
+          {
+            path: "write/:post?",
+            loader: PostLoader,
+            element: <PostWrite />,
+          },
         ],
       },
+
       { path: "/approval", element: <Approve /> },
       { path: "/search/:query", loader: SearchLoader, element: <SearchMain /> },
       { path: "/video/shorts", element: <ShortMain /> },

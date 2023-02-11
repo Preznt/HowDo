@@ -315,9 +315,14 @@ router.get("/reply/:pCode/get", async (req, res) => {
   try {
     // 게시글의 모든 댓글
     // 삭제된 댓글의 자식 댓글 처리 방법?
+    // !!!재귀 참조를 위해 raw Query 를 사용해야 함!!!
     const replyList = await REPLY.findAll({
       where: {
-        [Op.and]: [{ p_code: pCode }, { r_deleted: null }],
+        [Op.and]: [
+          { p_code: pCode },
+          { r_deleted: null },
+          { r_parent_code: null },
+        ],
       },
       order: [
         ["r_date", "DESC"],
@@ -338,7 +343,6 @@ router.get("/reply/:pCode/get", async (req, res) => {
         { model: USER, attributes: ["nickname", "profile_image"] },
       ],
     });
-
     // 게시글의 최상위 댓글 수
     const replyCount = await POST.findOne({
       attributes: ["p_replies"],

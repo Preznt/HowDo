@@ -36,10 +36,7 @@ const Board = () => {
     const { data } = await getBoardPosts(board.b_eng, value);
     setPostList([...data]);
     setOrderValue(text);
-  };
-
-  const onClickShowOrder = () => {
-    setShowOrder(!showOrder);
+    setShowOrder(false);
   };
 
   const btnClass =
@@ -60,8 +57,8 @@ const Board = () => {
       <section className="flex w-full px-5 pb-5 justify-between">
         <button
           className={`search-select relative w-30 ${selectClass}`}
-          onClick={onClickShowOrder}
-          onBlur={onClickShowOrder}
+          onClick={() => setShowOrder(true)}
+          onBlur={() => setShowOrder(false)}
         >
           <BarsArrowDownIcon className="inline-block mr-3 h-5 w-5 text-slate-500" />
           {orderValue}
@@ -93,9 +90,10 @@ const Board = () => {
         {Number(userSession?.level) >= Number(board.b_level) && (
           <Link
             className={btnClass}
-            to={`/community/${board.b_eng}/write`}
+            to={`/community/write`}
             state={{
               b_code: board.b_code,
+              b_kor: board.b_kor,
               b_eng: board.b_eng,
               b_group_code: board.b_group_code,
             }}
