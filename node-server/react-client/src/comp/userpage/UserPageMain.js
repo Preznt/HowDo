@@ -86,7 +86,10 @@ const UserPageMain = () => {
           <div className="ml-44">
             <CreaterPageContent />
           </div>{" "}
-          <Purchase />{" "}
+          <Purchase
+            nickname={createrResult?.u_result?.nickname}
+            price={createrResult?.u_result?.price}
+          />{" "}
         </div>
       ) : (
         (alert("존재하지 않는 회원입니다"), navigate("/"))
