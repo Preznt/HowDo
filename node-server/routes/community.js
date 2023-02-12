@@ -1,5 +1,6 @@
 import express from "express";
-import sequelize, { Sequelize } from "sequelize";
+import sequelize from "sequelize";
+import { QueryTypes } from "sequelize";
 import { Op } from "sequelize";
 import fileUp from "../modules/file_upload.js";
 import DB from "../models/index.js";
@@ -115,6 +116,20 @@ router.get("/posts/get", async (req, res) => {
   } catch (err) {
     console.error(err);
   }
+});
+
+router.get("/board/:value?/get", async (req, res) => {
+  const value = req?.params?.value;
+  // cf) value 가 없을 경우 where 절을 {} 로 설정하여 전체 목록 표시
+  const result = await BOARD.findAll({
+    where: value
+      ? {
+          b_kor: { [Op.like]: `%${value}%` },
+        }
+      : {},
+    raw: true,
+  });
+  return res.status(200).send(result);
 });
 
 // community board fetch
@@ -316,6 +331,20 @@ router.get("/reply/:pCode/get", async (req, res) => {
     // 게시글의 모든 댓글
     // 삭제된 댓글의 자식 댓글 처리 방법?
     // !!!재귀 참조를 위해 raw Query 를 사용해야 함!!!
+
+    // const test = await DB.sequelize.query(
+    //   `WITH RECURSIVE replies AS (
+    //       SELECT *, 0 AS depth FROM reply
+    //   WHERE p_code = :pCode AND r_deleted IS NULL AND r_parent_code IS NULL
+    //   UNION
+    //   SELECT c.*, depth + 1 FROM reply c
+    //   JOIN replies r ON c.r_parent_code = r.r_code)
+    //   SELECT * FROM replies`,
+    //   { replacements: { pCode: `${pCode}` }, type: QueryTypes.SELECT }
+    // );
+
+    // console.log(test);
+
     const replyList = await REPLY.findAll({
       where: {
         [Op.and]: [

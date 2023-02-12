@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { usePostContext } from "../../context/PostContextProvider";
 
 const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
   const { postData, setPostData } = usePostContext();
   const [showBoard, setShowBoard] = useState(false);
-  const [BoardInput, setBoardInput] = useState("");
-  const [BoardList, setBoardList] = useState(data);
+  const [boardInput, setBoardInput] = useState("");
+  const [boardList, setBoardList] = useState(data);
 
   /**
    * data
@@ -17,8 +17,26 @@ const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
     setShowBoard(!showBoard);
   };
 
-  const onChangeSearchBoard = (e) => {
-    setBoardInput(e.target.value);
+  useEffect(() => {
+    onChangeSearchBoard(boardInput);
+  }, [boardInput]);
+
+  const onChangeSearchBoard = async (value) => {
+    setBoardInput(value);
+    let result = await fetch(`/community/board/${boardInput}/get`).then(
+      (data) => data.json()
+    );
+    // 함수로 분리할 것
+    result = result.reduce((acc, obj) => {
+      let key = obj["b_group_kor"];
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(obj);
+      return acc;
+    }, {});
+    setBoardList(result);
+    console.log(boardInput);
   };
 
   const onChangeTitle = (e) => {
@@ -32,8 +50,8 @@ const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
   };
 
   const SelectList = () => {
-    return Object.keys(BoardList).map((group) =>
-      BoardList[group].map((board) => {
+    return Object.keys(boardList).map((group) =>
+      boardList[group].map((board) => {
         // 공지는 세션 체크 후 제외할 것
         return (
           <div
@@ -77,18 +95,18 @@ const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
       />
 
       <section
-        className="absolute flex flex-col top-full mt-2 left-0 w-full mb-2 transition-all duration-200 ease-out z-50 overflow-hidden"
+        className="absolute flex flex-col top-full mt-2.5 left-0 w-full mb-2 transition-all duration-200 ease-out z-50 overflow-hidden"
         style={{ maxHeight: showBoard ? "25vh" : "0vh" }}
       >
         <div className="w-full p-5 bg-slate-400">
           <input
             className="w-full p-1 rounded outline-none"
-            value={BoardInput}
-            onChange={onChangeSearchBoard}
+            value={boardInput}
+            onChange={(e) => setBoardInput(e.target.value)}
             placeholder="게시판 검색"
           />
         </div>
-        <div className="w-full h-full p-3 overflow-auto bg-white border-b border-[#ccced1]">
+        <div className="w-full min-h-[10vh] h-full p-3 overflow-auto bg-white border-b border-[#ccced1]">
           <SelectList />
         </div>
       </section>
