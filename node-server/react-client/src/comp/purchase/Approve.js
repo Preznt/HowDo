@@ -1,7 +1,7 @@
 import { payApprove, subApprovalSave } from "../../service/auth.service";
 import { usePayContext } from "../../context/PayContextProvider";
 import { dataPayApprove, dataSubApprovalSave } from "../../data/Pay";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import moment from "moment";
 
 const Approve = () => {
@@ -17,14 +17,14 @@ const Approve = () => {
   dataPayApprove.partner_order_id = order_id;
   // 카카오페이 승인 요청
 
-  let result;
+  let data = useRef();
   useEffect(() => {
     (async () => {
-      result = await payApprove(dataPayApprove);
+      const result = await payApprove(dataPayApprove);
       // console.log(result);
 
       if (result.sid) {
-        const data = new dataSubApprovalSave(
+        data.current = new dataSubApprovalSave(
           result.partner_user_id,
           result.partner_order_id,
           result.sid,
@@ -32,21 +32,21 @@ const Approve = () => {
           result.approved_at.substr(0, 10)
         );
         console.log(data);
-        subApprovalSave(data);
+        subApprovalSave(data.current);
       }
     })();
   });
 
-  const nextPay = moment(result.approved_at).add(30, "d");
+  const nextPay = moment(data?.current?.approved_at).add(30, "d");
 
   return (
     <div className="ml-auto w-1/2">
       <h1>How Do</h1>
       <div>
         <h1>결제가 완료되었습니다</h1>
-        <p>결제일시: {result.approved_at}</p>
-        <p>결제금액: {result.amount.total}</p>
-        <p>다음결제일: {nextPay}</p>
+        <p>결제일시: </p>
+        <p>결제금액: </p>
+        <p>다음결제일: </p>
       </div>
       <button>이어서 보기</button>
       <button>구매내역 확인</button>

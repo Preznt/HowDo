@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { dataPayApprove, dataPayReady } from "../data/Pay";
+import { createContext, useContext, useState } from "react";
+import { dataPayReady } from "../data/Pay";
 import { useUserContext } from "./UserContextProvider";
-import { expireUser } from "../service/auth.service";
 
 const PayContext = createContext();
 

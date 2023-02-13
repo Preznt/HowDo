@@ -90,13 +90,13 @@ router.get("/creater/:id", async (req, res, next) => {
     // 사용자가 구독하고 있는 크리에이터
     if (username) {
       const sub = await SUBSCRIBE.findAll({
-        attributes: ["partner_order_id"],
+        attributes: ["partner_order_id", "inactivated_at"],
         where: { partner_user_id: username },
         raw: true,
       });
 
       chkSub = await sub.filter((s) => s.partner_order_id === id?.username);
-      console.log(chkSub);
+      console.log("구독 크리에이터", chkSub);
     }
 
     return res.json({ u_result: id, v_result: result, chkSub });
@@ -113,7 +113,7 @@ router.get("/:username", async (req, res, next) => {
       where: { nickname: nickname },
       raw: true,
     });
-    console.log(id.username);
+    console.log(id?.username);
     userid = id.username;
     const result = await V_CONTENT.findAll({
       where: { username: userid },

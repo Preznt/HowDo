@@ -4,7 +4,7 @@ import { usePayContext } from "../../context/PayContextProvider";
 import { payReady } from "../../service/auth.service";
 
 const Purchase = (props) => {
-  const { modal, modalHandler, userSession } = useUserContext();
+  const { modal, modalHandler } = useUserContext();
   const { statePayReady } = usePayContext();
   const { nickname, price } = props;
   return (
