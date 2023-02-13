@@ -61,7 +61,7 @@ router.get("/total/:query", async (req, res, next) => {
 });
 router.get("/creater/:id", async (req, res, next) => {
   const nickname = req.params.id;
-  const username = req?.session?.user.username;
+  const username = req?.session?.user?.username;
   console.log(nickname);
   let userid;
   try {
@@ -76,19 +76,30 @@ router.get("/creater/:id", async (req, res, next) => {
       where: { nickname: nickname },
       raw: true,
     });
-    userid = id.username;
-    const result = await V_CONTENT.findAll({
-      where: { username: userid },
-      limit: 10,
-    });
+    userid = id?.username;
 
-    const sub = await SUBSCRIBE.findAll({
-      attributes: ["partner_order_id"],
-      where: { partner_user_id: username },
-    });
-    console.log(sub);
+    let result;
+    if (userid) {
+      result = await V_CONTENT.findAll({
+        where: { username: userid },
+        limit: 10,
+      });
+    }
 
-    return res.json({ u_result: id, v_result: result });
+    let chkSub = [];
+    // 사용자가 구독하고 있는 크리에이터
+    if (username) {
+      const sub = await SUBSCRIBE.findAll({
+        attributes: ["partner_order_id", "inactivated_at"],
+        where: { partner_user_id: username },
+        raw: true,
+      });
+
+      chkSub = await sub.filter((s) => s.partner_order_id === id?.username);
+      console.log("구독 크리에이터", chkSub);
+    }
+
+    return res.json({ u_result: id, v_result: result, chkSub });
   } catch (err) {
     console.log(err);
     return res.json({ u_result: null, v_result: null });
@@ -102,7 +113,7 @@ router.get("/:username", async (req, res, next) => {
       where: { nickname: nickname },
       raw: true,
     });
-    console.log(id.username);
+    console.log(id?.username);
     userid = id.username;
     const result = await V_CONTENT.findAll({
       where: { username: userid },

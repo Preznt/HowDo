@@ -1,7 +1,7 @@
 import express from "express";
 import DB from "../models/index.js";
 import { SYSTEM_RES } from "../config/api_res_code.js";
-import { subPayReq } from "../modules/pay_module.js";
+import { subPayReq, subCancel } from "../modules/pay_module.js";
 import schedule from "node-schedule";
 import moment from "moment";
 
@@ -63,6 +63,35 @@ const job = schedule.scheduleJob("0 0 * * *", async () => {
 
 job.cancel();
 
-router.get("/expire", async (req, res) => {});
+// 구독 취소 요청
+router.get("/cancel/:username/:orderUser", async (req, res) => {
+  const username = req.params.username;
+  const orderUser = req.params.orderUser;
+  console.log(username, orderUser);
+
+  try {
+    const expireInfo = await SUBSCRIBE.findOne({
+      attributes: ["sid"],
+      where: { partner_user_id: username, partner_order_id: orderUser },
+      raw: true,
+    });
+    console.log(expireInfo);
+
+    // console.log(cancelBody);
+
+    const inactive_date = await subCancel({
+      cid: "TCSUBSCRIP",
+      sid: expireInfo?.sid,
+    });
+    console.log("받아온 값", inactive_date);
+
+    await SUBSCRIBE.update(
+      { inactivated_at: inactive_date.substr(0, 10) },
+      { where: { partner_user_id: username, partner_order_id: orderUser } }
+    );
+  } catch (e) {
+    console.log("구독 취소 sql 오류", e);
+  }
+});
 
 export default router;
