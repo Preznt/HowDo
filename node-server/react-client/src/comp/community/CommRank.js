@@ -27,7 +27,7 @@ const CommRank = ({ data }) => {
             className="w-full h-44 col-span-2 bg-center bg-no-repeat bg-cover"
             style={{
               backgroundImage: item.p_thumb
-                ? `url(http://localhost:3000/public/uploads/${item.p_thumb})`
+                ? `url(${process.env.PUBLIC_URL}/uploads/${item.p_thumb})`
                 : `url(/image/noimage.png)`,
             }}
           ></div>

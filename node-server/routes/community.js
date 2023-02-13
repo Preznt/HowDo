@@ -120,18 +120,46 @@ router.get("/posts/get", async (req, res) => {
   }
 });
 
-router.get("/posts/:find?/:value/:bCode/search", async (req, res) => {
-  const find = req?.params?.find;
+router.get("/posts/:findBy/:value/:bCode/search", async (req, res) => {
+  const findBy = req.params.findBy;
   const value = req.params.value;
   const bCode = req.params.bCode;
+
+  const searchList = {
+    title_content: [
+      {
+        [Op.or]: [
+          { p_title: { [Op.iLike]: `%${value}%` } },
+          { p_content: { [Op.iLike]: `%${value}%` } },
+        ],
+      },
+      { b_code: bCode },
+    ],
+    title: [{ p_title: { [Op.like]: `%${value}%` } }, { b_code: bCode }],
+    content: [{ p_content: { [Op.like]: `%${value}%` } }, { b_code: bCode }],
+    // nickname, r_content 결과 확인할 것
+    // user.nickname  / replies > r_content
+
+    // nickname 과 reply 는 include 안의 where 이어야...
+    nickname: [
+      { "USER.nickname": { [Op.like]: `%${value}%` } },
+      { b_code: bCode },
+    ],
+    reply: [
+      { "REPLY.r_content": { [Op.like]: `%${value}%` } },
+      { b_code: bCode },
+    ],
+  };
+
   try {
     const result = await POST.findAll({
       where: {
-        [Op.and]: [
-          { p_title: { [Op.iLike]: `%${value}%` } },
-          { b_code: bCode },
-        ],
+        [Op.and]: searchList[`${findBy}`],
       },
+      include: [
+        { model: USER, attributes: ["nickname"] },
+        { model: REPLY, attributes: ["r_content"] },
+      ],
     });
     return res.status(200).send(result);
   } catch (err) {

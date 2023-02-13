@@ -14,7 +14,7 @@ export default (sequelize, DataTypes) => {
       },
       v_code: {
         type: Sequelize.DataTypes.STRING(256),
-        allowNull: false,
+        allowNull: true,
       },
       username: {
         type: Sequelize.DataTypes.STRING(256),
