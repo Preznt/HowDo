@@ -1,5 +1,6 @@
 import express from "express";
-import sequelize, { Sequelize } from "sequelize";
+import sequelize from "sequelize";
+import { QueryTypes } from "sequelize";
 import { Op } from "sequelize";
 import fileUp from "../modules/file_upload.js";
 import DB from "../models/index.js";
@@ -71,6 +72,8 @@ router.get("/posts/get", async (req, res) => {
       boardList.push(items);
     }
 
+    // 코드 정리 필요
+
     const noticeList = {};
     noticeList.b_code = `B11`;
     noticeList.b_kor = `공지`;
@@ -115,6 +118,40 @@ router.get("/posts/get", async (req, res) => {
   } catch (err) {
     console.error(err);
   }
+});
+
+router.get("/posts/:find?/:value/:bCode/search", async (req, res) => {
+  const find = req?.params?.find;
+  const value = req.params.value;
+  const bCode = req.params.bCode;
+  try {
+    const result = await POST.findAll({
+      where: {
+        [Op.and]: [
+          { p_title: { [Op.iLike]: `%${value}%` } },
+          { b_code: bCode },
+        ],
+      },
+    });
+    return res.status(200).send(result);
+  } catch (err) {
+    console.error(err);
+    return res.send({ ERROR: "검색 중 오류가 발생했습니다." });
+  }
+});
+
+router.get("/board/:value?/get", async (req, res) => {
+  const value = req?.params?.value;
+  // cf) value 가 없을 경우 where 절을 {} 로 설정하여 전체 목록 표시
+  const result = await BOARD.findAll({
+    where: value
+      ? {
+          b_kor: { [Op.like]: `%${value}%` },
+        }
+      : {},
+    raw: true,
+  });
+  return res.status(200).send(result);
 });
 
 // community board fetch
@@ -313,31 +350,47 @@ router.patch("/post/upvote", async (req, res, next) => {
 router.get("/reply/:pCode/get", async (req, res) => {
   const pCode = req.params.pCode;
   try {
+    const nestedReply = (data) => {
+      const result = [];
+      for (let reply of data) {
+        if (!reply.reply_child) {
+          reply.reply_child = [];
+        }
+        for (let item of data) {
+          if (item.r_parent_code === reply.r_code) {
+            reply.reply_child.push(item);
+          }
+        }
+        // 최상위 level 댓글만 result 배열에 push
+        if (Number(reply.depth) === 0) {
+          result.push(reply);
+          // 그렇지 않을 경우 재귀적 함수 호출
+        } else {
+          nestedReply(reply.reply_child);
+        }
+      }
+      return result;
+    };
+
     // 게시글의 모든 댓글
-    // 삭제된 댓글의 자식 댓글 처리 방법?
-    const replyList = await REPLY.findAll({
-      where: {
-        [Op.and]: [{ p_code: pCode }, { r_deleted: null }],
-      },
-      order: [
-        ["r_date", "DESC"],
-        ["r_time", "DESC"],
-      ],
-      include: [
-        {
-          model: REPLY,
-          as: "reply_child",
-          required: false,
-          where: { r_deleted: null },
-          order: [
-            ["r_date", "DESC"],
-            ["r_time", "DESC"],
-          ],
-          include: { model: USER, attributes: ["nickname", "profile_image"] },
-        },
-        { model: USER, attributes: ["nickname", "profile_image"] },
-      ],
-    });
+    // 삭제된 댓글 처리 방법: front 에서 체크 후 "삭제된 댓글입니다" 문구
+    // 재귀 참조를 위해 Raw Query 를 사용
+    // depth 칼럼을 추가하여 해당 댓글의 계층 level 파악
+    const replyList = await DB.sequelize
+      .query(
+        `WITH RECURSIVE replies AS (
+          SELECT *, 0 AS depth FROM reply
+            WHERE p_code = :pCode AND r_deleted IS NULL AND r_parent_code IS NULL
+          UNION ALL
+          SELECT c.*, depth + 1 FROM reply c
+            JOIN replies r ON c.r_parent_code = r.r_code
+      )
+      SELECT replies.*, user.nickname, user.profile_image FROM replies  
+          JOIN user ON replies.username = user.username
+          ORDER BY r_date DESC, r_time DESC`,
+        { replacements: { pCode: `${pCode}` }, type: QueryTypes.SELECT }
+      )
+      .then((data) => nestedReply(data));
 
     // 게시글의 최상위 댓글 수
     const replyCount = await POST.findOne({

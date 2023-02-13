@@ -144,6 +144,9 @@ const initModels = (sequelize) => {
   post.hasMany(reply, { foreignKey: "p_code" });
   reply.belongsTo(post, { foreignKey: "p_code" });
 
+  video.hasMany(reply, { foreignKey: "v_code" });
+  reply.belongsTo(video, { foreignKey: "v_code" });
+
   user.hasMany(reply, { foreignKey: "username" });
   reply.belongsTo(user, { foreignKey: "username" });
 

@@ -136,8 +136,8 @@ const PostDetail = () => {
         <section className="button-box flex justify-end w-full">
           <Link
             className={`${btnClass01} mr-4`}
-            to={`/community/${board?.b_eng}/write/${post?.p_code}`}
-            state={{ data: post, b_eng: board?.b_eng }}
+            to={`/community/write/${post?.p_code}`}
+            state={{ data: post, b_eng: board?.b_eng, b_kor: board?.b_kor }}
           >
             수정
           </Link>
@@ -147,12 +147,7 @@ const PostDetail = () => {
         </section>
       )}
 
-      <Reply
-        code={post?.p_code}
-        list={list}
-        replyCount={replyCount}
-        setReplyCount={setReplyCount}
-      />
+      <Reply writer={post?.user["nickname"]} code={post?.p_code} list={list} />
     </main>
   );
 };

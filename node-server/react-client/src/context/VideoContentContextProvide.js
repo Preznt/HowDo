@@ -30,10 +30,13 @@ export const VideoContentContextProvider = ({ children }) => {
     v_price: 0,
     v_detail: "",
     v_category: "",
-    v_save_file: "",
   });
   const [videoDetail, setVideoDetail] = useState({});
   const [relationship, setRelationship] = useState([]);
+  const [videoTime, setVideoTime] = useState(0);
+  const [openModel, setOpenModel] = useState({
+    video: false,
+  });
 
   useEffect(() => {
     (async () => {
@@ -45,6 +48,24 @@ export const VideoContentContextProvider = ({ children }) => {
       setGroupThumbnail(result.group);
     })();
   }, [userSession]);
+
+  const onClickDetailHandler = async (v_code) => {
+    const res = await fetch(`/video/detail/${v_code}`);
+    const { video, category } = await res.json();
+    setVideoDetail({ ...video });
+    setRelationship([...category]);
+    await new Promise((r) => setTimeout(r, 100));
+  };
+
+  const deleteVideo = (deleteData) => {
+    console.log(deleteData);
+    const fetchOption = {
+      method: "POST",
+      body: JSON.stringify(deleteData),
+      headers: { "Content-Type": "application/json" },
+    };
+    const res = fetch(`/video/delete`, fetchOption);
+  };
 
   const props = {
     videoContentList,
@@ -70,6 +91,12 @@ export const VideoContentContextProvider = ({ children }) => {
     setVideoDetail,
     relationship,
     setRelationship,
+    onClickDetailHandler,
+    deleteVideo,
+    videoTime,
+    setVideoTime,
+    openModel,
+    setOpenModel,
   };
 
   return (

@@ -4,7 +4,8 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { UserCircleIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
-const ReplyItem = ({ item, index }) => {
+const ReplyItem = ({ writer, item, index }) => {
+  console.log(writer);
   const { userSession } = useUserContext();
   const { initReply, setReplyList, setReplyCount } = usePostContext();
   const [showChild, setShowChild] = useState(false);
@@ -89,19 +90,27 @@ const ReplyItem = ({ item, index }) => {
             {item?.user?.profile_image ? (
               <img
                 className="inline-block mr-3 w-10 h-10"
-                src={item["user.profile_image"]}
+                src={item?.profile_image}
                 alt="profile"
               />
             ) : (
               <UserCircleIcon className={imgDefault} />
             )}
-            <span className="flex items-center flex-1 ml-3">
-              {item?.user["nickname"]}
-            </span>
-            <span>{`${item.r_date} ${item.r_time}`}</span>
+            <div className="flex items-center flex-1 ml-3">
+              <span>{item?.nickname}</span>
+              <span
+                className="ml-3 p-1 text-xs text-slate-500 border border-slate-500 rounded-lg"
+                style={{
+                  display: item?.nickname === writer ? "inline-block" : "none",
+                }}
+              >
+                {"작성자"}
+              </span>
+            </div>
+            <span>{`${item?.r_date} ${item?.r_time}`}</span>
           </div>
           <div className="pt-5 pb-5">
-            {item.r_content || "삭제된 댓글입니다."}
+            {item?.r_content || "삭제된 댓글입니다."}
           </div>
 
           {userSession?.username === item?.username && (
@@ -181,7 +190,12 @@ const ReplyItem = ({ item, index }) => {
           </div>
         </div>
         {item?.reply_child?.map((child, index) => (
-          <ReplyItem key={child.r_code} item={child} index={index} />
+          <ReplyItem
+            key={child.r_code}
+            writer={writer}
+            item={child}
+            index={index}
+          />
         ))}
       </div>
     </section>

@@ -3,24 +3,34 @@ import "../../css/community/Content.css";
 import { submitPost } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
 import { useUserContext } from "../../context/UserContextProvider";
-import { useRef, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import PostInput from "./PostInput";
 
 const PostWrite = () => {
   const nav = useNavigate();
   const { userSession } = useUserContext();
   const { initPost, postData, setPostData } = usePostContext();
   const location = useLocation();
-  const { b_code, b_eng, b_group_code } = location?.state;
+  const { b_code, b_kor, b_eng, b_group_code } = location?.state || "";
+  const [boardVal, setBoardVal] = useState({
+    bCode: b_code,
+    bKor: b_kor,
+    bEng: b_eng,
+  });
   const data = location?.state?.data;
   const pCode = useParams().post;
   const btnClass =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
-  const titleRef = useRef(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     // setState 를 같은 함수 내에서 여러 번 실행하면
     // 가장 마지막 setState 만 화면에 반영된다(batch update).
+    if (!userSession?.username) {
+      alert("로그인 후 이용해주세요.");
+      nav(-1);
+      return null;
+    }
 
     // insert
     if (!pCode) {
@@ -38,22 +48,21 @@ const PostWrite = () => {
     }
   }, []);
 
-  const onChangeHandler = (e) => {
-    setPostData({ ...postData, [e.target.name]: e.target.value });
-  };
-
   const onChangeContentHandler = (e, editor) => {
     const data = editor.getData();
     setPostData({ ...postData, p_content: data });
   };
 
   const onClickHandler = async () => {
-    if (postData.p_title.length < 1) {
-      alert("제목을 입력하세요.");
-      titleRef.current.focus();
+    if (!postData.b_code) {
+      alert("게시판을 선택하세요.");
       return null;
     }
-    if (postData.p_content.length < 1) {
+    if (!postData.p_title) {
+      alert("제목을 입력하세요.");
+      return null;
+    }
+    if (!postData.p_content) {
       alert("내용을 입력하세요.");
       return null;
     }
@@ -76,23 +85,14 @@ const PostWrite = () => {
     // update
     if (pCode) result = await submitPost(data, pCode);
     if (result.MESSAGE) {
-      nav(`/community/${b_eng}`, { replace: true });
+      nav(`/community/${boardVal.bEng}`, { replace: true });
     }
     return null;
   };
 
   return (
     <form className="post-editor">
-      {/* 게시판 리스트 버튼 나열 */}
-      <div></div>
-      <input
-        className="title w-full p-1 pl-2 mb-2 border border-[#ccced1] focus:outline-none focus:border-[#2977ff]"
-        name="p_title"
-        placeholder="제목"
-        value={postData.p_title}
-        onChange={onChangeHandler}
-        ref={titleRef}
-      />
+      <PostInput boardVal={boardVal} setBoardVal={setBoardVal} update={pCode} />
       <EditorModule
         data={postData.p_content}
         handler={onChangeContentHandler}
