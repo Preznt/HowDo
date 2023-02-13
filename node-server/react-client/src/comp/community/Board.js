@@ -23,10 +23,21 @@ const Board = () => {
     { o_eng: "replies", o_kor: "댓글순" },
     { o_eng: "views", o_kor: "조회순" },
   ];
+  const searchList = [
+    { s_eng: "title_content", s_kor: "제목+내용" },
+    { s_eng: "title", s_kor: "제목" },
+    { s_eng: "content", s_kor: "내용" },
+    { s_eng: "nickname", s_kor: "닉네임" },
+    { s_veng: "reply", s_kor: "댓글" },
+  ];
   const [postList, setPostList] = useState([]);
   const [showOrder, setShowOrder] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
   const [orderValue, setOrderValue] = useState(`${orderList[0].o_kor}`);
-
+  const [searchValue, setSearchValue] = useState({
+    eng: `${searchList[0].s_eng}`,
+    kor: `${searchList[0].s_kor}`,
+  });
   // 정렬기준 선택에 따라 게시글 리스트를 변경해야 함
   useLayoutEffect(() => {
     setPostList([...data]);
@@ -37,6 +48,11 @@ const Board = () => {
     setPostList([...data]);
     setOrderValue(text);
     setShowOrder(false);
+  };
+
+  const onClickSetSearchBy = (value, text) => {
+    setSearchValue({ ...searchValue, eng: value, kor: text });
+    setShowSearch(false);
   };
 
   const btnClass =
@@ -56,7 +72,7 @@ const Board = () => {
       </div>
       <section className="flex w-full px-5 pb-5 justify-between">
         <button
-          className={`search-select relative w-30 ${selectClass}`}
+          className={`order-select relative w-30 ${selectClass}`}
           onClick={() => setShowOrder(true)}
           onBlur={() => setShowOrder(false)}
         >
@@ -70,9 +86,7 @@ const Board = () => {
               return (
                 <div
                   key={order.o_eng}
-                  type="checkbox"
-                  className={`${optionClass}`}
-                  name="order"
+                  className={optionClass}
                   value={order.o_eng}
                   onClick={() => onClickSetOrder(order.o_eng, order.o_kor)}
                 >
@@ -82,9 +96,34 @@ const Board = () => {
             })}
           </div>
         </button>
-        <div className="cat-search flex justify-center">
-          <input className={inputClass} />
-          <button className={`ml-2 ${btnClass02}`}>검색</button>
+        <div className="cat-search flex gap-5 justify-center">
+          <button
+            className={`search-select relative w-28 ${selectClass}`}
+            type="button"
+            onClick={() => setShowSearch(true)}
+            onBlur={() => setShowSearch(false)}
+          >
+            {searchValue.kor}
+            <div
+              className="flex flex-col absolute top-11 left-0 w-full bg-gray-50 rounded border border-gray-300 text-gray-900"
+              style={{ display: showSearch === true ? "flex" : "none" }}
+            >
+              {searchList.map((item) => {
+                return (
+                  <div
+                    key={item.s_eng}
+                    className={optionClass}
+                    value={item.s_eng}
+                    onClick={() => onClickSetSearchBy(item.s_eng, item.s_kor)}
+                  >
+                    {item.s_kor}
+                  </div>
+                );
+              })}
+            </div>
+          </button>
+          <input className={`${inputClass} w-[30vw]`} />
+          <button className={btnClass02}>검색</button>
         </div>
         {/* 로그인 유저의 등급이 게시판 권한등급보다 같거나 높을 때 */}
         {Number(userSession?.level) >= Number(board.b_level) && (

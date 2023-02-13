@@ -19,12 +19,6 @@ const Reply = ({ writer, code, list }) => {
     }
   }, []);
 
-  console.log(replyList);
-
-  /**
-   * Reply 를 재사용 가능한 컴포넌트로...
-   */
-
   // 댓글 입력 데이터 갱신
   const onChangeHandler = (e) => {
     setReplyInput({

@@ -72,6 +72,8 @@ router.get("/posts/get", async (req, res) => {
       boardList.push(items);
     }
 
+    // 코드 정리 필요
+
     const noticeList = {};
     noticeList.b_code = `B11`;
     noticeList.b_kor = `공지`;
@@ -115,6 +117,26 @@ router.get("/posts/get", async (req, res) => {
     return res.status(200).send({ noticeList, freeList, boardList });
   } catch (err) {
     console.error(err);
+  }
+});
+
+router.get("/posts/:find?/:value/:bCode/search", async (req, res) => {
+  const find = req?.params?.find;
+  const value = req.params.value;
+  const bCode = req.params.bCode;
+  try {
+    const result = await POST.findAll({
+      where: {
+        [Op.and]: [
+          { p_title: { [Op.iLike]: `%${value}%` } },
+          { b_code: bCode },
+        ],
+      },
+    });
+    return res.status(200).send(result);
+  } catch (err) {
+    console.error(err);
+    return res.send({ ERROR: "검색 중 오류가 발생했습니다." });
   }
 });
 
