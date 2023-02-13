@@ -22,19 +22,19 @@ const Cancel = (props) => {
             : "hidden"
         }
       >
-        <div className="flex justify-between">
+        <div className="flex justify-between border-b-2">
           <h1>취소하기</h1>
           <XMarkIcon
             className="h-7 w-7 cursor-pointer"
             onClick={cancelHandler}
           />
         </div>
-        <div className="grid grid-rows-2">
-          <div>
+        <div className="grid gap-6 place-content-center">
+          <div className="my-8">
             <p>정말 구독을 취소하시겠습니까?</p>
           </div>
           <button
-            className="p-3 bg-sky-600 rounded-full text-white"
+            className="p-3 w-full bg-sky-600 rounded-full text-white"
             onClick={() => {
               cancelUser(userSession.username, orderUser);
             }}

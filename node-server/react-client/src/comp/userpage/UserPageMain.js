@@ -88,7 +88,9 @@ const UserPageMain = () => {
             ) : null}
 
             {createrResult?.u_result?.username === userSession.username ? (
-              <div>게시글 작성</div>
+              <div className="ml-auto hover:text-blue-600 hover:cursor-pointer">
+                게시글 작성
+              </div>
             ) : null}
           </div>
           <div className="ml-44">

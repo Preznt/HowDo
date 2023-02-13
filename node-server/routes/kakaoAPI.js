@@ -13,6 +13,7 @@ const router = express.Router();
 // 정기 결제 데이터 인서트
 router.post("/sub", async (req, res) => {
   console.log(req.body);
+  const user = req.body.partner_user_id;
   try {
     await SUBSCRIBE.create(req.body);
   } catch (e) {
