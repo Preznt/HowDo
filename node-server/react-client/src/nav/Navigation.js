@@ -7,9 +7,9 @@ import MyPageMain, {
 import Join from "../comp/login/Join";
 import Login from "../comp/login/Login";
 import LoginModal from "../comp/login/Login";
-import CommIndex, { loader as CommLoader } from "../comp/community/CommIndex";
-import CommMain, { loader as CommMainLoader } from "../comp/community/CommMain";
-import Board, { loader as BoardLoader } from "../comp/community/Board";
+import CommIndex, { CommLoader } from "../comp/community/CommIndex";
+import CommMain, { CommMainLoader } from "../comp/community/CommMain";
+import Board, { BoardLoader } from "../comp/community/Board";
 import PostDetail, {
   loader as DetailLoader,
 } from "../comp/community/PostDetail";

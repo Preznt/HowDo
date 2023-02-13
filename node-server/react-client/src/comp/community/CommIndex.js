@@ -3,7 +3,7 @@ import BoardNav from "./BoardNav";
 import { useLoaderData, Outlet } from "react-router-dom";
 import { getBoardList } from "../../service/post.service";
 
-export const loader = async () => {
+export const CommLoader = async () => {
   const board = await getBoardList();
   return board;
 };

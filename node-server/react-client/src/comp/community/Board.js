@@ -7,7 +7,7 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { BarsArrowDownIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
-export const loader = async ({ params }) => {
+export const BoardLoader = async ({ params }) => {
   const bEng = params.board;
   const order = "latest";
   const { data, board } = await getBoardPosts(bEng, order);
@@ -57,11 +57,13 @@ const Board = () => {
     setShowSearch(false);
   };
 
-  const onClickSearchPosts = async () => {
-    const result = await fetch(
-      `/community/posts/${searchValue.eng}/${searchInput}/${board.b_code}/search`
-    ).then((data) => data.json());
-    console.log(result);
+  const SearchPosts = async (e) => {
+    if (e.type === "click" || (e.type === "keydown" && e.keyCode === 13)) {
+      const result = await fetch(
+        `/community/posts/${searchValue.eng}/${searchInput}/${board.b_code}/search`
+      ).then((data) => data.json());
+      setPostList([...result]);
+    }
   };
 
   const btnClass =
@@ -134,8 +136,10 @@ const Board = () => {
           <input
             className={`${inputClass} w-[20vw]`}
             onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={SearchPosts}
+            spellCheck={false}
           />
-          <button className={btnClass02} onClick={onClickSearchPosts}>
+          <button className={btnClass02} onClick={SearchPosts}>
             검색
           </button>
         </div>
