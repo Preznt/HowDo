@@ -5,7 +5,7 @@ import { getBoardPosts } from "../../service/post.service";
 import { useLoaderData, Link } from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
 import { BarsArrowDownIcon } from "@heroicons/react/24/outline";
-import { useState, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 
 export const loader = async ({ params }) => {
   const bEng = params.board;
@@ -28,7 +28,7 @@ const Board = () => {
     { s_eng: "title", s_kor: "제목" },
     { s_eng: "content", s_kor: "내용" },
     { s_eng: "nickname", s_kor: "닉네임" },
-    { s_veng: "reply", s_kor: "댓글" },
+    { s_eng: "reply", s_kor: "댓글" },
   ];
   const [postList, setPostList] = useState([]);
   const [showOrder, setShowOrder] = useState(false);
@@ -38,8 +38,10 @@ const Board = () => {
     eng: `${searchList[0].s_eng}`,
     kor: `${searchList[0].s_kor}`,
   });
+  const [searchInput, setSearchInput] = useState("");
+
   // 정렬기준 선택에 따라 게시글 리스트를 변경해야 함
-  useLayoutEffect(() => {
+  useEffect(() => {
     setPostList([...data]);
   }, [data]);
 
@@ -53,6 +55,13 @@ const Board = () => {
   const onClickSetSearchBy = (value, text) => {
     setSearchValue({ ...searchValue, eng: value, kor: text });
     setShowSearch(false);
+  };
+
+  const onClickSearchPosts = async () => {
+    const result = await fetch(
+      `/community/posts/${searchValue.eng}/${searchInput}/${board.b_code}/search`
+    ).then((data) => data.json());
+    console.log(result);
   };
 
   const btnClass =
@@ -122,8 +131,13 @@ const Board = () => {
               })}
             </div>
           </button>
-          <input className={`${inputClass} w-[30vw]`} />
-          <button className={btnClass02}>검색</button>
+          <input
+            className={`${inputClass} w-[20vw]`}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+          <button className={btnClass02} onClick={onClickSearchPosts}>
+            검색
+          </button>
         </div>
         {/* 로그인 유저의 등급이 게시판 권한등급보다 같거나 높을 때 */}
         {Number(userSession?.level) >= Number(board.b_level) && (

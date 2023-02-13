@@ -37,6 +37,7 @@ export const VideoContentContextProvider = ({ children }) => {
   const [openModel, setOpenModel] = useState({
     video: false,
   });
+  const [replyList, setReplyList] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -97,6 +98,8 @@ export const VideoContentContextProvider = ({ children }) => {
     setVideoTime,
     openModel,
     setOpenModel,
+    replyList,
+    setReplyList,
   };
 
   return (
