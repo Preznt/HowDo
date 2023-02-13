@@ -131,7 +131,7 @@ const VideoDetail = () => {
           <div className="flex">
             <Reply
               writer={videoDetail?.username}
-              code={videoDetail?.v_code}
+              v_code={videoDetail?.v_code}
               list={replyList}
             />
           </div>
