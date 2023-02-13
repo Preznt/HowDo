@@ -147,7 +147,11 @@ const PostDetail = () => {
         </section>
       )}
 
-      <Reply writer={post?.user["nickname"]} code={post?.p_code} list={list} />
+      <Reply
+        writer={post?.user["nickname"]}
+        p_code={post?.p_code}
+        list={list}
+      />
     </main>
   );
 };

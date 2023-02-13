@@ -5,8 +5,6 @@ import Editor from "ckeditor5-custom-build/build/ckeditor";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 
 export const EditorModule = ({ data, handler, code }) => {
-  const BACKEND_URI = "http://localhost:3000";
-
   // UploadAdapter Interface 를 implement 하여 CustomAdapter 구현
   class imageUploadAdapter {
     constructor(loader) {
@@ -72,7 +70,7 @@ export const EditorModule = ({ data, handler, code }) => {
         // 위의 if 문에 걸리지 않으면 Promise.resolve 실행(fulfilled;업로드 성공)
         // response 가 보낸 url 을 img tag 의 src 에 삽입
         resolve({
-          default: `${BACKEND_URI}/public/uploads/${response.url}`,
+          default: `${process.env.PUBLIC_URL}/uploads/${response.url}`,
         });
       });
 
