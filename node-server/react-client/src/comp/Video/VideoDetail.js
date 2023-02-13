@@ -1,11 +1,20 @@
 import { useEffect } from "react";
 import ReactPlayer from "react-player";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
 const VideoDetail = () => {
-  const { videoDetail, relationship } = useVideoContentContext();
+  const {
+    videoDetail,
+    relationship,
+    onClickDetailHandler,
+    deleteVideo,
+    setOpenModel,
+    setDetail,
+    setShorts,
+  } = useVideoContentContext();
   const { userSession } = useUserContext();
+  const nav = useNavigate();
   const relationshipItems = relationship.filter((item) => {
     return item.v_code !== videoDetail.v_code;
   });
@@ -14,24 +23,66 @@ const VideoDetail = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  const onClickHandler = (e) => {
+    const v_code = e.target.dataset.v_code;
+    nav(`/video/detail/${v_code}`);
+    return onClickDetailHandler(v_code);
+  };
+
+  const deleteHandler = (e) => {
+    const v_code = e.target.dataset.v_code;
+    const Username = userSession.username;
+    const deleteData = { Username, v_code };
+    deleteVideo(deleteData);
+    nav("/");
+  };
+
+  const videoEditingHandler = async (e) => {
+    const v_code = e.target.dataset.v_code;
+    setOpenModel({ video: true });
+    const res = await fetch(`/video/editing/select/${v_code}`);
+    const { videoInfo, shorts } = await res.json();
+    setDetail({ ...videoInfo });
+    setShorts({ ...shorts });
+  };
+
   const videoRelationshipView = relationshipItems.map((video) => {
     return (
       <div
         data-v_code={video.v_code}
         className="mx-7 flex w-80 h-64 flex-col justify-center items-center shadow-lg p-3"
+        onClick={onClickHandler}
+        onContextMenu={(e) => e.preventDefault()}
+        key={video.v_code}
       >
-        <iframe
-          className="w-full h-full columns-1 aspect-video border-black border-1"
-          src={video.v_src}
-        ></iframe>
+        {video.v_price === 0 ? (
+          <video
+            className="w-full h-full columns-1 aspect-video border-black border-1"
+            src={video.v_src}
+            controlsList="nodownload"
+            controls
+            data-v_code={video.v_code}
+            onContextMenu={(e) => e.preventDefault()}
+          />
+        ) : (
+          <video
+            className="w-full h-full columns-1 aspect-video border-black border-1"
+            src={video.v_src}
+            controlsList="nodownload"
+            data-v_code={video.v_code}
+            onContextMenu={(e) => e.preventDefault()}
+          />
+        )}
         <div className="item-left">
           <h3 data-v_code={video.v_code}>제목 : {video.v_title}</h3>
         </div>
       </div>
     );
   });
-  console.log(videoDetail);
-  if (videoDetail.v_price === 0) {
+  if (videoDetail.code === 404) {
+    alert(videoDetail.message);
+    return <Navigate to="/" />;
+  } else if (videoDetail.v_price === 0) {
     return (
       <div className="flex ml-32 mt-2">
         <div className="flex-1 ">
@@ -45,6 +96,7 @@ const VideoDetail = () => {
               controls={true}
               light={false}
               pip={false}
+              onContextMenu={(e) => e.preventDefault()}
             />
           </div>
           <div>
@@ -56,10 +108,18 @@ const VideoDetail = () => {
           </div>
           {userSession.username === videoDetail.username ? (
             <div className="flex justify-end">
-              <button className="bg-cyan-600 rounded-md mr-2 text-white p-2 px-3">
+              <button
+                data-v_code={videoDetail.v_code}
+                onClick={videoEditingHandler}
+                className="bg-cyan-600 rounded-md mr-2 text-white p-2 px-3"
+              >
                 수정
               </button>
-              <button className="bg-cyan-600 rounded-md mr-10 text-white p-2 px-3 ">
+              <button
+                data-v_code={videoDetail.v_code}
+                onClick={deleteHandler}
+                className="bg-cyan-600 rounded-md mr-10 text-white p-2 px-3 "
+              >
                 삭제
               </button>
             </div>
