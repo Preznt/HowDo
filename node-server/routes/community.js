@@ -331,7 +331,9 @@ router.get("/reply/:pCode/get", async (req, res) => {
     const nestedReply = (data) => {
       const result = [];
       for (let reply of data) {
-        reply.reply_child = [];
+        if (!reply.reply_child) {
+          reply.reply_child = [];
+        }
         for (let item of data) {
           if (item.r_parent_code === reply.r_code) {
             reply.reply_child.push(item);
@@ -350,7 +352,7 @@ router.get("/reply/:pCode/get", async (req, res) => {
 
     // 게시글의 모든 댓글
     // 삭제된 댓글 처리 방법: front 에서 체크 후 "삭제된 댓글입니다" 문구
-    // !!!재귀 참조를 위해 raw Query 를 사용해야 함!!!
+    // 재귀 참조를 위해 Raw Query 를 사용
     // depth 칼럼을 추가하여 해당 댓글의 계층 level 파악
     const replyList = await DB.sequelize
       .query(
@@ -368,33 +370,6 @@ router.get("/reply/:pCode/get", async (req, res) => {
       )
       .then((data) => nestedReply(data));
 
-    // const replyList = await REPLY.findAll({
-    //   where: {
-    //     [Op.and]: [
-    //       { p_code: pCode },
-    //       { r_deleted: null },
-    //       { r_parent_code: null },
-    //     ],
-    //   },
-    //   order: [
-    //     ["r_date", "DESC"],
-    //     ["r_time", "DESC"],
-    //   ],
-    //   include: [
-    //     {
-    //       model: REPLY,
-    //       as: "reply_child",
-    //       required: false,
-    //       where: { r_deleted: null },
-    //       order: [
-    //         ["r_date", "DESC"],
-    //         ["r_time", "DESC"],
-    //       ],
-    //       include: { model: USER, attributes: ["nickname", "profile_image"] },
-    //     },
-    //     { model: USER, attributes: ["nickname", "profile_image"] },
-    //   ],
-    // });
     // 게시글의 최상위 댓글 수
     const replyCount = await POST.findOne({
       attributes: ["p_replies"],
