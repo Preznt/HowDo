@@ -1,22 +1,34 @@
 import axios from "axios";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
+import ReactPlayer from "react-player";
 
 const VideoUpload = (props) => {
   const formData = new FormData();
-  const { setDetail, detail, file, setFile, shorts, setShorts } =
-    useVideoContentContext();
+  const {
+    setDetail,
+    detail,
+    file,
+    setFile,
+    shorts,
+    setShorts,
+    videoTime,
+    setVideoTime,
+  } = useVideoContentContext();
   const { open, close } = props;
+
   const videoUpload = (e) => {
     const videoType = e.target.files[0].type.includes("video");
-    const filename = e.target.files[0].name;
 
     setFile(e.target.files[0]);
     setDetail({
       ...detail,
       url: URL.createObjectURL(e.target.files[0]),
       video: videoType,
-      v_save_file: filename,
     });
+  };
+
+  const onDurationHandler = (e) => {
+    setVideoTime(e);
   };
 
   const titleOnChangeHandler = (e) => {
@@ -37,7 +49,45 @@ const VideoUpload = (props) => {
 
   const shortsOnChangeHandler = (e) => {
     const name = e.target.className;
-    setShorts({ ...shorts, [name]: !shorts[name] });
+    if (detail.video && videoTime < 60) {
+      setShorts({ ...shorts, [name]: !shorts[name] });
+    } else {
+      e.target.readonly = true;
+    }
+  };
+
+  const onEditingHandler = async () => {
+    if (!detail.video) {
+      return alert("업로드할 동영상을 선택해주세요");
+    } else if (!detail.v_title) {
+      console.log(detail.v_category);
+      return alert("제목을 입력해주세요");
+    } else if (detail.v_category === "" || detail.v_category === "none") {
+      return alert("카테고리를 선택해주세요");
+    } else if (!detail.v_detail) {
+      return alert("내용을 입력해주세요");
+    } else {
+      const fetchOption = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ detail: detail, shorts: shorts }),
+      };
+      close();
+      setDetail({
+        url: "",
+        video: false,
+        v_title: "",
+        v_price: 0,
+        v_detail: "",
+        v_category: "none",
+      });
+      setShorts({
+        shorts: false,
+      });
+      await fetch(`/video/editing`, fetchOption);
+    }
   };
 
   const onClickHandler = async () => {
@@ -62,7 +112,6 @@ const VideoUpload = (props) => {
         v_price: 0,
         v_detail: "",
         v_category: "none",
-        v_save_file: "",
       });
       setShorts({
         shorts: false,
@@ -74,6 +123,18 @@ const VideoUpload = (props) => {
       });
     }
   };
+
+  const closeHandler = () => {
+    setDetail({
+      url: "",
+      video: false,
+      v_title: "",
+      v_price: 0,
+      v_detail: "",
+      v_category: "none",
+    });
+    close();
+  };
   return (
     <div
       className={
@@ -84,14 +145,19 @@ const VideoUpload = (props) => {
     >
       <div className="modal w-full bg-slate-800/50 p-96">
         <div className="modal bg-white rounded-md text-center">
-          <div className="modal h-56 mt-10">
+          <div className="modal h-56">
             {detail.video === true ? (
-              <video
-                className="m-auto pt-10"
-                src={detail.url}
-                controls
+              <ReactPlayer
+                className="m-auto"
+                url={detail.url}
+                onDuration={onDurationHandler}
                 width="350px"
-                controlsList="nodownload"
+                height="250px"
+                playing={false}
+                muted={false}
+                controls={true}
+                light={false}
+                pip={false}
               />
             ) : (
               <div className="modal h-full">
@@ -202,15 +268,24 @@ const VideoUpload = (props) => {
             )}
           </div>
           <div className="modal mb-7">
-            <button
-              className="modal px-4 py-2 rounded-l-xl text-white m-0 bg-red-500 hover:bg-red-600 transition"
-              onClick={onClickHandler}
-            >
-              저장
-            </button>
+            {detail.v_code ? (
+              <button
+                className="modal px-8 py-2 rounded-l-xl text-white m-0 bg-blue-500 hover:bg-red-600 transition"
+                onClick={onEditingHandler}
+              >
+                수정
+              </button>
+            ) : (
+              <button
+                className="modal px-8 py-2 rounded-l-xl text-white m-0 bg-red-500 hover:bg-red-600 transition"
+                onClick={onClickHandler}
+              >
+                저장
+              </button>
+            )}
             <button
               className="modal px-4 py-2 rounded-r-xl bg-neutral-200 hover:bg-neutral-300 transition mb-16"
-              onClick={close}
+              onClick={closeHandler}
             >
               돌아가기
             </button>

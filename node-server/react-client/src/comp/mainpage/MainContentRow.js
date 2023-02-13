@@ -1,22 +1,31 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTransferContext } from "../../context/TransferContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
 const MainContentRow = () => {
   const { contentButton } = useTransferContext();
-  const { videoItemList, setVideoDetail, setRelationship } =
+  const { videoItemList, onClickDetailHandler, setVideoItemList } =
     useVideoContentContext();
   const nav = useNavigate();
 
-  const videoView = videoItemList.map((video) => {
-    const onClickHandler = async (e) => {
-      const v_code = e.target.dataset.v_code;
-      const res = await fetch(`/video/detail/${v_code}`);
-      const { video, category } = await res.json();
-      await setVideoDetail({ ...video });
-      await setRelationship([...category]);
-      await new Promise((r) => setTimeout(r, 100));
-      return nav(`/video/detail/${v_code}`);
+  useEffect(() => {
+    const item = async () => {
+      const res = await fetch("/video/main");
+      const result = await res.json();
+      let tempArray = [...result];
+      tempArray.sort(() => Math.random() - 0.5);
+      setVideoItemList([...tempArray]);
     };
+    item();
+  }, []);
+
+  const onClickHandler = async (e) => {
+    const v_code = e.target.dataset.v_code;
+    await onClickDetailHandler(v_code);
+    return nav(`/video/detail/${v_code}`);
+  };
+
+  const videoView = videoItemList.map((video) => {
     return (
       <div
         data-v_code={video.v_code}
