@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { usePostContext } from "../../context/PostContextProvider";
+import { useUserContext } from "../../context/UserContextProvider";
+import { groupBoardList, getBoardList } from "../../service/post.service";
 
-const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
+const PostInput = ({ update, boardVal, setBoardVal }) => {
   const { postData, setPostData } = usePostContext();
   const [showBoard, setShowBoard] = useState(false);
   const [boardInput, setBoardInput] = useState("");
-  const [boardList, setBoardList] = useState(data);
+  const [boardList, setBoardList] = useState({});
+  const { userSession } = useUserContext();
 
   /**
    * data
@@ -13,8 +16,9 @@ const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
    * Object.keys(data) => [key1, key2, key3...]
    * Object.keys(data).map((item)=>data[item]) => [val1, val2, val3...]
    */
-  const onClickShowBoard = () => {
+  const onClickShowBoard = async () => {
     setShowBoard(!showBoard);
+    await getBoardList().then((data) => groupBoardList(data));
   };
 
   useEffect(() => {
@@ -23,20 +27,10 @@ const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
 
   const onChangeSearchBoard = async (value) => {
     setBoardInput(value);
-    let result = await fetch(`/community/board/${boardInput}/get`).then(
-      (data) => data.json()
-    );
-    // 함수로 분리할 것
-    result = result.reduce((acc, obj) => {
-      let key = obj["b_group_kor"];
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(obj);
-      return acc;
-    }, {});
+    let result = await fetch(`/community/board/${boardInput}/get`)
+      .then((data) => data.json())
+      .then((data) => groupBoardList(data));
     setBoardList(result);
-    console.log(boardInput);
   };
 
   const onChangeTitle = (e) => {
@@ -52,10 +46,15 @@ const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
   const SelectList = () => {
     return Object.keys(boardList).map((group) =>
       boardList[group].map((board) => {
-        // 공지는 세션 체크 후 제외할 것
         return (
           <div
             className="px-4 py-1 flex justify-between border-b last:border-b-0 border-slate-200 hover:text-blue-500 cursor-pointer"
+            style={{
+              display:
+                Number(userSession?.level) >= Number(board.b_level)
+                  ? "flex"
+                  : "none",
+            }}
             key={board.b_code}
             value={board.b_code}
             onClick={() =>
@@ -96,7 +95,7 @@ const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
 
       <section
         className="absolute flex flex-col top-full mt-2.5 left-0 w-full mb-2 transition-all duration-200 ease-out z-50 overflow-hidden"
-        style={{ maxHeight: showBoard ? "25vh" : "0vh" }}
+        style={{ maxHeight: showBoard ? "100vh" : "0vh" }}
       >
         <div className="w-full p-5 bg-slate-400">
           <input
@@ -106,7 +105,7 @@ const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
             placeholder="게시판 검색"
           />
         </div>
-        <div className="w-full min-h-[10vh] h-full p-3 overflow-auto bg-white border-b border-[#ccced1]">
+        <div className="w-full min-h-[64.4vh] h-full p-3 overflow-auto bg-white border-b border-[#ccced1]">
           <SelectList />
         </div>
       </section>
@@ -114,4 +113,13 @@ const PostSelect = ({ data, update, boardVal, setBoardVal }) => {
   );
 };
 
-export default PostSelect;
+export default PostInput;
+
+/**
+ * cf) onChange event 로 데이터 검색
+ *    input value 의 마지막 글자가 잘리는 현상 해결
+ * 1. input 에 onChange={event => setValue(event.target.value)} 를 setting
+ * 2. state 변수인 value 를 사용하여 fetch 후 검색할 데이터를 가져오는 함수 getList(val) 만들기
+ *    (val 의 인수는 event.target.value 여야)
+ * 3. useEffect 의 body 영역에 getList(value), 배열에 value 를 각각 setting
+ */

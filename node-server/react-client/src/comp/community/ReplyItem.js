@@ -90,22 +90,27 @@ const ReplyItem = ({ writer, item, index }) => {
             {item?.user?.profile_image ? (
               <img
                 className="inline-block mr-3 w-10 h-10"
-                src={item["user.profile_image"]}
+                src={item?.profile_image}
                 alt="profile"
               />
             ) : (
               <UserCircleIcon className={imgDefault} />
             )}
             <div className="flex items-center flex-1 ml-3">
-              <span>{item?.user["nickname"]}</span>
-              <span className="ml-3 p-1 text-xs text-slate-500 border border-slate-500 rounded-lg">
-                {item?.user["nickname"] === writer && "작성자"}
+              <span>{item?.nickname}</span>
+              <span
+                className="ml-3 p-1 text-xs text-slate-500 border border-slate-500 rounded-lg"
+                style={{
+                  display: item?.nickname === writer ? "inline-block" : "none",
+                }}
+              >
+                {"작성자"}
               </span>
             </div>
-            <span>{`${item.r_date} ${item.r_time}`}</span>
+            <span>{`${item?.r_date} ${item?.r_time}`}</span>
           </div>
           <div className="pt-5 pb-5">
-            {item.r_content || "삭제된 댓글입니다."}
+            {item?.r_content || "삭제된 댓글입니다."}
           </div>
 
           {userSession?.username === item?.username && (

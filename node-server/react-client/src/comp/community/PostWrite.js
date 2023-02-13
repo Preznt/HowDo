@@ -1,28 +1,13 @@
 import EditorModule from "./EditorModule";
 import "../../css/community/Content.css";
-import { getBoardList, submitPost } from "../../service/post.service";
+import { submitPost } from "../../service/post.service";
 import { usePostContext } from "../../context/PostContextProvider";
 import { useUserContext } from "../../context/UserContextProvider";
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useLoaderData } from "react-router-dom";
-import PostSelect from "./PostSelect";
-
-export const PostLoader = async () => {
-  let board = await getBoardList();
-  board = board.reduce((acc, obj) => {
-    let key = obj["b_group_kor"];
-    if (!acc[key]) {
-      acc[key] = [];
-    }
-    acc[key].push(obj);
-    return acc;
-  }, {});
-  return board;
-};
+import PostInput from "./PostInput";
 
 const PostWrite = () => {
-  const board = useLoaderData();
   const nav = useNavigate();
   const { userSession } = useUserContext();
   const { initPost, postData, setPostData } = usePostContext();
@@ -64,15 +49,15 @@ const PostWrite = () => {
   };
 
   const onClickHandler = async () => {
-    if (postData.b_code === "") {
+    if (!postData.b_code) {
       alert("게시판을 선택하세요.");
       return null;
     }
-    if (postData.p_title.length < 1) {
+    if (!postData.p_title) {
       alert("제목을 입력하세요.");
       return null;
     }
-    if (postData.p_content.length < 1) {
+    if (!postData.p_content) {
       alert("내용을 입력하세요.");
       return null;
     }
@@ -102,12 +87,7 @@ const PostWrite = () => {
 
   return (
     <form className="post-editor">
-      <PostSelect
-        data={board}
-        boardVal={boardVal}
-        setBoardVal={setBoardVal}
-        update={pCode}
-      />
+      <PostInput boardVal={boardVal} setBoardVal={setBoardVal} update={pCode} />
       <EditorModule
         data={postData.p_content}
         handler={onChangeContentHandler}

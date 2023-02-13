@@ -328,50 +328,73 @@ router.patch("/post/upvote", async (req, res, next) => {
 router.get("/reply/:pCode/get", async (req, res) => {
   const pCode = req.params.pCode;
   try {
+    const nestedReply = (data) => {
+      const result = [];
+      for (let reply of data) {
+        reply.reply_child = [];
+        for (let item of data) {
+          if (item.r_parent_code === reply.r_code) {
+            reply.reply_child.push(item);
+          }
+        }
+        // 최상위 level 댓글만 result 배열에 push
+        if (Number(reply.depth) === 0) {
+          result.push(reply);
+          // 그렇지 않을 경우 재귀적 함수 호출
+        } else {
+          nestedReply(reply.reply_child);
+        }
+      }
+      return result;
+    };
+
     // 게시글의 모든 댓글
-    // 삭제된 댓글의 자식 댓글 처리 방법?
+    // 삭제된 댓글 처리 방법: front 에서 체크 후 "삭제된 댓글입니다" 문구
     // !!!재귀 참조를 위해 raw Query 를 사용해야 함!!!
+    // depth 칼럼을 추가하여 해당 댓글의 계층 level 파악
+    const replyList = await DB.sequelize
+      .query(
+        `WITH RECURSIVE replies AS (
+          SELECT *, 0 AS depth FROM reply
+            WHERE p_code = :pCode AND r_deleted IS NULL AND r_parent_code IS NULL
+          UNION ALL
+          SELECT c.*, depth + 1 FROM reply c
+            JOIN replies r ON c.r_parent_code = r.r_code
+      )
+      SELECT replies.*, user.nickname, user.profile_image FROM replies  
+          JOIN user ON replies.username = user.username
+          ORDER BY r_date DESC, r_time DESC`,
+        { replacements: { pCode: `${pCode}` }, type: QueryTypes.SELECT }
+      )
+      .then((data) => nestedReply(data));
 
-    // const test = await DB.sequelize.query(
-    //   `WITH RECURSIVE replies AS (
-    //       SELECT *, 0 AS depth FROM reply
-    //   WHERE p_code = :pCode AND r_deleted IS NULL AND r_parent_code IS NULL
-    //   UNION
-    //   SELECT c.*, depth + 1 FROM reply c
-    //   JOIN replies r ON c.r_parent_code = r.r_code)
-    //   SELECT * FROM replies`,
-    //   { replacements: { pCode: `${pCode}` }, type: QueryTypes.SELECT }
-    // );
-
-    // console.log(test);
-
-    const replyList = await REPLY.findAll({
-      where: {
-        [Op.and]: [
-          { p_code: pCode },
-          { r_deleted: null },
-          { r_parent_code: null },
-        ],
-      },
-      order: [
-        ["r_date", "DESC"],
-        ["r_time", "DESC"],
-      ],
-      include: [
-        {
-          model: REPLY,
-          as: "reply_child",
-          required: false,
-          where: { r_deleted: null },
-          order: [
-            ["r_date", "DESC"],
-            ["r_time", "DESC"],
-          ],
-          include: { model: USER, attributes: ["nickname", "profile_image"] },
-        },
-        { model: USER, attributes: ["nickname", "profile_image"] },
-      ],
-    });
+    // const replyList = await REPLY.findAll({
+    //   where: {
+    //     [Op.and]: [
+    //       { p_code: pCode },
+    //       { r_deleted: null },
+    //       { r_parent_code: null },
+    //     ],
+    //   },
+    //   order: [
+    //     ["r_date", "DESC"],
+    //     ["r_time", "DESC"],
+    //   ],
+    //   include: [
+    //     {
+    //       model: REPLY,
+    //       as: "reply_child",
+    //       required: false,
+    //       where: { r_deleted: null },
+    //       order: [
+    //         ["r_date", "DESC"],
+    //         ["r_time", "DESC"],
+    //       ],
+    //       include: { model: USER, attributes: ["nickname", "profile_image"] },
+    //     },
+    //     { model: USER, attributes: ["nickname", "profile_image"] },
+    //   ],
+    // });
     // 게시글의 최상위 댓글 수
     const replyCount = await POST.findOne({
       attributes: ["p_replies"],

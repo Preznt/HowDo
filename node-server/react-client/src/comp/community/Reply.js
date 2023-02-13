@@ -19,7 +19,6 @@ const Reply = ({ writer, code, list }) => {
     }
   }, []);
 
-  console.log(replyList);
   /**
    * Reply 를 재사용 가능한 컴포넌트로...
    */
