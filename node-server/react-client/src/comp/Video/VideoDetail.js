@@ -3,6 +3,7 @@ import ReactPlayer from "react-player";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
+import Reply from "../community/Reply";
 const VideoDetail = () => {
   const {
     videoDetail,
@@ -12,6 +13,7 @@ const VideoDetail = () => {
     setOpenModel,
     setDetail,
     setShorts,
+    replyList,
   } = useVideoContentContext();
   const { userSession } = useUserContext();
   const nav = useNavigate();
@@ -126,6 +128,13 @@ const VideoDetail = () => {
           ) : (
             <></>
           )}
+          <div className="flex">
+            <Reply
+              writer={videoDetail?.username}
+              code={videoDetail?.v_code}
+              list={replyList}
+            />
+          </div>
         </div>
         <aside className="border-l-2 pb-80 flex-1">
           {videoRelationshipView}
