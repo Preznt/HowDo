@@ -1,11 +1,18 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { usePostContext } from "../../context/PostContextProvider";
 import { useTransferContext } from "../../context/TransferContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
+import { getReply } from "../../service/post.service";
 const MainContentRow = () => {
   const { contentButton } = useTransferContext();
-  const { videoItemList, onClickDetailHandler, setVideoItemList } =
-    useVideoContentContext();
+  const {
+    videoItemList,
+    onClickDetailHandler,
+    setVideoItemList,
+    setReplyList,
+  } = useVideoContentContext();
+  const { replyCount, setReplyCount } = usePostContext();
   const nav = useNavigate();
 
   useEffect(() => {
@@ -22,6 +29,10 @@ const MainContentRow = () => {
   const onClickHandler = async (e) => {
     const v_code = e.target.dataset.v_code;
     await onClickDetailHandler(v_code);
+    const reply = await getReply(v_code);
+    console.log(reply);
+    setReplyList(reply?.list);
+    setReplyCount(reply?.count);
     return nav(`/video/detail/${v_code}`);
   };
 
