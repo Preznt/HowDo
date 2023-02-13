@@ -5,7 +5,7 @@ import { usePostContext } from "../../context/PostContextProvider";
 import { insertReply, getReply } from "../../service/post.service";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 
-const Reply = ({ code, list }) => {
+const Reply = ({ writer, code, list }) => {
   const { userSession } = useUserContext();
   const { initReply, replyList, setReplyList, replyCount, setReplyCount } =
     usePostContext();
@@ -85,7 +85,7 @@ const Reply = ({ code, list }) => {
           등록
         </button>
       </div>
-      <ReplyList data={replyList} />
+      <ReplyList writer={writer} data={replyList} />
     </section>
   );
 };
