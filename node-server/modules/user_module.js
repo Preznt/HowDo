@@ -67,15 +67,15 @@ export const chkJoin = async (info) => {
   }
 
   // 인서트하기
-  // if (info.name === "BUTTON") {
-  try {
-    await USER.create(info);
-    return info.username;
-  } catch (e) {
-    console.log(e.message);
-    throw new Error(JSON.stringify(USER_JOIN_RES.USER_NOT_CREATE));
+  if (info.name === "BUTTON") {
+    try {
+      await USER.create(info);
+      return info.username;
+    } catch (e) {
+      console.log(e.message);
+      throw new Error(JSON.stringify(USER_JOIN_RES.USER_NOT_CREATE));
+    }
   }
-  // }
 };
 
 export const chkLogin = async (info) => {
