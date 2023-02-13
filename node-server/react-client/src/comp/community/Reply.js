@@ -5,7 +5,7 @@ import { usePostContext } from "../../context/PostContextProvider";
 import { insertReply, getReply } from "../../service/post.service";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 
-const Reply = ({ writer, code, list }) => {
+const Reply = ({ writer, p_code = null, v_code = null, list }) => {
   const { userSession } = useUserContext();
   const { initReply, replyList, setReplyList, replyCount, setReplyCount } =
     usePostContext();
@@ -23,7 +23,8 @@ const Reply = ({ writer, code, list }) => {
   const onChangeHandler = (e) => {
     setReplyInput({
       ...replyInput,
-      p_code: code,
+      p_code: p_code,
+      v_code: v_code,
       r_content: e.target.value,
       username: userSession.username,
       r_parent_code: null,
