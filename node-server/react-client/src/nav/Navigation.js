@@ -52,6 +52,11 @@ const router = createBrowserRouter([
             element: <Board />,
           },
           {
+            path: ":board/search",
+            loader: BoardLoader,
+            element: <Board />,
+          },
+          {
             path: ":board/:post",
             loader: DetailLoader,
             element: <PostDetail />,

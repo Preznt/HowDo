@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getReply, insertReply, deleteReply } from "../../service/post.service";
 import { useUserContext } from "../../context/UserContextProvider";
 import { usePostContext } from "../../context/PostContextProvider";
 import { UserCircleIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { useLocation } from "react-router-dom";
 
 const ReplyItem = ({ writer, item, index }) => {
-  console.log(writer);
+  const location = useLocation();
   const { userSession } = useUserContext();
   const { initReply, setReplyList, setReplyCount } = usePostContext();
   const [showChild, setShowChild] = useState(false);
@@ -25,6 +26,22 @@ const ReplyItem = ({ writer, item, index }) => {
     values[index] = event.target.value;
     setInputValues(values);
   };
+
+  // 가끔 스크롤 위치가 이상한 곳에서 멈춰요
+  useEffect(() => {
+    const hash = location?.hash;
+    // hash 로 댓글 보기
+    // 숫자로 된 id 는 querySelector 동작 안함
+    if (hash) {
+      const replyEle = document?.getElementById(`${hash?.slice(1)}`);
+      if (replyEle) {
+        window.scrollTo(0, replyEle.offsetTop - 100);
+      }
+    }
+    if (!hash) {
+      window.scrollTo(0, 0);
+    }
+  });
 
   // cf) eventHandler 에 값을 전달해야 할 경우 중첩 callback 을 사용해야 한다.
   // cf) 함수의 코드가 전부 실행된 이후에 state의 값이 변경된다.
@@ -72,14 +89,14 @@ const ReplyItem = ({ writer, item, index }) => {
   // id 가 있는 해당 요소에 scroll-margin-top 을 줄 것
   // 일반적인 스크롤에 영향을 주지 않는다.
   return (
-    <section className="flex w-full border-gray-200 border-t first:border-t-0 snap-mandatory">
+    <section className="flex w-full border-gray-200 border-t first:border-t-0">
       <ChevronRightIcon
         className="ml-10 mt-7 w-6 h-6 text-slate-500"
         style={{ display: item.r_parent_code ? "inline-block" : "none" }}
       />
       <div className="w-full">
         <div
-          className="w-full p-5 scroll-mt-16"
+          className="w-full p-5"
           id={item?.r_code}
           style={{
             backgroundColor:

@@ -18,6 +18,28 @@ const REPLY = DB.models.reply;
 
 const router = express.Router();
 
+const orderOption = {
+  latest: [
+    ["p_date", "DESC"],
+    ["p_time", "DESC"],
+  ],
+  upvotes: [
+    ["p_upvotes", "DESC"],
+    ["p_date", "DESC"],
+    ["p_time", "DESC"],
+  ],
+  replies: [
+    ["p_replies", "DESC"],
+    ["p_date", "DESC"],
+    ["p_time", "DESC"],
+  ],
+  views: [
+    ["p_views", "DESC"],
+    ["p_date", "DESC"],
+    ["p_time", "DESC"],
+  ],
+};
+
 // get board list
 router.get("/boards/get", async (req, res) => {
   try {
@@ -120,12 +142,13 @@ router.get("/posts/get", async (req, res) => {
   }
 });
 
-router.get("/posts/:findBy/:value/:bCode/search", async (req, res) => {
-  const findBy = req.params.findBy;
-  const value = req.params.value;
+router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
   const bCode = req.params.bCode;
-  // 코드 정리할 것
-  const searchList = {
+  const value = req.params.value;
+  const filter = req.params.filter;
+  const order = req.params.order;
+
+  const filterList = {
     title_content: {
       where: {
         [Op.and]: [
@@ -142,7 +165,7 @@ router.get("/posts/:findBy/:value/:bCode/search", async (req, res) => {
         model: USER,
         attributes: ["nickname"],
       },
-      raw: true,
+      order: orderOption[`${order}`],
     },
     title: {
       where: {
@@ -152,7 +175,7 @@ router.get("/posts/:findBy/:value/:bCode/search", async (req, res) => {
         model: USER,
         attributes: ["nickname"],
       },
-      raw: true,
+      order: orderOption[`${order}`],
     },
     // html tag 고려해야
     content: {
@@ -166,11 +189,8 @@ router.get("/posts/:findBy/:value/:bCode/search", async (req, res) => {
         model: USER,
         attributes: ["nickname"],
       },
-      raw: true,
+      order: orderOption[`${order}`],
     },
-    // nickname, r_content 결과 확인할 것
-    // user.nickname  / replies > r_content
-    // reply 는 내용을 표시?
     nickname: {
       where: { b_code: bCode },
       include: {
@@ -178,35 +198,49 @@ router.get("/posts/:findBy/:value/:bCode/search", async (req, res) => {
         attributes: ["nickname"],
         where: { nickname: { [Op.like]: `%${value}%` } },
       },
-      raw: true,
+      order: orderOption[`${order}`],
     },
     reply: {
       where: { b_code: bCode },
       include: [
         {
           model: REPLY,
-          attributes: ["r_content"],
+          attributes: ["r_code", "r_content"],
           where: { r_content: { [Op.like]: `%${value}%` } },
+          include: {
+            model: USER,
+            attributes: ["nickname"],
+          },
         },
         {
           model: USER,
           attributes: ["nickname"],
         },
       ],
-      raw: true,
-      group: ["p_code"],
+      order: orderOption[`${order}`],
     },
   };
 
   try {
-    const result = await POST.findAll(searchList[`${findBy}`]);
-    return res.status(200).send(result);
+    let result = await POST.findAll(filterList[`${filter}`]);
+    console.log(result);
+
+    let message =
+      result.length > 0
+        ? `총 ${result.length} 개의 게시글이 있습니다. (키워드: ${value})`
+        : `검색 결과가 없습니다. (키워드: ${value})`;
+
+    return res.status(200).send({
+      data: result,
+      MESSAGE: message,
+    });
   } catch (err) {
     console.error(err);
     return res.send({ ERROR: "검색 중 오류가 발생했습니다." });
   }
 });
 
+// write 페이지에서 게시판 검색
 router.get("/board/:value?/get", async (req, res) => {
   const value = req?.params?.value;
   // cf) value 가 없을 경우 where 절을 {} 로 설정하여 전체 목록 표시
@@ -221,31 +255,11 @@ router.get("/board/:value?/get", async (req, res) => {
   return res.status(200).send(result);
 });
 
-// community board fetch
+// community 게시판의 게시글 표시 및 정렬
 router.get("/board/:bEng/:order/get", async (req, res) => {
   const bEng = req.params.bEng;
   const order = req.params.order;
-  const orderOption = {
-    latest: [
-      ["p_date", "DESC"],
-      ["p_time", "DESC"],
-    ],
-    upvotes: [
-      ["p_upvotes", "DESC"],
-      ["p_date", "DESC"],
-      ["p_time", "DESC"],
-    ],
-    replies: [
-      ["p_replies", "DESC"],
-      ["p_date", "DESC"],
-      ["p_time", "DESC"],
-    ],
-    views: [
-      ["p_views", "DESC"],
-      ["p_date", "DESC"],
-      ["p_time", "DESC"],
-    ],
-  };
+
   try {
     const board = await BOARD.findOne({
       where: { b_eng: bEng },
@@ -273,7 +287,6 @@ router.get("/board/:bEng/:order/get", async (req, res) => {
         },
       ],
       order: orderOption[`${order}`],
-      raw: true,
     });
     return res.status(200).send({ board, data });
   } catch (err) {
