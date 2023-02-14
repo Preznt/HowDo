@@ -14,10 +14,21 @@ const router = express.Router();
 router.post("/sub", async (req, res) => {
   console.log(req.body);
   const user = req.body.partner_user_id;
+  const orderUser = req.body.partner_order_id;
+  const re_sid = req.body.sid;
+  const re_approved_at = req.body.approved_at;
   try {
     await SUBSCRIBE.create(req.body);
   } catch (e) {
     console.log("정기 결제 승인 인서트 오류", e);
+    try {
+      await SUBSCRIBE.update(
+        { sid: re_sid, approved_at: re_approved_at, inactivated_at: "" },
+        { where: { partner_user_id: user, partner_order_id: orderUser } }
+      );
+    } catch (e) {
+      console.log("정기 결제 업데이트 오류", e);
+    }
   }
 });
 

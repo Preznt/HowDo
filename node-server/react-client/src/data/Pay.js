@@ -1,5 +1,5 @@
 export const dataPayReady = {
-  cid: "TCSUBSCRIP",
+  cid: "",
   partner_order_id: "",
   partner_user_id: "",
   item_name: "",
@@ -32,5 +32,14 @@ export class dataSubApprovalSave {
     this.sid = sid;
     this.first_payment = first_payment;
     this.approved_at = approved_at;
+  }
+}
+
+export class dataOneApprovalSave {
+  constructor(pch_code, username, v_code, pch_pay_method) {
+    this.pch_code = pch_code;
+    this.username = username;
+    this.v_code = v_code;
+    this.pch_pay_method = pch_pay_method;
   }
 }
