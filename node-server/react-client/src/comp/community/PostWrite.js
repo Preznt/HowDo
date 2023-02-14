@@ -26,6 +26,10 @@ const PostWrite = () => {
   useEffect(() => {
     // setState 를 같은 함수 내에서 여러 번 실행하면
     // 가장 마지막 setState 만 화면에 반영된다(batch update).
+    if (!userSession?.username) {
+      alert("로그인 후 이용해주세요.");
+      return nav("/");
+    }
     // insert
     if (!pCode) {
       const init = initPost();

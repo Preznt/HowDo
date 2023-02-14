@@ -18,6 +18,28 @@ const REPLY = DB.models.reply;
 
 const router = express.Router();
 
+const orderOption = {
+  latest: [
+    ["p_date", "DESC"],
+    ["p_time", "DESC"],
+  ],
+  upvotes: [
+    ["p_upvotes", "DESC"],
+    ["p_date", "DESC"],
+    ["p_time", "DESC"],
+  ],
+  replies: [
+    ["p_replies", "DESC"],
+    ["p_date", "DESC"],
+    ["p_time", "DESC"],
+  ],
+  views: [
+    ["p_views", "DESC"],
+    ["p_date", "DESC"],
+    ["p_time", "DESC"],
+  ],
+};
+
 // get board list
 router.get("/boards/get", async (req, res) => {
   try {
@@ -120,54 +142,105 @@ router.get("/posts/get", async (req, res) => {
   }
 });
 
-router.get("/posts/:findBy/:value/:bCode/search", async (req, res) => {
-  const findBy = req.params.findBy;
-  const value = req.params.value;
+router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
   const bCode = req.params.bCode;
+  const value = req.params.value;
+  const filter = req.params.filter;
+  const order = req.params.order;
 
-  const searchList = {
-    title_content: [
-      {
-        [Op.or]: [
-          { p_title: { [Op.iLike]: `%${value}%` } },
-          { p_content: { [Op.iLike]: `%${value}%` } },
+  const filterList = {
+    title_content: {
+      where: {
+        [Op.and]: [
+          {
+            [Op.or]: [
+              { p_title: { [Op.like]: `%${value}%` } },
+              { p_content: { [Op.like]: `%${value}%` } },
+            ],
+          },
+          { b_code: bCode },
         ],
       },
-      { b_code: bCode },
-    ],
-    title: [{ p_title: { [Op.like]: `%${value}%` } }, { b_code: bCode }],
-    content: [{ p_content: { [Op.like]: `%${value}%` } }, { b_code: bCode }],
-    // nickname, r_content 결과 확인할 것
-    // user.nickname  / replies > r_content
-
-    // nickname 과 reply 는 include 안의 where 이어야...
-    nickname: [
-      { "USER.nickname": { [Op.like]: `%${value}%` } },
-      { b_code: bCode },
-    ],
-    reply: [
-      { "REPLY.r_content": { [Op.like]: `%${value}%` } },
-      { b_code: bCode },
-    ],
+      include: {
+        model: USER,
+        attributes: ["nickname"],
+      },
+      order: orderOption[`${order}`],
+    },
+    title: {
+      where: {
+        [Op.and]: [{ p_title: { [Op.like]: `%${value}%` } }, { b_code: bCode }],
+      },
+      include: {
+        model: USER,
+        attributes: ["nickname"],
+      },
+      order: orderOption[`${order}`],
+    },
+    // html tag 고려해야
+    content: {
+      where: {
+        [Op.and]: [
+          { p_content: { [Op.like]: `%${value}%` } },
+          { b_code: bCode },
+        ],
+      },
+      include: {
+        model: USER,
+        attributes: ["nickname"],
+      },
+      order: orderOption[`${order}`],
+    },
+    nickname: {
+      where: { b_code: bCode },
+      include: {
+        model: USER,
+        attributes: ["nickname"],
+        where: { nickname: { [Op.like]: `%${value}%` } },
+      },
+      order: orderOption[`${order}`],
+    },
+    reply: {
+      where: { b_code: bCode },
+      include: [
+        {
+          model: REPLY,
+          attributes: ["r_code", "r_content"],
+          where: { r_content: { [Op.like]: `%${value}%` } },
+          include: {
+            model: USER,
+            attributes: ["nickname"],
+          },
+        },
+        {
+          model: USER,
+          attributes: ["nickname"],
+        },
+      ],
+      order: orderOption[`${order}`],
+    },
   };
 
   try {
-    const result = await POST.findAll({
-      where: {
-        [Op.and]: searchList[`${findBy}`],
-      },
-      include: [
-        { model: USER, attributes: ["nickname"] },
-        { model: REPLY, attributes: ["r_content"] },
-      ],
+    let result = await POST.findAll(filterList[`${filter}`]);
+    console.log(result);
+
+    let message =
+      result.length > 0
+        ? `총 ${result.length} 개의 게시글이 있습니다. (키워드: ${value})`
+        : `검색 결과가 없습니다. (키워드: ${value})`;
+
+    return res.status(200).send({
+      data: result,
+      MESSAGE: message,
     });
-    return res.status(200).send(result);
   } catch (err) {
     console.error(err);
     return res.send({ ERROR: "검색 중 오류가 발생했습니다." });
   }
 });
 
+// write 페이지에서 게시판 검색
 router.get("/board/:value?/get", async (req, res) => {
   const value = req?.params?.value;
   // cf) value 가 없을 경우 where 절을 {} 로 설정하여 전체 목록 표시
@@ -182,31 +255,11 @@ router.get("/board/:value?/get", async (req, res) => {
   return res.status(200).send(result);
 });
 
-// community board fetch
+// community 게시판의 게시글 표시 및 정렬
 router.get("/board/:bEng/:order/get", async (req, res) => {
   const bEng = req.params.bEng;
   const order = req.params.order;
-  const orderOption = {
-    latest: [
-      ["p_date", "DESC"],
-      ["p_time", "DESC"],
-    ],
-    upvotes: [
-      ["p_upvotes", "DESC"],
-      ["p_date", "DESC"],
-      ["p_time", "DESC"],
-    ],
-    replies: [
-      ["p_replies", "DESC"],
-      ["p_date", "DESC"],
-      ["p_time", "DESC"],
-    ],
-    views: [
-      ["p_views", "DESC"],
-      ["p_date", "DESC"],
-      ["p_time", "DESC"],
-    ],
-  };
+
   try {
     const board = await BOARD.findOne({
       where: { b_eng: bEng },
@@ -234,7 +287,6 @@ router.get("/board/:bEng/:order/get", async (req, res) => {
         },
       ],
       order: orderOption[`${order}`],
-      raw: true,
     });
     return res.status(200).send({ board, data });
   } catch (err) {

@@ -19,10 +19,6 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 import { usePostContext } from "../../context/PostContextProvider";
 
 // html tag -> entity -> tag 로 변환하는 과정 필요
-// 자기 자신을 참조하도록 테이블 관계 설정
-// 댓글을 중첩 구조로 데이터 가공해야 하는지?
-// 같은 데이터를 호출하는 여러 코드들 어떻게 처리?
-// 불필요한 전역변수 어떻게 처리?
 
 // hook 은 컴포넌트 함수 또는 커스텀 hook 에서만 호출할 수 있다.
 // 따라서 일반 함수에서는 hook 을 호출할 수 없다.
@@ -38,6 +34,7 @@ const PostDetail = () => {
   const { userSession } = useUserContext();
   const { replyCount, setReplyCount } = usePostContext();
   const nav = useNavigate();
+
   const bEng = useParams().board;
   const [upvotes, setUpvotes] = useState();
 

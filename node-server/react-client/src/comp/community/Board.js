@@ -2,12 +2,22 @@
 import BoardList from "./BoardList";
 import "../../css/community/Board.css";
 import { getBoardPosts } from "../../service/post.service";
-import { useLoaderData, Link } from "react-router-dom";
+import {
+  useNavigate,
+  useLocation,
+  useLoaderData,
+  Link,
+  useParams,
+} from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
-import { BarsArrowDownIcon } from "@heroicons/react/24/outline";
+import {
+  BarsArrowDownIcon,
+  ChevronDownIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
-export const loader = async ({ params }) => {
+export const BoardLoader = async ({ params }) => {
   const bEng = params.board;
   const order = "latest";
   const { data, board } = await getBoardPosts(bEng, order);
@@ -15,78 +25,143 @@ export const loader = async ({ params }) => {
 };
 
 const Board = () => {
+  const nav = useNavigate();
+  const params = useParams();
+  const location = useLocation();
   const { userSession } = useUserContext();
   const { data, board } = useLoaderData();
+
+  // select option
   const orderList = [
     { o_eng: "latest", o_kor: "최신순" },
     { o_eng: "upvotes", o_kor: "추천순" },
     { o_eng: "replies", o_kor: "댓글순" },
     { o_eng: "views", o_kor: "조회순" },
   ];
-  const searchList = [
+  const filterList = [
     { s_eng: "title_content", s_kor: "제목+내용" },
     { s_eng: "title", s_kor: "제목" },
     { s_eng: "content", s_kor: "내용" },
     { s_eng: "nickname", s_kor: "닉네임" },
     { s_eng: "reply", s_kor: "댓글" },
   ];
-  const [postList, setPostList] = useState([]);
+
+  const initOrder = () => {
+    const order = {
+      eng: `${orderList[0].o_eng}`,
+      kor: `${orderList[0].o_kor}`,
+    };
+    return order;
+  };
+
+  const initFilter = () => {
+    const filter = {
+      eng: `${filterList[0].s_eng}`,
+      kor: `${filterList[0].s_kor}`,
+    };
+    return filter;
+  };
+
+  // state
+  const [postList, setPostList] = useState([...data]);
   const [showOrder, setShowOrder] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
-  const [orderValue, setOrderValue] = useState(`${orderList[0].o_kor}`);
-  const [searchValue, setSearchValue] = useState({
-    eng: `${searchList[0].s_eng}`,
-    kor: `${searchList[0].s_kor}`,
-  });
+  const [orderValue, setOrderValue] = useState(initOrder);
+  const [filterValue, setFilterValue] = useState(initFilter);
   const [searchInput, setSearchInput] = useState("");
+  const [searchMsg, setSearchMsg] = useState("");
 
-  // 정렬기준 선택에 따라 게시글 리스트를 변경해야 함
+  /**
+   * 페이지 경로에 따라 게시글 리스트와 값들을 변경
+   * 1. 게시판 초기 화면
+   * 2. 게시글 클릭 후 게시판으로 되돌아왔을 때
+   * 3. 검색 직후 화면
+   * 4. 검색하여 게시글 클릭 후 게시판으로 되돌아왔을 때
+   * 5. 검색 후 모든 게시글 보기를 클릭했을 때
+   */
+
+  // useEffect(() => {
+  //   console.log("par.loc", location);
+  //   console.log("par.par", params);
+  // }, []);
+
   useEffect(() => {
-    setPostList([...data]);
-  }, [data]);
+    console.log("loc.loc", location);
+    console.log("loc.par", params);
+    if (location?.state?.search) {
+      setPostList([...location?.state?.data]);
+      setSearchMsg([...location?.state?.msg]);
+      setFilterValue({ ...location?.state?.filter });
+      setSearchInput(location?.state?.search);
+    } else {
+      setPostList([...data]);
+      setSearchMsg("");
+      setSearchInput("");
+      setOrderValue(initOrder);
+      setFilterValue(initFilter);
+    }
+  }, [location?.state?.search, params.board]);
 
   const onClickSetOrder = async (value, text) => {
-    const { data } = await getBoardPosts(board.b_eng, value);
-    setPostList([...data]);
-    setOrderValue(text);
+    if (!location?.state?.msg) {
+      const result = await getBoardPosts(board?.b_eng, value).then(
+        (result) => result.data
+      );
+      setPostList([...result]);
+    } else {
+      const result = await fetch(
+        `/community/posts/${board?.b_code}/${searchInput}/${filterValue?.eng}/${value}/search`
+      )
+        .then((result) => result.json())
+        .then((result) => result.data);
+      setPostList([...result]);
+    }
+    setOrderValue({ eng: value, kor: text });
     setShowOrder(false);
   };
 
   const onClickSetSearchBy = (value, text) => {
-    setSearchValue({ ...searchValue, eng: value, kor: text });
-    setShowSearch(false);
+    setFilterValue({ ...filterValue, eng: value, kor: text });
   };
 
-  const onClickSearchPosts = async () => {
-    const result = await fetch(
-      `/community/posts/${searchValue.eng}/${searchInput}/${board.b_code}/search`
-    ).then((data) => data.json());
-    console.log(result);
+  const SearchPosts = async (e) => {
+    if (e.type === "click" || (e.type === "keydown" && e.keyCode === 13)) {
+      const result = await fetch(
+        `/community/posts/${board.b_code}/${searchInput}/${filterValue.eng}/${orderValue.eng}/search`
+      ).then((data) => data.json());
+      // 페이지 이동
+      nav(`/community/${board.b_eng}/search`, {
+        state: {
+          data: result.data,
+          search: searchInput,
+          filter: { eng: filterValue.eng, kor: filterValue.kor },
+          msg: result.MESSAGE,
+        },
+      });
+    }
   };
 
   const btnClass =
     "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
-  const btnClass02 =
-    "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded";
   const selectClass =
     "bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:outline-none focus:ring-blue-500 focus:border-blue-500 p-2";
   const optionClass = "w-full p-2 hover:bg-blue-500 hover:text-white";
   const inputClass =
-    "bg-gray-200 appearance-none border-2 border-gray-200 rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 p-2";
+    "bg-slate-200 appearance-none border-2 border-transparent rounded py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500 p-2";
 
   return (
     <main className="commu-cat w-full">
-      <div className="border-2 rounded border-slate-400 text-xl font-bold p-2 mb-5">
+      <div className="border-l-8 border-slate-400 text-2xl font-bold p-5 mb-5">
         {board.b_kor}
       </div>
-      <section className="flex w-full px-5 pb-5 justify-between">
+      <section className="flex w-full pb-5 justify-between">
         <button
           className={`order-select relative w-30 ${selectClass}`}
           onClick={() => setShowOrder(true)}
           onBlur={() => setShowOrder(false)}
         >
           <BarsArrowDownIcon className="inline-block mr-3 h-5 w-5 text-slate-500" />
-          {orderValue}
+          {orderValue.kor}
           <div
             className="flex flex-col absolute top-11 left-0 w-full bg-gray-50 rounded border border-gray-300 text-gray-900"
             style={{ display: showOrder === true ? "flex" : "none" }}
@@ -105,19 +180,19 @@ const Board = () => {
             })}
           </div>
         </button>
-        <div className="cat-search flex gap-5 justify-center">
+        <div className="cat-search flex-1 flex justify-center">
           <button
-            className={`search-select relative w-28 ${selectClass}`}
-            type="button"
+            className={`search-select relative text-sm w-[130px] ${inputClass} rounded-r-none`}
             onClick={() => setShowSearch(true)}
             onBlur={() => setShowSearch(false)}
           >
-            {searchValue.kor}
+            {filterValue.kor}
+            <ChevronDownIcon className="inline-block float-right mt-0.5 ml-3 h-4 w-4 text-slate-500" />
             <div
               className="flex flex-col absolute top-11 left-0 w-full bg-gray-50 rounded border border-gray-300 text-gray-900"
               style={{ display: showSearch === true ? "flex" : "none" }}
             >
-              {searchList.map((item) => {
+              {filterList.map((item) => {
                 return (
                   <div
                     key={item.s_eng}
@@ -132,11 +207,19 @@ const Board = () => {
             </div>
           </button>
           <input
-            className={`${inputClass} w-[20vw]`}
+            className={`${inputClass} w-[20vw] rounded-none`}
             onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={SearchPosts}
+            spellCheck={false}
+            value={searchInput}
+            type="search"
           />
-          <button className={btnClass02} onClick={onClickSearchPosts}>
-            검색
+          <button
+            className={`${inputClass} rounded-l-none`}
+            onClick={SearchPosts}
+            disabled={searchInput.length > 0 ? false : true}
+          >
+            <MagnifyingGlassIcon className="inline-block h-6 w-6 text-slate-500" />
           </button>
         </div>
         {/* 로그인 유저의 등급이 게시판 권한등급보다 같거나 높을 때 */}
@@ -155,7 +238,19 @@ const Board = () => {
           </Link>
         )}
       </section>
-      <BoardList data={postList} />
+      <div
+        className="text-center p-3 mx-5 mt-5 border-b border-slate-200"
+        style={{ display: searchMsg ? "block" : "none" }}
+      >
+        {searchMsg}
+        <Link
+          className="block text-center w-[10em] p-1 mx-auto mt-2 underline text-blue-500"
+          to={`/community/${board.b_eng}`}
+        >
+          모든 게시글 보기
+        </Link>
+      </div>
+      <BoardList board={board} data={postList} />
     </main>
   );
 };
