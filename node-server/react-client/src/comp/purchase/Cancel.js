@@ -1,10 +1,13 @@
 import { useUserContext } from "../../context/UserContextProvider";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { cancelUser } from "../../service/auth.service";
+import { useNavigate } from "react-router-dom";
 
 const Cancel = (props) => {
   const { cancel, cancelHandler, userSession } = useUserContext();
-  const { orderUser } = props;
+  const { orderUser, nickname } = props;
+  const nav = useNavigate();
+
   return (
     <div>
       <div
@@ -18,7 +21,7 @@ const Cancel = (props) => {
       <div
         className={
           cancel.open
-            ? "fixed w-1/4 h-1/4 top-1/4 left-1/3 bg-white rounded-2xl p-3"
+            ? "fixed w-1/4 h-1/4 top-1/3 left-1/3 bg-white rounded-2xl p-3"
             : "hidden"
         }
       >
@@ -37,6 +40,8 @@ const Cancel = (props) => {
             className="p-3 w-full bg-sky-600 rounded-full text-white"
             onClick={() => {
               cancelUser(userSession.username, orderUser);
+              cancelHandler();
+              document.location.href = `/creater/${nickname}`;
             }}
           >
             취소하기

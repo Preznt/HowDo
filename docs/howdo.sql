@@ -4,7 +4,7 @@ USE howdo;
 DROP DATABASE howdo;
 
 DROP TABLE subscribe;
-SELECT * FROM subscribe;
+SELECT * FROM post;
 
 -- 사용자정보
 CREATE TABLE IF NOT EXISTS user(
@@ -72,13 +72,13 @@ CREATE TABLE IF NOT EXISTS shorts(
 
 -- 구매내역
 CREATE TABLE IF NOT EXISTS purchase(
-	p_code	VARCHAR(256),
+	pch_code	VARCHAR(256),
 	username	VARCHAR(256),
 	i_code	BIGINT,
 	v_code	BIGINT,
-	p_reg_date	datetime	DEFAULT CURRENT_TIMESTAMP,	
-	p_pay_method	VARCHAR(125)	NOT NULL,
-	PRIMARY KEY(p_code)
+	pch_reg_date	datetime	DEFAULT CURRENT_TIMESTAMP,	
+	pch_pay_method	VARCHAR(125)	NOT NULL,
+	PRIMARY KEY(pch_code)
 );
 
 -- 게시판

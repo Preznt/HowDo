@@ -15,6 +15,7 @@ import PostDetail, {
 } from "../comp/community/PostDetail";
 import PostWrite from "../comp/community/PostWrite";
 import Approve from "../comp/purchase/Approve";
+import PayReady from "../comp/purchase/PayReady";
 import SearchMain, { SearchLoader } from "../comp/serachPage/SearchMain";
 import UserPageMain, { userPageFetch } from "../comp/userpage/UserPageMain";
 import ShortMain from "../comp/Video/Main";
@@ -64,6 +65,7 @@ const router = createBrowserRouter([
       },
 
       { path: "/approval", element: <Approve /> },
+      { path: "/payReady", element: <PayReady /> },
       { path: "/search/:query", loader: SearchLoader, element: <SearchMain /> },
       { path: "/video/shorts", element: <ShortMain /> },
       { path: "/video/detail/:v_code", element: <VideoDetail /> },

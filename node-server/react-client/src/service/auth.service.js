@@ -82,7 +82,7 @@ export const payApprove = async (dataPayApprove) => {
   try {
     const res = await fetch(URL.APPROVE, fetchOption);
     const result = await res.json();
-    // console.log(result);
+    console.log(result);
     return result;
   } catch (e) {
     console.log(e);

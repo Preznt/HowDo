@@ -3,7 +3,7 @@ export default (sequelize) => {
   return sequelize.define(
     "purchase",
     {
-      p_code: {
+      pch_code: {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: false,
         primaryKey: true,
@@ -13,19 +13,19 @@ export default (sequelize) => {
         allowNull: true,
       },
       i_code: {
-        type: Sequelize.DataTypes.BIGINT,
+        type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
       },
       v_code: {
-        type: Sequelize.DataTypes.BIGINT,
+        type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
       },
-      p_date: {
+      pch_date: {
         type: Sequelize.DataTypes.DATE,
         allowNull: true,
         defaultValue: Sequelize.Sequelize.literal("CURRENT_TIMESTAMP"),
       },
-      p_pay_method: {
+      pch_pay_method: {
         type: Sequelize.DataTypes.STRING(125),
         allowNull: false,
       },
