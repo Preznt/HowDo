@@ -4,7 +4,7 @@ import CommList from "./CommList";
 import { getMainPosts } from "../../service/post.service";
 import { useLoaderData } from "react-router-dom";
 
-export const loader = async () => {
+export const CommMainLoader = async () => {
   const result = await getMainPosts();
   return result;
 };
