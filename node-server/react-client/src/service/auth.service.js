@@ -69,7 +69,7 @@ export const payReady = async (statePayReady) => {
 // 결제 승인
 
 export const payApprove = async (dataPayApprove) => {
-  console.log(dataPayApprove);
+  // console.log(dataPayApprove);
   const fetchOption = {
     method: "POST",
     body: new URLSearchParams(dataPayApprove),
@@ -129,5 +129,20 @@ export const cancelUser = async (username, orderUser) => {
     return result;
   } catch (e) {
     console.log(`expire sql error \n`, e);
+  }
+};
+
+// 단건 결제 데이터 인서트 요청
+export const oneApprovalSave = (data) => {
+  const fetchOption = {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+  };
+
+  try {
+    fetch("/kakao/one", fetchOption);
+  } catch (e) {
+    console.log("단건 결제 저장 fetch 실패 \n", e);
   }
 };

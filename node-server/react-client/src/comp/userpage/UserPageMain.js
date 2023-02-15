@@ -24,7 +24,7 @@ const UserPageMain = () => {
 
   const twoClickEvent = () => {
     modalHandler();
-    payReadyBody(orderUser, price);
+    payReadyBody(orderUser, price, "", "", nickname);
     console.log(statePayReady);
   };
   const cancelClick = () => {
@@ -72,8 +72,7 @@ const UserPageMain = () => {
             <div className="ml-6 mt-auto mb-auto hover:text-blue-600 hover:cursor-pointer">
               {nickname}
             </div>
-            {createrResult.chkSub[0] &&
-            createrResult.chkSub[0].inactivated_at === "" ? (
+            {createrResult?.chkSub[0]?.inactivated_at === null ? (
               <div
                 className="ml-auto hover:text-blue-600 hover:cursor-pointer"
                 onClick={cancelClick}

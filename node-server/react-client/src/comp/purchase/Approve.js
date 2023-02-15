@@ -1,4 +1,8 @@
-import { payApprove, subApprovalSave } from "../../service/auth.service";
+import {
+  payApprove,
+  subApprovalSave,
+  oneApprovalSave,
+} from "../../service/auth.service";
 import { usePayContext } from "../../context/PayContextProvider";
 import {
   dataPayApprove,
@@ -32,7 +36,7 @@ const Approve = () => {
       if (result.approved_at) {
         await setApprove({ ...result });
       }
-      console.log(result);
+      // console.log(result);
 
       if (result.sid) {
         const data = new dataSubApprovalSave(
@@ -45,7 +49,7 @@ const Approve = () => {
         console.log(data);
         // 승인 응답 데이터 저장하기
         await subApprovalSave(data);
-      } else {
+      } else if (result.cid) {
         const data = new dataOneApprovalSave(
           uuid(),
           result.partner_user_id,
@@ -53,6 +57,7 @@ const Approve = () => {
           result.payment_method_type
         );
         console.log(data);
+        oneApprovalSave(data);
       }
     })();
   });
@@ -74,14 +79,17 @@ const Approve = () => {
           <p>다음결제일: {nextPay}</p>
         </div>
         <div className="flex justify-end">
-          <button
-            className="mr-2 p-2 hover:bg-gray-500 hover:text-white border-2 border-gray font-semibold rounded-full"
-            onClick={() => {
-              document.location.href = `/creater/${nickname}`;
-            }}
-          >
-            이어서 보기
-          </button>
+          {approve?.sid ? (
+            <button
+              className="mr-2 p-2 hover:bg-gray-500 hover:text-white border-2 border-gray font-semibold rounded-full"
+              onClick={() => {
+                document.location.href = `/creater/${nickname}`;
+              }}
+            >
+              이어서 보기
+            </button>
+          ) : null}
+
           <button className="p-2 hover:bg-sky-600 rounded-full hover:text-white font-semibold border-2">
             구매내역 확인
           </button>

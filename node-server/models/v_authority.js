@@ -22,7 +22,7 @@ export default (sequelize) => {
         },
       },
       authority: {
-        type: Sequelize.DataTypes.INTEGER,
+        type: Sequelize.DataTypes.BOOLEAN,
         allowNull: false,
       },
     },

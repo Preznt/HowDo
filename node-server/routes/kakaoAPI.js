@@ -6,6 +6,8 @@ import schedule from "node-schedule";
 import moment from "moment";
 
 const SUBSCRIBE = DB.models.subscribe;
+const PURCHASE = DB.models.purchase;
+const V_AUTHORITY = DB.models.v_authority;
 const USER = DB.models.user;
 
 const router = express.Router();
@@ -23,12 +25,25 @@ router.post("/sub", async (req, res) => {
     console.log("정기 결제 승인 인서트 오류", e);
     try {
       await SUBSCRIBE.update(
-        { sid: re_sid, approved_at: re_approved_at, inactivated_at: "" },
+        { sid: re_sid, approved_at: re_approved_at, inactivated_at: null },
         { where: { partner_user_id: user, partner_order_id: orderUser } }
       );
     } catch (e) {
       console.log("정기 결제 업데이트 오류", e);
     }
+  }
+});
+
+// 단건 결제 데이터 인서트
+router.post("/one", (req, res) => {
+  const username = req.body.username;
+  const v_code = req.body.v_code;
+  console.log("단건 결제 데이터", req.body);
+  try {
+    PURCHASE.create(req.body);
+    V_AUTHORITY.create({ username: username, v_code: v_code, authority: true });
+  } catch (error) {
+    console.log("단건 결제 인서트 오류", error);
   }
 });
 

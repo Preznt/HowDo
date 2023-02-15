@@ -95,7 +95,8 @@ const Join = () => {
                       onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
-                    {error.CODE === "REQ_NICKNAME" ? (
+                    {error.CODE === "REQ_NICKNAME" &&
+                    joinUser.nickname === "" ? (
                       <p className="text-red-500 mb-2 text-center">
                         닉네임을 입력해 주세요
                       </p>
