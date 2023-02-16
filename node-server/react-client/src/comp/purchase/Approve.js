@@ -32,11 +32,13 @@ const Approve = () => {
   useEffect(() => {
     (async () => {
       // 카카오페이 승인 요청
+      console.log("useEffect");
       const result = await payApprove(dataPayApprove);
       if (result.approved_at) {
         await setApprove({ ...result });
       }
       // console.log(result);
+      console.log(approve);
 
       if (result.sid) {
         const data = new dataSubApprovalSave(
@@ -60,9 +62,7 @@ const Approve = () => {
         oneApprovalSave(data);
       }
     })();
-  });
-
-  console.log(approve);
+  }, []);
 
   const nextPay = moment(approve?.approved_at)
     .add(30, "d")

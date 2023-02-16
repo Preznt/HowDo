@@ -15,6 +15,7 @@ export const UserContextProvider = ({ children }) => {
   const [modifierOpen, setModifierOpen] = useState(false);
   const [joinUser, setJoinUser] = useState(new User());
   const [login, setLogin] = useState(new Login());
+  const [overlap, setOverlap] = useState("");
   const [error, setError] = useState({});
   const [loginError, setLoginError] = useState({});
   const [userSession, setUserSession] = useState(new UserSession());
@@ -80,6 +81,8 @@ export const UserContextProvider = ({ children }) => {
     setLoginError,
     login,
     setLogin,
+    overlap,
+    setOverlap,
     userSession,
     setUserSession,
     onClickHandler,

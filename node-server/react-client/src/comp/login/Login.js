@@ -4,7 +4,8 @@ import { useUserContext } from "../../context/UserContextProvider";
 import { fetchLogin } from "../../service/auth.service";
 
 const Login = () => {
-  const { login, setLogin, loginError, onClickHandler } = useUserContext();
+  const { login, setLogin, loginError, setLoginError, onClickHandler } =
+    useUserContext();
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -14,6 +15,10 @@ const Login = () => {
   const submitHandler = (e) => {
     e.preventDefault();
   };
+
+  useEffect(() => {
+    setLoginError({});
+  }, []);
 
   return (
     <>
