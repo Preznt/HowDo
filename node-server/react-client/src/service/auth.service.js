@@ -33,7 +33,7 @@ export const fetchLogin = async (loginUser) => {
 };
 
 export const fetchUser = async () => {
-  const response = await fetch("/user/session");
+  const response = await fetch("/user/session", { credentials: "include" });
   const result = await response.json();
 
   // console.log(result);

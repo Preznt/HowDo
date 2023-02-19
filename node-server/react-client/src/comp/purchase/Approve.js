@@ -2,6 +2,7 @@ import {
   payApprove,
   subApprovalSave,
   oneApprovalSave,
+  fetchUser,
 } from "../../service/auth.service";
 import { usePayContext } from "../../context/PayContextProvider";
 import {
@@ -12,58 +13,62 @@ import {
 import { useEffect } from "react";
 import moment from "moment";
 import uuid from "react-uuid";
+import { useUserContext } from "../../context/UserContextProvider";
 
 const Approve = () => {
-  const { userSession, approve, setApprove } = usePayContext();
+  const { approve, setApprove, dataBody, setDataBody } = usePayContext();
+  const { userSession, setUserSession } = useUserContext();
   const query = window.location.search;
   const pg_token = query.substring(10, 30);
   const tid = localStorage.getItem("tid");
   const order_id = localStorage.getItem("order_id");
   const nickname = localStorage.getItem("nickname");
 
-  if (!nickname) {
-    dataPayApprove.cid = "TC0ONETIME";
-  }
-  dataPayApprove.tid = tid;
-  dataPayApprove.pg_token = pg_token;
-  dataPayApprove.partner_user_id = userSession.username;
-  dataPayApprove.partner_order_id = order_id;
-
   useEffect(() => {
     (async () => {
       // 카카오페이 승인 요청
-      console.log("useEffect");
-      const result = await payApprove(dataPayApprove);
-      if (result.approved_at) {
-        await setApprove({ ...result });
-      }
-      // console.log(result);
-      console.log(approve);
+      // const loginUser = await fetchUser();
+      // await setUserSession(loginUser);
 
-      if (result.sid) {
-        const data = new dataSubApprovalSave(
-          result.partner_user_id,
-          result.partner_order_id,
-          result.sid,
-          result.approved_at.substr(0, 10),
-          result.approved_at.substr(0, 10)
-        );
-        console.log(data);
-        // 승인 응답 데이터 저장하기
-        await subApprovalSave(data);
-      } else if (result.cid) {
-        const data = new dataOneApprovalSave(
-          uuid(),
-          result.partner_user_id,
-          result.item_code,
-          result.payment_method_type
-        );
-        console.log(data);
-        oneApprovalSave(data);
+      if (!nickname) {
+        dataPayApprove.cid = "TC0ONETIME";
       }
+      dataPayApprove.tid = tid;
+      dataPayApprove.pg_token = pg_token;
+      dataPayApprove.partner_user_id = userSession?.username;
+      dataPayApprove.partner_order_id = order_id;
+      console.log(dataPayApprove);
+
+      // const result = await payApprove(dataPayApprove);
+      // if (result.approved_at) {
+      //   await setApprove({ ...result });
+      //   console.log(approve);
+      // }
+      // // console.log(result);
+      // if (result.sid) {
+      //   const data = new dataSubApprovalSave(
+      //     result.partner_user_id,
+      //     result.partner_order_id,
+      //     result.sid,
+      //     result.approved_at.substr(0, 10),
+      //     result.approved_at.substr(0, 10)
+      //   );
+      //   console.log(data);
+      //   // 승인 응답 데이터 저장하기
+      //   await subApprovalSave(data);
+      // } else if (result.cid) {
+      //   const data = new dataOneApprovalSave(
+      //     uuid(),
+      //     result.partner_user_id,
+      //     result.item_code,
+      //     result.payment_method_type
+      //   );
+      //   console.log(data);
+      //   oneApprovalSave(data);
+      // }
     })();
   }, []);
-
+  console.log(userSession);
   const nextPay = moment(approve?.approved_at)
     .add(30, "d")
     .format("YYYY-MM-DD");

@@ -49,8 +49,8 @@ app.use(
   session({
     key: "ProjectHowDo",
     secret: "ProjectHowDo",
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     store: sessionStore,
     cookie: {
       maxAge: 1000 * 60 * 10,

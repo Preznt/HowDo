@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
+
 import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
@@ -30,20 +31,10 @@ export const UserContextProvider = ({ children }) => {
   const rePasswordRef = useRef();
   const inputRef = { usernameRef, nicknameRef, passwordRef, rePasswordRef };
 
-  const onClickHandler = async () => {
-    const result = await fetchLogin(login);
-    if (result.CODE) {
-      setLoginError({ ...result });
-    }
-    setUserSession(result);
-    if (result.username) document.location.href = "/";
-    console.log(result);
-  };
-
   // 모달창 열고 닫는 함수
   const modalHandler = () => {
     setModal({ ...modal, open: !modal.open });
-    console.log(userSession);
+    // console.log(userSession);
   };
 
   const cancelHandler = () => {
@@ -62,13 +53,13 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     (async () => {
       const loginUser = await fetchUser();
-      if (loginUser) {
+      if (loginUser.username) {
         setUserSession(loginUser);
+        console.log("유저 컨텍스트", userSession);
       } else {
         setUserSession(new UserSession());
       }
     })();
-    console.log(userSession);
   }, []);
 
   const props = {
@@ -85,7 +76,7 @@ export const UserContextProvider = ({ children }) => {
     setOverlap,
     userSession,
     setUserSession,
-    onClickHandler,
+    // onClickHandler,
     logoutHandler,
     modal,
     setModal,
