@@ -152,7 +152,8 @@ const VideoDetail = () => {
       videoDetail.username,
       videoDetail.v_price,
       videoDetail.v_title,
-      videoDetail.v_code
+      videoDetail.v_code,
+      videoDetail.v_src
     );
     return <Navigate to="/payReady" />;
   }

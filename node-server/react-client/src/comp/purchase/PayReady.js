@@ -3,6 +3,7 @@ import { payReady } from "../../service/auth.service";
 
 const PayReady = () => {
   const { statePayReady } = usePayContext();
+  const v_src = localStorage.getItem("v_src");
   console.log(statePayReady);
   return (
     <div className="flex flex-column justify-center w-full m-8">
@@ -12,10 +13,7 @@ const PayReady = () => {
         <h1 className="text-2xl font-bold mb-3">상품정보</h1>
         <div className="flex justify-between">
           <div className="flex">
-            <video
-              src="/uploads/8e4e66cc-88e0-4f73-8bad-1fb59f004975-sea.mp4"
-              className="w-80 mr-3"
-            />
+            <video src={v_src} className="w-80 mr-3" />
             <div className="grid">
               <p className="text-xl font-semibold">
                 {statePayReady?.item_name}

@@ -15,7 +15,7 @@ export const PayContextProvider = ({ children }) => {
   const [dataBody, setDataBody] = useState(dataPayApprove);
   // const [statePayApprove, setPayApprove] = useState(dataPayApprove);
 
-  const payReadyBody = (orderUser, price, item, v_code, nickname) => {
+  const payReadyBody = (orderUser, price, item, v_code, v_src, nickname) => {
     if (item) {
       setPayReady({
         ...statePayReady,
@@ -26,6 +26,8 @@ export const PayContextProvider = ({ children }) => {
         total_amount: price,
         item_code: v_code,
       });
+      localStorage.setItem("order_id", orderUser);
+      localStorage.setItem("v_src", v_src);
     } else {
       setPayReady({
         ...statePayReady,

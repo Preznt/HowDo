@@ -24,7 +24,7 @@ const UserPageMain = () => {
 
   const twoClickEvent = () => {
     modalHandler();
-    payReadyBody(orderUser, price, "", "", nickname);
+    payReadyBody(orderUser, price, "", "", "", nickname);
     console.log(statePayReady);
   };
   const cancelClick = () => {
@@ -42,7 +42,6 @@ const UserPageMain = () => {
   // useEffect(() => {
   // returnHome();
   // }, []);
-
   return (
     <>
       {createrResult.u_result ? (

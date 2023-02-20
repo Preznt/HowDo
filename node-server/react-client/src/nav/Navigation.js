@@ -24,6 +24,7 @@ import VideoDetail from "../comp/Video/VideoDetail";
 import CreaterMain, {
   loader as CreaterFetch,
 } from "../comp/userpage/CreaterMain";
+import Subscribe from "../comp/purchase/Subscribe";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +72,7 @@ const router = createBrowserRouter([
 
       { path: "/approval", element: <Approve /> },
       { path: "/payReady", element: <PayReady /> },
+      { path: "/subscribe", element: <Subscribe /> },
       { path: "/search/:query", loader: SearchLoader, element: <SearchMain /> },
       { path: "/video/shorts", element: <ShortMain /> },
       { path: "/video/detail/:v_code", element: <VideoDetail /> },

@@ -4,7 +4,7 @@ import { cancelUser } from "../../service/auth.service";
 import { useNavigate } from "react-router-dom";
 
 const Cancel = (props) => {
-  const { cancel, cancelHandler, userSession } = useUserContext();
+  const { modal, cancelHandler, userSession } = useUserContext();
   const { orderUser, nickname } = props;
   const nav = useNavigate();
 
@@ -12,7 +12,7 @@ const Cancel = (props) => {
     <div>
       <div
         className={
-          cancel.open
+          modal.cancel
             ? "fixed top-0 left-0 h-full w-full bg-zinc-800 opacity-40"
             : ""
         }
@@ -20,7 +20,7 @@ const Cancel = (props) => {
       ></div>
       <div
         className={
-          cancel.open
+          modal.cancel
             ? "fixed w-1/4 h-1/4 top-1/3 left-1/3 bg-white rounded-2xl p-3"
             : "hidden"
         }

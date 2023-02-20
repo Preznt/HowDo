@@ -11,7 +11,7 @@ const Purchase = (props) => {
     <div>
       <div
         className={
-          modal.open
+          modal.subReady
             ? "background fixed top-0 left-0 h-full w-full bg-zinc-800 opacity-40"
             : ""
         }
@@ -19,7 +19,7 @@ const Purchase = (props) => {
       ></div>
       <div
         className={
-          modal.open
+          modal.subReady
             ? "fixed w-1/3 top-32 left-1/3 bg-white rounded-2xl"
             : "hidden"
         }
