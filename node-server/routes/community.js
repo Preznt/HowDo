@@ -8,6 +8,7 @@ import fs from "fs";
 import path from "path";
 import { v4 } from "uuid";
 import moment from "moment";
+import { sanitizer } from "../modules/sanitize_html.js";
 
 const USER = DB.models.user;
 const BOARD = DB.models.board;
@@ -351,8 +352,9 @@ router.post("/upload", fileUp.single("upload"), async (req, res, next) => {
   }
 });
 
-router.post("/post/insert", async (req, res) => {
-  const data = req.body;
+// sanitizer 로 content 의 html tag filter
+router.post("/post/insert", sanitizer, async (req, res) => {
+  const data = { ...req.body, p_content: req.filtered };
   try {
     await POST.create(data);
     return res.send({ MESSAGE: "게시글이 등록되었습니다." });

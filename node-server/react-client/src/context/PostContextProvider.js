@@ -43,6 +43,7 @@ export const PostContextProvider = ({ children }) => {
     b_group_eng: "",
     b_group_kor: "",
   });
+  const [keyValue, setKeyValue] = useState("");
 
   const props = {
     boardList,
@@ -57,6 +58,8 @@ export const PostContextProvider = ({ children }) => {
     setReplyList,
     replyCount,
     setReplyCount,
+    keyValue,
+    setKeyValue,
   };
 
   return <PostContext.Provider value={props}>{children}</PostContext.Provider>;

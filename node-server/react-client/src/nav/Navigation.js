@@ -51,11 +51,11 @@ const router = createBrowserRouter([
             loader: BoardLoader,
             element: <Board />,
           },
-          {
-            path: ":board/search",
-            loader: BoardLoader,
-            element: <Board />,
-          },
+          // {
+          //   path: ":board/search",
+          //   loader: BoardLoader,
+          //   element: <Board />,
+          // },
           {
             path: ":board/:post",
             loader: DetailLoader,
