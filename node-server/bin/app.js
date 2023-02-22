@@ -30,6 +30,11 @@ import createrAPI from "../routes/createrAPI.js";
 import videoRouter from "../routes/video.js";
 import kakaoRouter from "../routes/kakaoAPI.js";
 
+// scheduler
+import { scheduleJob } from "node-schedule";
+import { removeAttach } from "../modules/remove_attach.js";
+import { removePost } from "../modules/remove_post.js";
+
 // create express framework
 const app = express();
 
@@ -97,6 +102,17 @@ app.use((err, req, res, next) => {
   // render the error page
   res.status(err.status || 500);
   res.render("error");
+});
+
+// execute scheduler
+app.listen(process.env.PORT, () => {
+  // 게시되지 않은 첨부파일 완전 삭제(modules/attach_remove.js)
+  // 저번 주 동안 deleted 된 게시글을 댓글 + 첨부파일과 함께 완전 삭제(modules/post_remove.js)
+  // 서버가 켜져 있을 때 매일 자정에 실행: 0 0 0 * * *
+  scheduleJob("0 0 0 * * *", async () => {
+    await removeAttach();
+    await removePost();
+  });
 });
 
 export default app;

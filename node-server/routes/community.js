@@ -9,7 +9,6 @@ import path from "path";
 import { v4 } from "uuid";
 import moment from "moment";
 import { sanitizer } from "../modules/sanitize_html.js";
-import { removeAttach } from "../modules/attach_remove.js";
 
 const USER = DB.models.user;
 const BOARD = DB.models.board;
@@ -378,14 +377,10 @@ router.patch("/post/update", sanitizer, async (req, res, next) => {
 
 router.get("/post/:pCode/delete", async (req, res, next) => {
   const pCode = req.params.pCode;
-  // const uploadDir = path.join("public/uploads");
-  // let files;
-  // 일정 시간 지나면 댓글 + 첨부파일과 함께 게시글 완전 삭제(modules => attach_remove.js)
   try {
     const date = moment().format("YYYY[-]MM[-]DD HH:mm:ss");
     await POST.update({ p_deleted: date }, { where: { p_code: pCode } });
     await REPLY.update({ r_deleted: date }, { where: { p_code: pCode } });
-    removeAttach();
     return res.send({ MESSAGE: "게시글이 삭제되었습니다." });
   } catch (err) {
     console.error(err);
