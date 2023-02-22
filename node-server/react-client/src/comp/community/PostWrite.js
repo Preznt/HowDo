@@ -70,13 +70,14 @@ const PostWrite = () => {
     }
     let result;
     let data;
-    const image = document?.querySelector(".ck-content img");
-    if (image) {
-      const index = Array?.from(image?.src).lastIndexOf("/");
-      const url = image?.src?.slice(index + 1);
-      data = { ...postData, p_thumb: url };
-    } else {
-      data = { ...postData, p_thumb: null };
+    const images = document?.querySelectorAll(".ck-content img");
+    if (images) {
+      const imageArr = Array?.from(images).map((item) => {
+        const index = item?.src?.lastIndexOf("/");
+        const url = item?.src?.slice(index + 1);
+        return url;
+      });
+      data = { ...postData, p_thumb: imageArr[0], p_attachs: `${imageArr}` };
     }
     // insert
     if (!pCode) result = await submitPost(data);

@@ -14,9 +14,9 @@ const Reply = ({ writer, p_code = null, v_code = null, list }) => {
   useEffect(() => {
     setReplyList([...list]);
     setReplyInput(initReply);
-    if (!window?.location?.hash) {
-      window.scrollTo(0, 0);
-    }
+    // if (!window?.location?.hash) {
+    //   window.scrollTo(0, 0);
+    // }
   }, []);
 
   // 댓글 입력 데이터 갱신

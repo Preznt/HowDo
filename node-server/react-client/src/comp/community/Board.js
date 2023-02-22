@@ -26,7 +26,7 @@ export const BoardLoader = async ({ params }) => {
 };
 
 const Board = () => {
-  // const nav = useNavigate();
+  const nav = useNavigate();
   const { keyValue, setKeyValue } = usePostContext();
   const location = useLocation();
   const { userSession } = useUserContext();

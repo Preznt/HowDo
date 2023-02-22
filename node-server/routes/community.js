@@ -9,6 +9,7 @@ import path from "path";
 import { v4 } from "uuid";
 import moment from "moment";
 import { sanitizer } from "../modules/sanitize_html.js";
+import { removeAttach } from "../modules/attach_remove.js";
 
 const USER = DB.models.user;
 const BOARD = DB.models.board;
@@ -364,10 +365,9 @@ router.post("/post/insert", sanitizer, async (req, res) => {
   }
 });
 
-router.patch("/post/update", async (req, res, next) => {
-  const data = req.body;
+router.patch("/post/update", sanitizer, async (req, res, next) => {
+  const data = { ...req.body, p_content: req.filtered };
   try {
-    console.log("asdf", data.p_code);
     await POST.update(data, { where: { p_code: data.p_code } });
     return res.send({ MESSAGE: "게시글이 수정되었습니다." });
   } catch (err) {
@@ -380,29 +380,17 @@ router.get("/post/:pCode/delete", async (req, res, next) => {
   const pCode = req.params.pCode;
   // const uploadDir = path.join("public/uploads");
   // let files;
-  // 일정 시간 지나면 댓글 + 첨부파일과 함께 게시글 완전 삭제 필요
+  // 일정 시간 지나면 댓글 + 첨부파일과 함께 게시글 완전 삭제(modules => attach_remove.js)
   try {
     const date = moment().format("YYYY[-]MM[-]DD HH:mm:ss");
     await POST.update({ p_deleted: date }, { where: { p_code: pCode } });
     await REPLY.update({ r_deleted: date }, { where: { p_code: pCode } });
-
+    removeAttach();
     return res.send({ MESSAGE: "게시글이 삭제되었습니다." });
   } catch (err) {
     console.error(err);
     return res.send({ ERROR: "게시글 삭제 중 문제가 발생했습니다." });
   }
-
-  // files = await ATTACH.findAll({ where: { p_code: pCode } });
-  // await files.forEach(async (file) => {
-  //   try {
-  //     const delFile = path.join(uploadDir, files.a_save_name);
-
-  //     fs.statSync(delFile);
-  //     fs.unlinkSync(delFile);
-  //   } catch (err) {
-  //     console.log(file.a_save_name, "파일을 찾을 수 없음");
-  //   }
-  // });
 });
 
 router.patch("/post/upvote", async (req, res, next) => {

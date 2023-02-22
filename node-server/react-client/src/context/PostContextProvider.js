@@ -15,6 +15,7 @@ export const PostContextProvider = ({ children }) => {
       p_title: "",
       p_content: "",
       p_thumb: null,
+      p_attachs: null,
       b_code: "",
       b_group_code: "",
     };
