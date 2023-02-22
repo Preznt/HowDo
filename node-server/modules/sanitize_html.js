@@ -78,12 +78,16 @@ const sanitizeOption = {
   ],
   disallowedTagsMode: "discard",
   allowedAttributes: {
+    "*": ["style"],
     a: ["href", "name", "target"],
     // We don't currently allow img itself by default, but
     // these attributes would make sense if we did.
     img: ["src", "srcset", "alt", "title", "width", "height", "loading"],
 
     iframe: ["src"],
+  },
+  allowedClasses: {
+    "*": ["ck-*", "ck", "image-*", "image"],
   },
   allowedIframeHostnames: ["www.youtube.com", "player.vimeo.com"],
   // Lots of these won't come up by default because we don't allow them

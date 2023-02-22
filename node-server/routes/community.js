@@ -156,7 +156,11 @@ router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
           {
             [Op.or]: [
               { p_title: { [Op.like]: `%${value}%` } },
-              { p_content: { [Op.like]: `%${value}%` } },
+              {
+                p_content: {
+                  [Op.regexp]: `[^><]*?(${value})[^><]*?(?=<|$)`,
+                },
+              },
             ],
           },
           { b_code: bCode },
@@ -178,11 +182,14 @@ router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
       },
       order: orderOption[`${order}`],
     },
-    // html tag 고려해야
     content: {
       where: {
         [Op.and]: [
-          { p_content: { [Op.like]: `%${value}%` } },
+          {
+            p_content: {
+              [Op.regexp]: `[^><]*?(${value})[^><]*?(?=<|$)`,
+            },
+          },
           { b_code: bCode },
         ],
       },
