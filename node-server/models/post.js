@@ -66,6 +66,10 @@ export default (sequelize, DataTypes) => {
         type: Sequelize.DataTypes.STRING(256),
         allowNull: true,
       },
+      p_attachs: {
+        type: Sequelize.DataTypes.TEXT,
+        allowNull: true,
+      },
       b_group_code: {
         type: Sequelize.DataTypes.STRING(125),
         allowNull: true,

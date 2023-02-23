@@ -16,17 +16,18 @@ import {
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
+import { usePostContext } from "../../context/PostContextProvider";
 
+// loader 와 state 를 어떻게 해결?
 export const BoardLoader = async ({ params }) => {
   const bEng = params.board;
-  const order = "latest";
-  const { data, board } = await getBoardPosts(bEng, order);
+  const { data, board } = await getBoardPosts(bEng);
   return { data, board };
 };
 
 const Board = () => {
   const nav = useNavigate();
-  const params = useParams();
+  const { keyValue, setKeyValue } = usePostContext();
   const location = useLocation();
   const { userSession } = useUserContext();
   const { data, board } = useLoaderData();
@@ -71,36 +72,22 @@ const Board = () => {
   const [searchInput, setSearchInput] = useState("");
   const [searchMsg, setSearchMsg] = useState("");
 
-  /**
-   * 페이지 경로에 따라 게시글 리스트와 값들을 변경
-   * 1. 게시판 초기 화면
-   * 2. 게시글 클릭 후 게시판으로 되돌아왔을 때
-   * 3. 검색 직후 화면
-   * 4. 검색하여 게시글 클릭 후 게시판으로 되돌아왔을 때
-   * 5. 검색 후 모든 게시글 보기를 클릭했을 때
-   */
-
-  // useEffect(() => {
-  //   console.log("par.loc", location);
-  //   console.log("par.par", params);
-  // }, []);
-
   useEffect(() => {
-    console.log("loc.loc", location);
-    console.log("loc.par", params);
-    if (location?.state?.search) {
-      setPostList([...location?.state?.data]);
-      setSearchMsg([...location?.state?.msg]);
-      setFilterValue({ ...location?.state?.filter });
-      setSearchInput(location?.state?.search);
-    } else {
+    if (keyValue !== location.key) {
       setPostList([...data]);
       setSearchMsg("");
       setSearchInput("");
       setOrderValue(initOrder);
       setFilterValue(initFilter);
+      setKeyValue(location.key);
     }
-  }, [location?.state?.search, params.board]);
+    // if (location?.state?.search) {
+    //   setPostList([...location?.state?.data]);
+    //   setSearchMsg([...location?.state?.msg]);
+    //   setFilterValue({ ...location?.state?.filter });
+    //   setSearchInput(location?.state?.search);
+    // }
+  }, [location.key]);
 
   const onClickSetOrder = async (value, text) => {
     if (!location?.state?.msg) {
@@ -129,15 +116,23 @@ const Board = () => {
       const result = await fetch(
         `/community/posts/${board.b_code}/${searchInput}/${filterValue.eng}/${orderValue.eng}/search`
       ).then((data) => data.json());
-      // 페이지 이동
-      nav(`/community/${board.b_eng}/search`, {
-        state: {
-          data: result.data,
-          search: searchInput,
-          filter: { eng: filterValue.eng, kor: filterValue.kor },
-          msg: result.MESSAGE,
-        },
+      setPostList([...result.data]);
+      setSearchInput(searchInput);
+      setFilterValue({
+        ...filterValue,
+        eng: filterValue.eng,
+        kor: filterValue.kor,
       });
+      setSearchMsg(result.MESSAGE);
+      // // 페이지 이동
+      // nav(`/community/${board.b_eng}/search`, {
+      //   state: {
+      //     data: result.data,
+      //     search: searchInput,
+      //     filter: { eng: filterValue.eng, kor: filterValue.kor },
+      //     msg: result.MESSAGE,
+      //   },
+      // });
     }
   };
 

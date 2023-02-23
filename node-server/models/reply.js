@@ -21,7 +21,7 @@ export default (sequelize, DataTypes) => {
         allowNull: true,
       },
       r_content: {
-        type: Sequelize.DataTypes.STRING(256),
+        type: Sequelize.DataTypes.TEXT,
         allowNull: true,
       },
       r_date: {

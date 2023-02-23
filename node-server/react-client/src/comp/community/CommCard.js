@@ -5,8 +5,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
-const CommRank = ({ data }) => {
-  const Rank = () => {
+const CommCard = ({ data }) => {
+  const Card = () => {
     return data.map((item) => {
       return (
         <Link
@@ -40,9 +40,9 @@ const CommRank = ({ data }) => {
 
   return (
     <section className="commu-rank grid grid-cols-5 gap-5 p-5">
-      <Rank />
+      <Card />
     </section>
   );
 };
 
-export default CommRank;
+export default CommCard;

@@ -8,6 +8,7 @@ import fs from "fs";
 import path from "path";
 import { v4 } from "uuid";
 import moment from "moment";
+import { sanitizer } from "../modules/sanitize_html.js";
 
 const USER = DB.models.user;
 const BOARD = DB.models.board;
@@ -147,7 +148,11 @@ router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
   const value = req.params.value;
   const filter = req.params.filter;
   const order = req.params.order;
-
+  /**
+   * [^><]: 괄호 안 문자 부등호 >< 는 모두 제외
+   * [^><]*[^><]*: 부등호를 제외한 모든 문자(0~n개) 일치
+   * (?=<): 정규식 그룹 패턴. 이전 결과에서 < 직전에 오는 문자열만 일치(재필터링)
+   */
   const filterList = {
     title_content: {
       where: {
@@ -155,7 +160,11 @@ router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
           {
             [Op.or]: [
               { p_title: { [Op.like]: `%${value}%` } },
-              { p_content: { [Op.like]: `%${value}%` } },
+              {
+                p_content: {
+                  [Op.regexp]: `[^><]*${value}[^><]*(?=<)`,
+                },
+              },
             ],
           },
           { b_code: bCode },
@@ -177,11 +186,14 @@ router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
       },
       order: orderOption[`${order}`],
     },
-    // html tag 고려해야
     content: {
       where: {
         [Op.and]: [
-          { p_content: { [Op.like]: `%${value}%` } },
+          {
+            p_content: {
+              [Op.regexp]: `[^><]*${value}[^><]*(?=<)`,
+            },
+          },
           { b_code: bCode },
         ],
       },
@@ -351,8 +363,9 @@ router.post("/upload", fileUp.single("upload"), async (req, res, next) => {
   }
 });
 
-router.post("/post/insert", async (req, res) => {
-  const data = req.body;
+// sanitizer 로 content 의 html tag filter
+router.post("/post/insert", sanitizer, async (req, res) => {
+  const data = { ...req.body, p_content: req.filtered };
   try {
     await POST.create(data);
     return res.send({ MESSAGE: "게시글이 등록되었습니다." });
@@ -362,10 +375,9 @@ router.post("/post/insert", async (req, res) => {
   }
 });
 
-router.patch("/post/update", async (req, res, next) => {
-  const data = req.body;
+router.patch("/post/update", sanitizer, async (req, res, next) => {
+  const data = { ...req.body, p_content: req.filtered };
   try {
-    console.log("asdf", data.p_code);
     await POST.update(data, { where: { p_code: data.p_code } });
     return res.send({ MESSAGE: "게시글이 수정되었습니다." });
   } catch (err) {
@@ -376,31 +388,15 @@ router.patch("/post/update", async (req, res, next) => {
 
 router.get("/post/:pCode/delete", async (req, res, next) => {
   const pCode = req.params.pCode;
-  // const uploadDir = path.join("public/uploads");
-  // let files;
-  // 일정 시간 지나면 댓글 + 첨부파일과 함께 게시글 완전 삭제 필요
   try {
     const date = moment().format("YYYY[-]MM[-]DD HH:mm:ss");
     await POST.update({ p_deleted: date }, { where: { p_code: pCode } });
     await REPLY.update({ r_deleted: date }, { where: { p_code: pCode } });
-
     return res.send({ MESSAGE: "게시글이 삭제되었습니다." });
   } catch (err) {
     console.error(err);
     return res.send({ ERROR: "게시글 삭제 중 문제가 발생했습니다." });
   }
-
-  // files = await ATTACH.findAll({ where: { p_code: pCode } });
-  // await files.forEach(async (file) => {
-  //   try {
-  //     const delFile = path.join(uploadDir, files.a_save_name);
-
-  //     fs.statSync(delFile);
-  //     fs.unlinkSync(delFile);
-  //   } catch (err) {
-  //     console.log(file.a_save_name, "파일을 찾을 수 없음");
-  //   }
-  // });
 });
 
 router.patch("/post/upvote", async (req, res, next) => {
@@ -467,7 +463,7 @@ router.get("/reply/:pCode/get", async (req, res) => {
       )
       SELECT replies.*, user.nickname, user.profile_image FROM replies  
           JOIN user ON replies.username = user.username
-          ORDER BY r_date DESC, r_time DESC`,
+          ORDER BY r_date ASC, r_time ASC`,
         { replacements: { pCode: `${pCode}` }, type: QueryTypes.SELECT }
       )
       .then((data) => nestedReply(data));
