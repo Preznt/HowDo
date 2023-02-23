@@ -148,7 +148,11 @@ router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
   const value = req.params.value;
   const filter = req.params.filter;
   const order = req.params.order;
-
+  /**
+   * [^><]: 괄호 안 문자 부등호 >< 는 모두 제외
+   * [^><]*[^><]*: 부등호를 제외한 모든 문자(0~n개) 일치
+   * (?=<): 정규식 그룹 패턴. 이전 결과에서 < 직전에 오는 문자열만 일치(재필터링)
+   */
   const filterList = {
     title_content: {
       where: {
@@ -158,7 +162,7 @@ router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
               { p_title: { [Op.like]: `%${value}%` } },
               {
                 p_content: {
-                  [Op.regexp]: `[^><]*?(${value})[^><]*?(?=<|$)`,
+                  [Op.regexp]: `[^><]*${value}[^><]*(?=<)`,
                 },
               },
             ],
@@ -187,7 +191,7 @@ router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
         [Op.and]: [
           {
             p_content: {
-              [Op.regexp]: `[^><]*?(${value})[^><]*?(?=<|$)`,
+              [Op.regexp]: `[^><]*${value}[^><]*(?=<)`,
             },
           },
           { b_code: bCode },
@@ -459,7 +463,7 @@ router.get("/reply/:pCode/get", async (req, res) => {
       )
       SELECT replies.*, user.nickname, user.profile_image FROM replies  
           JOIN user ON replies.username = user.username
-          ORDER BY r_date DESC, r_time DESC`,
+          ORDER BY r_date ASC, r_time ASC`,
         { replacements: { pCode: `${pCode}` }, type: QueryTypes.SELECT }
       )
       .then((data) => nestedReply(data));

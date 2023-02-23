@@ -9,7 +9,7 @@ const ATTACH = DB.models.attach;
 
 export const removeAttach = async () => {
   // 테스트용 코드
-  const today = moment().format("YYYY-MM-DD");
+  // const today = moment().format("YYYY-MM-DD");
   const yesterday = moment().subtract(1, "days").format("YYYY-MM-DD");
   const uploadDir = path.join("react-client/public/uploads");
 
@@ -18,7 +18,7 @@ export const removeAttach = async () => {
     raw: true,
     attributes: ["p_code", "p_attachs"],
     // 날짜 형식에서 Op.like 와 % 를 사용하면 원하는 결과가 나오지 않음
-    where: { p_updated: { [Op.startsWith]: `${today}` } },
+    where: { p_updated: { [Op.startsWith]: `${yesterday}` } },
   });
 
   // map 을 사용하여 각 post 에서 미사용된(업로드 O, 게시 X) attachment 삭제

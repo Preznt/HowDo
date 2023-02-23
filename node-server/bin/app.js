@@ -106,9 +106,12 @@ app.use((err, req, res, next) => {
 
 // execute scheduler
 app.listen(process.env.PORT, () => {
-  // 게시되지 않은 첨부파일 완전 삭제(modules/attach_remove.js)
-  // 저번 주 동안 deleted 된 게시글을 댓글 + 첨부파일과 함께 완전 삭제(modules/post_remove.js)
-  // 서버가 켜져 있을 때 매일 자정에 실행: 0 0 0 * * *
+  /**
+   * 게시되지 않은 첨부파일 완전 삭제(modules/attach_remove.js)
+   * 저번 주 동안 deleted 된 게시글을 댓글 + 첨부파일과 함께 완전 삭제(modules/post_remove.js)
+   * 서버가 켜져 있을 때 매일 자정에 실행 : 0 0 0 * * *
+   */
+  // 테스트용 5초마다 실행 : */5 * * * * *
   scheduleJob("0 0 0 * * *", async () => {
     await removeAttach();
     await removePost();

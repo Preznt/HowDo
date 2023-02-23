@@ -1,5 +1,5 @@
 // 커뮤니티 초기 화면
-import CommRank from "./CommRank";
+import CommCard from "./CommCard";
 import CommList from "./CommList";
 import { getMainPosts } from "../../service/post.service";
 import { useLoaderData } from "react-router-dom";
@@ -19,7 +19,7 @@ const CommMain = () => {
           <div className="main-item-title mb-2.5 p-2 text-left text-lg font-bold border-b border-slate-500">
             {item.b_group_kor}
           </div>
-          <CommRank data={item.list} />
+          <CommCard data={item.list} />
         </section>
       );
     });

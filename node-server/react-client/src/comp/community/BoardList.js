@@ -5,6 +5,7 @@ import {
   MinusIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 
 const BoardList = ({ board, data }) => {
   const ListItem = () => {
@@ -32,14 +33,14 @@ const BoardList = ({ board, data }) => {
           {/* 댓글 검색 시 표시되는 댓글 영역 */}
           {item?.replies &&
             item?.replies.map((reply) => (
-              <Link
+              <HashLink
                 className="p-5 block bg-slate-100 border-b-2 border-white"
                 to={`/community/${board.b_eng}/${item.p_code}#${reply?.r_code}`}
               >
                 <MinusIcon className="inline-block h-5 w-5 text-slate-500" />
                 <span className="ml-5 mr-2">{`${reply?.user?.nickname} : `}</span>
                 <span>{reply?.r_content}</span>
-              </Link>
+              </HashLink>
             ))}
         </div>
       );
