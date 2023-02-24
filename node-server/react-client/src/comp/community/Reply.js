@@ -48,8 +48,9 @@ const Reply = ({ writer, p_code = null, v_code = null, list }) => {
 
   return (
     <section className="p-5 w-full">
-      <div className="text-lg">{`댓글 ${replyCount} 개`}</div>
-      <div className="reply-input-box flex gap-3 mt-5 mb-5 p-10 w-full border border-gray-300 rounded">
+      <span className="inline-block text-lg px-4 pb-2 mb-5 border-b-4 border-slate-400">{`댓글 ${replyCount} 개`}</span>
+      <ReplyList writer={writer} data={replyList} />
+      <div className="reply-input-box flex gap-3 mt-5 mb-5 p-10 w-full border border-slate-300 rounded">
         {userSession?.profile_image ? (
           <img
             className="rounded-full flex items-center w-10 h-10"
@@ -79,7 +80,6 @@ const Reply = ({ writer, p_code = null, v_code = null, list }) => {
           등록
         </button>
       </div>
-      <ReplyList writer={writer} data={replyList} />
     </section>
   );
 };

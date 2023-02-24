@@ -83,7 +83,7 @@ const PostDetail = () => {
   // 예외 처리를 하지 않으면 alert 후 navigation 하기 전 오류 발생
   return (
     <main className="commu-detail w-full p-5 mb-10 rounded border border-slate-300">
-      <section className="flex p-2 border-b border-slate-300">
+      <section className="flex p-3 border-b border-slate-300">
         <Link
           className="board inline-block px-2 mr-3 border border-blue-700 text-blue-700 rounded hover:bg-blue-700 hover:text-white"
           to={`/community/${board?.b_eng}`}

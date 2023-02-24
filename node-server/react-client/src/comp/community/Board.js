@@ -7,7 +7,6 @@ import {
   useLocation,
   useLoaderData,
   Link,
-  useParams,
 } from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
 import {
@@ -18,121 +17,140 @@ import {
 import { useState, useEffect } from "react";
 import { usePostContext } from "../../context/PostContextProvider";
 
-// loader 와 state 를 어떻게 해결?
 export const BoardLoader = async ({ params }) => {
-  const bEng = params.board;
+  const bEng = params?.board;
   const { data, board } = await getBoardPosts(bEng);
-  return { data, board };
+  return { postData: data, boardData: board };
 };
 
 const Board = () => {
   const nav = useNavigate();
-  const { keyValue, setKeyValue } = usePostContext();
+  const {
+    boardCode,
+    setBoardCode,
+    keyValue,
+    setKeyValue,
+    initOrder,
+    initFilter,
+    orderList,
+    filterList,
+  } = usePostContext();
   const location = useLocation();
   const { userSession } = useUserContext();
-  const { data, board } = useLoaderData();
+  const postData = useLoaderData()?.postData;
+  const boardData = useLoaderData()?.boardData;
 
-  // select option
-  const orderList = [
-    { o_eng: "latest", o_kor: "최신순" },
-    { o_eng: "upvotes", o_kor: "추천순" },
-    { o_eng: "replies", o_kor: "댓글순" },
-    { o_eng: "views", o_kor: "조회순" },
-  ];
-  const filterList = [
-    { s_eng: "title_content", s_kor: "제목+내용" },
-    { s_eng: "title", s_kor: "제목" },
-    { s_eng: "content", s_kor: "내용" },
-    { s_eng: "nickname", s_kor: "닉네임" },
-    { s_eng: "reply", s_kor: "댓글" },
-  ];
-
-  const initOrder = () => {
-    const order = {
-      eng: `${orderList[0].o_eng}`,
-      kor: `${orderList[0].o_kor}`,
-    };
-    return order;
-  };
-
-  const initFilter = () => {
-    const filter = {
-      eng: `${filterList[0].s_eng}`,
-      kor: `${filterList[0].s_kor}`,
-    };
-    return filter;
-  };
+  // cf) useLocation 의 state 는 useState 와 달리
+  // 새로고침해도 데이터가 사라지지 않고, url이 바뀌었을 때만 사라진다.
+  const data = location?.state?.data || postData;
+  const board = location?.state?.board || boardData;
+  const filter = location?.state?.filter || initFilter();
+  const order = location?.state?.order || initOrder();
+  const keyword = location?.state?.keyword || "";
+  const msg = location?.state?.msg || "";
 
   // state
   const [postList, setPostList] = useState([...data]);
   const [showOrder, setShowOrder] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
-  const [orderValue, setOrderValue] = useState(initOrder);
-  const [filterValue, setFilterValue] = useState(initFilter);
-  const [searchInput, setSearchInput] = useState("");
-  const [searchMsg, setSearchMsg] = useState("");
+  const [showFilter, setShowFilter] = useState(false);
+  const [orderValue, setOrderValue] = useState({ ...order });
+  const [filterValue, setFilterValue] = useState({ ...filter });
+  const [searchInput, setSearchInput] = useState(keyword);
+  const [searchMsg, setSearchMsg] = useState(msg);
 
   useEffect(() => {
-    if (keyValue !== location.key) {
+    // 게시판이 바뀌거나, 검색화면에서 `모든 게시글 보기` 클릭
+    if (
+      (keyValue !== "" &&
+        boardCode !== "" &&
+        location.key !== keyValue &&
+        boardCode !== board.b_code) ||
+      (boardCode === board.b_code && !location.search)
+    ) {
       setPostList([...data]);
-      setSearchMsg("");
       setSearchInput("");
+      setSearchMsg("");
       setOrderValue(initOrder);
       setFilterValue(initFilter);
-      setKeyValue(location.key);
     }
-    // if (location?.state?.search) {
-    //   setPostList([...location?.state?.data]);
-    //   setSearchMsg([...location?.state?.msg]);
-    //   setFilterValue({ ...location?.state?.filter });
-    //   setSearchInput(location?.state?.search);
-    // }
-  }, [location.key]);
+    setKeyValue(location.key);
+    setBoardCode(board.b_code);
+  }, [location.key, board]);
 
   const onClickSetOrder = async (value, text) => {
-    if (!location?.state?.msg) {
-      const result = await getBoardPosts(board?.b_eng, value).then(
-        (result) => result.data
-      );
-      setPostList([...result]);
+    setOrderValue({ ...orderValue, eng: value, kor: text });
+    let result;
+    if (searchInput === "") {
+      result = await getBoardPosts(board.b_eng, value);
     } else {
-      const result = await fetch(
-        `/community/posts/${board?.b_code}/${searchInput}/${filterValue?.eng}/${value}/search`
-      )
-        .then((result) => result.json())
-        .then((result) => result.data);
-      setPostList([...result]);
+      const query = new URLSearchParams({
+        bCode: board.b_code,
+        keyword: searchInput,
+        filter: filterValue.eng,
+        order: value,
+      });
+      result = await fetch(`/community/posts/search?${query}`).then((result) =>
+        result.json()
+      );
     }
-    setOrderValue({ eng: value, kor: text });
+    setPostList([...result.data]);
+    setSearchMsg(result.MESSAGE);
     setShowOrder(false);
+    const state = {
+      data: result.data,
+      board: result.board,
+      order: { eng: value, kor: text },
+      filter: filterValue,
+      search: searchInput,
+      msg: result.MESSAGE,
+      keyword: searchInput,
+    };
+    if (searchInput === "") {
+      nav(`/community/${board.b_eng}?order=${value}`, {
+        state: state,
+      });
+    } else {
+      nav(
+        `/community/${board.b_eng}/search?keyword=${searchInput}&filter=${filterValue.eng}&order=${value}`,
+        {
+          state: state,
+        }
+      );
+    }
   };
 
-  const onClickSetSearchBy = (value, text) => {
+  const onClickSetFilterBy = (value, text) => {
     setFilterValue({ ...filterValue, eng: value, kor: text });
+    setShowFilter(false);
   };
 
   const SearchPosts = async (e) => {
     if (e.type === "click" || (e.type === "keydown" && e.keyCode === 13)) {
-      const result = await fetch(
-        `/community/posts/${board.b_code}/${searchInput}/${filterValue.eng}/${orderValue.eng}/search`
-      ).then((data) => data.json());
-      setPostList([...result.data]);
-      setSearchInput(searchInput);
-      setFilterValue({
-        ...filterValue,
-        eng: filterValue.eng,
-        kor: filterValue.kor,
+      const query = new URLSearchParams({
+        bCode: board.b_code,
+        keyword: searchInput,
+        filter: filterValue.eng,
+        order: orderValue.eng,
       });
+      const result = await fetch(`/community/posts/search?${query}`).then(
+        (data) => data.json()
+      );
+      setPostList([...result.data]);
       setSearchMsg(result.MESSAGE);
-      // // 페이지 이동
-      // nav(`/community/${board.b_eng}/search`, {
-      //   state: {
-      //     data: result.data,
-      //     search: searchInput,
-      //     filter: { eng: filterValue.eng, kor: filterValue.kor },
-      //     msg: result.MESSAGE,
-      //   },
-      // });
+      nav(
+        `/community/${board.b_eng}/search?keyword=${searchInput}&filter=${filterValue.eng}&order=${orderValue.eng}`,
+        {
+          state: {
+            data: result.data,
+            board: result.board,
+            order: orderValue,
+            filter: filterValue,
+            search: searchInput,
+            msg: result.MESSAGE,
+            keyword: searchInput,
+          },
+        }
+      );
     }
   };
 
@@ -156,7 +174,7 @@ const Board = () => {
           onBlur={() => setShowOrder(false)}
         >
           <BarsArrowDownIcon className="inline-block mr-3 h-5 w-5 text-slate-500" />
-          {orderValue.kor}
+          {orderValue?.kor}
           <div
             className="flex flex-col absolute top-11 left-0 w-full bg-gray-50 rounded border border-gray-300 text-gray-900"
             style={{ display: showOrder === true ? "flex" : "none" }}
@@ -164,12 +182,12 @@ const Board = () => {
             {orderList.map((order) => {
               return (
                 <div
-                  key={order.o_eng}
+                  key={order.eng}
                   className={optionClass}
-                  value={order.o_eng}
-                  onClick={() => onClickSetOrder(order.o_eng, order.o_kor)}
+                  value={order.eng}
+                  onClick={() => onClickSetOrder(order.eng, order.kor)}
                 >
-                  {order.o_kor}
+                  {order.kor}
                 </div>
               );
             })}
@@ -178,24 +196,24 @@ const Board = () => {
         <div className="cat-search flex-1 flex justify-center">
           <button
             className={`search-select relative text-sm w-[130px] ${inputClass} rounded-r-none`}
-            onClick={() => setShowSearch(true)}
-            onBlur={() => setShowSearch(false)}
+            onClick={() => setShowFilter(true)}
+            onBlur={() => setShowFilter(false)}
           >
-            {filterValue.kor}
+            {filterValue?.kor}
             <ChevronDownIcon className="inline-block float-right mt-0.5 ml-3 h-4 w-4 text-slate-500" />
             <div
               className="flex flex-col absolute top-11 left-0 w-full bg-gray-50 rounded border border-gray-300 text-gray-900"
-              style={{ display: showSearch === true ? "flex" : "none" }}
+              style={{ display: showFilter === true ? "flex" : "none" }}
             >
               {filterList.map((item) => {
                 return (
                   <div
-                    key={item.s_eng}
+                    key={item.eng}
                     className={optionClass}
-                    value={item.s_eng}
-                    onClick={() => onClickSetSearchBy(item.s_eng, item.s_kor)}
+                    value={item.eng}
+                    onClick={() => onClickSetFilterBy(item.eng, item.kor)}
                   >
-                    {item.s_kor}
+                    {item.kor}
                   </div>
                 );
               })}
@@ -241,6 +259,7 @@ const Board = () => {
         <Link
           className="block text-center w-[10em] p-1 mx-auto mt-2 underline text-blue-500"
           to={`/community/${board.b_eng}`}
+          replace
         >
           모든 게시글 보기
         </Link>

@@ -32,9 +32,10 @@ const ReplyItem = ({ writer, item, index }) => {
   // !! state 값이 setting 되기 전에 함수가 먼저 호출되는 문제 !! => function updater 로 해결
   const onClickCReply = async (index) => {
     // cf) function updater
-    // setState 내에서 callback 실행
+    // useState 내에서 callback 실행
     // 매개변수는 현재 state 값, callback 에서 return 되는 값은 state 에 저장될 값
     // 저장할 값을 변수로 선언하고 fetch 함수를 호출했다.
+    // 또는 중괄호 와 return 없이 사용: setData((prevData) => [...prevData, value])
     setCReplyInput(async (reply) => {
       reply = {
         ...cReplyInput,
@@ -77,7 +78,7 @@ const ReplyItem = ({ writer, item, index }) => {
     <section
       className={
         !item.r_parent_code && index !== 0
-          ? "border-t border-slate-300 snap-mandatory"
+          ? "border-t border-dashed border-slate-300 snap-mandatory"
           : "snap-mandatory"
       }
       style={{ marginLeft: item.r_parent_code ? "2rem" : "0" }}

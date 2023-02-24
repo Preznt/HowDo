@@ -143,130 +143,6 @@ router.get("/posts/get", async (req, res) => {
   }
 });
 
-router.get("/posts/:bCode/:value/:filter/:order/search", async (req, res) => {
-  const bCode = req.params.bCode;
-  const value = req.params.value;
-  const filter = req.params.filter;
-  const order = req.params.order;
-  /**
-   * [^><]: 괄호 안 문자 부등호 >< 는 모두 제외
-   * [^><]*[^><]*: 부등호를 제외한 모든 문자(0~n개) 일치
-   * (?=<): 정규식 그룹 패턴. 이전 결과에서 < 직전에 오는 문자열만 일치(재필터링)
-   */
-  const filterList = {
-    title_content: {
-      where: {
-        [Op.and]: [
-          {
-            [Op.or]: [
-              { p_title: { [Op.like]: `%${value}%` } },
-              {
-                p_content: {
-                  [Op.regexp]: `[^><]*${value}[^><]*(?=<)`,
-                },
-              },
-            ],
-          },
-          { b_code: bCode },
-        ],
-      },
-      include: {
-        model: USER,
-        attributes: ["nickname"],
-      },
-      order: orderOption[`${order}`],
-    },
-    title: {
-      where: {
-        [Op.and]: [{ p_title: { [Op.like]: `%${value}%` } }, { b_code: bCode }],
-      },
-      include: {
-        model: USER,
-        attributes: ["nickname"],
-      },
-      order: orderOption[`${order}`],
-    },
-    content: {
-      where: {
-        [Op.and]: [
-          {
-            p_content: {
-              [Op.regexp]: `[^><]*${value}[^><]*(?=<)`,
-            },
-          },
-          { b_code: bCode },
-        ],
-      },
-      include: {
-        model: USER,
-        attributes: ["nickname"],
-      },
-      order: orderOption[`${order}`],
-    },
-    nickname: {
-      where: { b_code: bCode },
-      include: {
-        model: USER,
-        attributes: ["nickname"],
-        where: { nickname: { [Op.like]: `%${value}%` } },
-      },
-      order: orderOption[`${order}`],
-    },
-    reply: {
-      where: { b_code: bCode },
-      include: [
-        {
-          model: REPLY,
-          attributes: ["r_code", "r_content"],
-          where: { r_content: { [Op.like]: `%${value}%` } },
-          include: {
-            model: USER,
-            attributes: ["nickname"],
-          },
-        },
-        {
-          model: USER,
-          attributes: ["nickname"],
-        },
-      ],
-      order: orderOption[`${order}`],
-    },
-  };
-
-  try {
-    let result = await POST.findAll(filterList[`${filter}`]);
-    console.log(result);
-
-    let message =
-      result.length > 0
-        ? `총 ${result.length} 개의 게시글이 있습니다. (키워드: ${value})`
-        : `검색 결과가 없습니다. (키워드: ${value})`;
-
-    return res.status(200).send({
-      data: result,
-      MESSAGE: message,
-    });
-  } catch (err) {
-    console.error(err);
-    return res.send({ ERROR: "검색 중 오류가 발생했습니다." });
-  }
-});
-
-// write 페이지에서 게시판 검색
-router.get("/board/:value?/get", async (req, res) => {
-  const value = req?.params?.value;
-  // cf) value 가 없을 경우 where 절을 {} 로 설정하여 전체 목록 표시
-  const result = await BOARD.findAll({
-    where: value
-      ? {
-          b_kor: { [Op.like]: `%${value}%` },
-        }
-      : {},
-    raw: true,
-  });
-  return res.status(200).send(result);
-});
-
 // community 게시판의 게시글 표시 및 정렬
 router.get("/board/:bEng/:order/get", async (req, res) => {
   const bEng = req.params.bEng;
@@ -304,6 +180,150 @@ router.get("/board/:bEng/:order/get", async (req, res) => {
   } catch (err) {
     console.error(err);
   }
+});
+
+//  community 게시판의 게시글 검색 및 정렬
+router.get("/posts/search", async (req, res) => {
+  const bCode = req.query.bCode;
+  const value = req.query.keyword;
+  const filter = req.query.filter;
+  const order = req.query.order;
+  /**
+   * [^><]: 괄호 안 문자 부등호 >< 는 모두 제외
+   * [^><]*[^><]*: 부등호를 제외한 모든 문자(0~n개) 일치
+   * (?=<): 정규식 그룹 패턴. 이전 결과에서 < 직전에 오는 문자열만 일치(재필터링)
+   */
+  const filterList = {
+    title_content: {
+      where: {
+        [Op.and]: [
+          {
+            [Op.or]: [
+              { p_title: { [Op.like]: `%${value}%` } },
+              {
+                p_content: {
+                  [Op.regexp]: `[^><]*${value}[^><]*(?=<)`,
+                },
+              },
+            ],
+          },
+          { b_code: bCode },
+          { p_deleted: null },
+        ],
+      },
+      include: {
+        model: USER,
+        attributes: ["nickname"],
+      },
+    },
+
+    title: {
+      where: {
+        [Op.and]: [
+          { p_title: { [Op.like]: `%${value}%` } },
+          { b_code: bCode },
+          { p_deleted: null },
+        ],
+      },
+      include: {
+        model: USER,
+        attributes: ["nickname"],
+      },
+    },
+
+    content: {
+      where: {
+        [Op.and]: [
+          {
+            p_content: {
+              [Op.regexp]: `[^><]*${value}[^><]*(?=<)`,
+            },
+          },
+          { b_code: bCode },
+          { p_deleted: null },
+        ],
+      },
+      include: {
+        model: USER,
+        attributes: ["nickname"],
+      },
+    },
+
+    nickname: {
+      where: { [Op.and]: [{ b_code: bCode }, { p_deleted: null }] },
+      include: {
+        model: USER,
+        attributes: ["nickname"],
+        where: { nickname: { [Op.like]: `%${value}%` } },
+      },
+    },
+
+    reply: {
+      where: { [Op.and]: [{ b_code: bCode }, { p_deleted: null }] },
+      include: [
+        {
+          model: REPLY,
+          attributes: ["r_code", "r_content"],
+          where: {
+            [Op.and]: [
+              { r_content: { [Op.like]: `%${value}%` } },
+              { r_deleted: null },
+            ],
+          },
+          // reply
+          include: {
+            model: USER,
+            attributes: ["nickname"],
+          },
+        },
+        // post
+        {
+          model: USER,
+          attributes: ["nickname"],
+        },
+      ],
+    },
+  };
+
+  try {
+    const result = await POST.findAll({
+      where: filterList[`${filter}`].where,
+      include: filterList[`${filter}`].include,
+      order: orderOption[`${order}`],
+    });
+    const board = await BOARD.findOne({
+      where: { b_code: bCode },
+    });
+    let message = !value
+      ? ""
+      : result.length > 0
+      ? `총 ${result.length} 개의 게시글이 있습니다. (키워드: ${value})`
+      : `검색 결과가 없습니다. (키워드: ${value})`;
+
+    return res.status(200).send({
+      data: result,
+      board: board,
+      MESSAGE: message,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.send({ ERROR: "검색 중 오류가 발생했습니다." });
+  }
+});
+
+// write 페이지에서 게시판 검색
+router.get("/board/:value?/get", async (req, res) => {
+  const value = req?.params?.value;
+  // cf) value 가 없을 경우 where 절을 {} 로 설정하여 전체 목록 표시
+  const result = await BOARD.findAll({
+    where: value
+      ? {
+          b_kor: { [Op.like]: `%${value}%` },
+        }
+      : {},
+    raw: true,
+  });
+  return res.status(200).send(result);
 });
 
 // community Detail fetch

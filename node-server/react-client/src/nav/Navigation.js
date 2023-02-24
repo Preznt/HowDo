@@ -48,18 +48,18 @@ const router = createBrowserRouter([
           { path: "", loader: CommMainLoader, element: <CommMain /> },
           {
             path: ":board",
-            loader: BoardLoader,
-            element: <Board />,
-          },
-          // {
-          //   path: ":board/search",
-          //   loader: BoardLoader,
-          //   element: <Board />,
-          // },
-          {
-            path: ":board/:post",
-            loader: DetailLoader,
-            element: <PostDetail />,
+            children: [
+              { path: "", loader: BoardLoader, element: <Board /> },
+              {
+                path: "search",
+                element: <Board />,
+              },
+              {
+                path: ":post",
+                loader: DetailLoader,
+                element: <PostDetail />,
+              },
+            ],
           },
           {
             path: "write/:post?",

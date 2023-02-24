@@ -34,6 +34,7 @@ const BoardList = ({ board, data }) => {
           {item?.replies &&
             item?.replies.map((reply) => (
               <HashLink
+                key={reply.r_code}
                 className="p-5 block bg-slate-100 border-b-2 border-white"
                 to={`/community/${board.b_eng}/${item.p_code}#${reply?.r_code}`}
               >
