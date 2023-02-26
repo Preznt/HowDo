@@ -12,7 +12,7 @@ const CommList = ({ data }) => {
         <Link
           className="rank-item grid grid-cols-2 grid-rows-1 p-2 border-b border-dashed border-slate-300"
           key={item.p_code}
-          to={`/community/${item["board.b_eng"]}/${item.p_code}`}
+          to={`/community/${item["board.b_eng"]}/post/${item.p_code}`}
         >
           <div className="text-left font-bold">{item.p_title}</div>
           <div className="w-full text-right">

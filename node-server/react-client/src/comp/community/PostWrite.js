@@ -12,7 +12,8 @@ const PostWrite = () => {
   const { userSession } = useUserContext();
   const { initPost, postData, setPostData } = usePostContext();
   const location = useLocation();
-  const { b_code, b_kor, b_eng, b_group_code } = location?.state || "";
+  const { username, b_code, b_kor, b_eng, b_group_code } =
+    location?.state || "";
   const [boardVal, setBoardVal] = useState({
     bCode: b_code,
     bKor: b_kor,
@@ -26,7 +27,7 @@ const PostWrite = () => {
   useEffect(() => {
     // setState 를 같은 함수 내에서 여러 번 실행하면
     // 가장 마지막 setState 만 화면에 반영된다(batch update).
-    if (!userSession?.username) {
+    if (!username) {
       alert("로그인 후 이용해주세요.");
       return nav("/");
     }

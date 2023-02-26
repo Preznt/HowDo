@@ -4,8 +4,6 @@ import { QueryTypes } from "sequelize";
 import { Op } from "sequelize";
 import fileUp from "../modules/file_upload.js";
 import DB from "../models/index.js";
-import fs from "fs";
-import path from "path";
 import { v4 } from "uuid";
 import moment from "moment";
 import { sanitizer } from "../modules/sanitize_html.js";
@@ -55,7 +53,7 @@ router.get("/boards/get", async (req, res) => {
 // 게시글보다 첨부파일이 먼저 등록되므로 INSERT 되지 않는 문제 발생
 
 // community Main fetch
-router.get("/posts/get", async (req, res) => {
+router.get("/main/get", async (req, res) => {
   try {
     // 그룹 B1 을 제외한 모든 그룹 리스트
     // 코드 수정 필요
@@ -143,16 +141,37 @@ router.get("/posts/get", async (req, res) => {
   }
 });
 
+const pagination = {};
+
+// /posts 경로 router 전처리
+router.all("/posts/**", async (req, res, next) => {
+  const { pageNum, listLimit, pageNavCount } = req.query;
+
+  pagination.listLimit = Number(listLimit) || 10;
+  pagination.pageNavCount = Number(pageNavCount) || 10;
+
+  pagination.pageNum = Number(pageNum) || 1;
+  pagination.offset = (pagination.pageNum - 1) * pagination.listLimit;
+
+  pagination.startNavNum =
+    pagination.pageNum - Math.floor(pagination.pageNavCount / 2);
+  pagination.startNavNum =
+    pagination.startNavNum < 1 ? 1 : pagination.startNavNum;
+  next();
+});
+
 // community 게시판의 게시글 표시 및 정렬
-router.get("/board/:bEng/:order/get", async (req, res) => {
-  const bEng = req.params.bEng;
-  const order = req.params.order;
+router.get("/posts/get", async (req, res) => {
+  const bEng = req.query.bEng;
+  const order = req.query.order;
 
   try {
     const board = await BOARD.findOne({
       where: { b_eng: bEng },
     });
-    const data = await POST.findAll({
+
+    const condition = {
+      raw: true,
       attributes: [
         "p_code",
         "p_title",
@@ -175,8 +194,31 @@ router.get("/board/:bEng/:order/get", async (req, res) => {
         },
       ],
       order: orderOption[`${order}`],
+    };
+
+    const data = await POST.findAll({
+      raw: condition.raw,
+      attributes: condition.attributes,
+      where: condition.where,
+      include: condition.include,
+      order: condition.order,
+      limit: pagination.listLimit,
+      offset: pagination.offset,
     });
-    return res.status(200).send({ board, data });
+    const count = await POST.count({
+      raw: condition.raw,
+      attributes: condition.attributes,
+      where: condition.where,
+      include: condition.include,
+      order: condition.order,
+    });
+
+    pagination.listTotalCount = count || 0;
+    pagination.pageTotalCount = Math.ceil(
+      pagination.listTotalCount / pagination.listLimit
+    );
+
+    return res.status(200).send({ pagination, board, data });
   } catch (err) {
     console.error(err);
   }
@@ -286,24 +328,37 @@ router.get("/posts/search", async (req, res) => {
   };
 
   try {
-    const result = await POST.findAll({
+    const board = await BOARD.findOne({
+      where: { b_code: bCode },
+    });
+    const data = await POST.findAll({
+      where: filterList[`${filter}`].where,
+      include: filterList[`${filter}`].include,
+      order: orderOption[`${order}`],
+      limit: pagination.listLimit,
+      offset: pagination.offset,
+    });
+    const count = await POST.count({
       where: filterList[`${filter}`].where,
       include: filterList[`${filter}`].include,
       order: orderOption[`${order}`],
     });
-    const board = await BOARD.findOne({
-      where: { b_code: bCode },
-    });
-    let message = !value
+    let MESSAGE = !value
       ? ""
-      : result.length > 0
-      ? `총 ${result.length} 개의 게시글이 있습니다. (키워드: ${value})`
+      : count > 0
+      ? `총 ${count} 개의 게시글이 있습니다. (키워드: ${value})`
       : `검색 결과가 없습니다. (키워드: ${value})`;
 
+    pagination.listTotalCount = count || 0;
+    pagination.pageTotalCount = Math.ceil(
+      pagination.listTotalCount / pagination.listLimit
+    );
+
     return res.status(200).send({
-      data: result,
-      board: board,
-      MESSAGE: message,
+      pagination,
+      data,
+      board,
+      MESSAGE,
     });
   } catch (err) {
     console.error(err);

@@ -21,7 +21,7 @@ export const getBoardList = async () => {
 
 export const getMainPosts = async () => {
   try {
-    const response = await fetch("/community/posts/get");
+    const response = await fetch("/community/main/get");
     const result = await response.json();
     // noticeList, freeList, boardList
     return result;
@@ -30,9 +30,9 @@ export const getMainPosts = async () => {
   }
 };
 
-export const getBoardPosts = async (bEng, order = "latest") => {
+export const getBoardPosts = async (query) => {
   try {
-    const response = await fetch(`/community/board/${bEng}/${order}/get`);
+    const response = await fetch(`/community/posts/get?${query}`);
     const result = await response.json();
     // board, data;
     return result;

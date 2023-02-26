@@ -9,7 +9,7 @@ const BoardNav = ({ data }) => {
           <NavLink
             key={item.b_code}
             className="board-link"
-            to={`/community/${item.b_eng}`}
+            to={`/community/${item.b_eng}/1`}
           >
             {item.b_kor}
           </NavLink>
@@ -19,7 +19,7 @@ const BoardNav = ({ data }) => {
           <NavLink
             key={item.b_code}
             className="board-link"
-            to={`/community/${item.b_eng}`}
+            to={`/community/${item.b_eng}/1`}
           >
             {item.b_kor}
           </NavLink>

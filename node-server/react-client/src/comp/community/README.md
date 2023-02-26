@@ -67,5 +67,6 @@ removePlugins: ["MediaEmbedToolbar"],
 
 - 다시 build 해야 할 경우 NodeJS 폴더에서 node_modules 폴더 삭제 후 install
 - 만약 git merge master 를 반복해서 ckeditor 폴더에 필요없는 파일이 쌓일 경우 해당 폴더 삭제 후 새로운 폴더를 복사, node_modules 폴더 삭제 후 install
-- https://ckeditor.com/docs/ckeditor5/latest/features/images/image-upload/image-upload.html  
-  서버에서 임시(에디터에만 업로드),영구 이미지 저장 로직 구현해야
+- https://ckeditor.com/docs/ckeditor5/latest/features/images/image-upload/image-upload.html
+- 사용하지 않는 파일을 주기적으로 삭제: `node-schedule`
+- XSS 방지를 위한 html tag 필터링: `sanitize-html`

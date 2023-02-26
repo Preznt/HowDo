@@ -13,13 +13,13 @@ const BoardList = ({ board, data }) => {
       return (
         <div key={item.p_code}>
           <Link
-            to={`/community/${board.b_eng}/${item.p_code}`}
+            to={`/community/${board.b_eng}/post/${item.p_code}`}
             className="list-item p-3 border-b border-dashed border-slate-300"
           >
             <div className="title font-semibold text-lg">{item.p_title}</div>
             <div className="date text-sm flex justify-end items-end">{`${item.p_date} ${item.p_time}`}</div>
             <div className="nickname text-sm flex items-center">
-              {item.user["nickname"]}
+              {item["user.nickname"]}
             </div>
             <div className="detail-box text-right">
               <EyeIcon className="inline-block h-5 w-5 text-slate-500" />
@@ -36,7 +36,7 @@ const BoardList = ({ board, data }) => {
               <HashLink
                 key={reply.r_code}
                 className="p-5 block bg-slate-100 border-b-2 border-white"
-                to={`/community/${board.b_eng}/${item.p_code}#${reply?.r_code}`}
+                to={`/community/${board.b_eng}/post/${item.p_code}#${reply?.r_code}`}
               >
                 <MinusIcon className="inline-block h-5 w-5 text-slate-500" />
                 <span className="ml-5 mr-2">{`${reply?.user?.nickname} : `}</span>

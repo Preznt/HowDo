@@ -1,5 +1,6 @@
 // 각 게시판별 페이지
 import BoardList from "./BoardList";
+import BoardPage from "./BoardPage";
 import "../../css/community/Board.css";
 import { getBoardPosts } from "../../service/post.service";
 import {
@@ -17,10 +18,25 @@ import {
 import { useState, useEffect } from "react";
 import { usePostContext } from "../../context/PostContextProvider";
 
+const listLimit = 5;
+const pageNavCount = 5;
+let pageNum;
+
 export const BoardLoader = async ({ params }) => {
-  const bEng = params?.board;
-  const { data, board } = await getBoardPosts(bEng);
-  return { postData: data, boardData: board };
+  pageNum = params?.pageNum;
+  const query = new URLSearchParams({
+    bEng: params?.board,
+    order: "latest",
+    pageNum: pageNum || 1,
+    listLimit,
+    pageNavCount,
+  }).toString();
+  const { data, board, pagination } = await getBoardPosts(query);
+  return {
+    postData: data,
+    boardData: board,
+    pagination,
+  };
 };
 
 const Board = () => {
@@ -39,6 +55,7 @@ const Board = () => {
   const { userSession } = useUserContext();
   const postData = useLoaderData()?.postData;
   const boardData = useLoaderData()?.boardData;
+  const pagination = useLoaderData()?.pagination;
 
   // cf) useLocation 의 state 는 useState 와 달리
   // 새로고침해도 데이터가 사라지지 않고, url이 바뀌었을 때만 사라진다.
@@ -48,6 +65,7 @@ const Board = () => {
   const order = location?.state?.order || initOrder();
   const keyword = location?.state?.keyword || "";
   const msg = location?.state?.msg || "";
+  const page = location?.state?.page || pagination;
 
   // state
   const [postList, setPostList] = useState([...data]);
@@ -77,25 +95,35 @@ const Board = () => {
     setBoardCode(board.b_code);
   }, [location.key, board]);
 
-  const onClickSetOrder = async (value, text) => {
+  const orderPosts = async (value, text) => {
     setOrderValue({ ...orderValue, eng: value, kor: text });
     let result;
     if (searchInput === "") {
-      result = await getBoardPosts(board.b_eng, value);
+      const query = new URLSearchParams({
+        bEng: board.b_eng,
+        order: value,
+        pageNum: pageNum || 1,
+        listLimit,
+        pageNavCount,
+      }).toString();
+      result = await getBoardPosts(query);
     } else {
       const query = new URLSearchParams({
         bCode: board.b_code,
         keyword: searchInput,
         filter: filterValue.eng,
         order: value,
-      });
+        pageNum: pageNum || 1,
+        listLimit,
+        pageNavCount,
+      }).toString();
       result = await fetch(`/community/posts/search?${query}`).then((result) =>
         result.json()
       );
     }
     setPostList([...result.data]);
     setSearchMsg(result.MESSAGE);
-    setShowOrder(false);
+
     const state = {
       data: result.data,
       board: result.board,
@@ -104,14 +132,16 @@ const Board = () => {
       search: searchInput,
       msg: result.MESSAGE,
       keyword: searchInput,
+      page: result.pagination,
     };
+    setShowOrder(false);
     if (searchInput === "") {
-      nav(`/community/${board.b_eng}?order=${value}`, {
+      nav(`/community/${board.b_eng}/1?order=${value}`, {
         state: state,
       });
     } else {
       nav(
-        `/community/${board.b_eng}/search?keyword=${searchInput}&filter=${filterValue.eng}&order=${value}`,
+        `/community/${board.b_eng}/search/1?keyword=${searchInput}&filter=${filterValue.eng}&order=${value}`,
         {
           state: state,
         }
@@ -119,26 +149,29 @@ const Board = () => {
     }
   };
 
-  const onClickSetFilterBy = (value, text) => {
+  const onClickSetFilter = (value, text) => {
     setFilterValue({ ...filterValue, eng: value, kor: text });
-    setShowFilter(false);
   };
 
-  const SearchPosts = async (e) => {
+  const searchPosts = async (e) => {
     if (e.type === "click" || (e.type === "keydown" && e.keyCode === 13)) {
       const query = new URLSearchParams({
         bCode: board.b_code,
         keyword: searchInput,
         filter: filterValue.eng,
         order: orderValue.eng,
+        pageNum: pageNum || 1,
+        listLimit,
+        pageNavCount,
       });
       const result = await fetch(`/community/posts/search?${query}`).then(
         (data) => data.json()
       );
       setPostList([...result.data]);
       setSearchMsg(result.MESSAGE);
+      setShowFilter(false);
       nav(
-        `/community/${board.b_eng}/search?keyword=${searchInput}&filter=${filterValue.eng}&order=${orderValue.eng}`,
+        `/community/${board.b_eng}/search/1?keyword=${searchInput}&filter=${filterValue.eng}&order=${orderValue.eng}`,
         {
           state: {
             data: result.data,
@@ -148,6 +181,7 @@ const Board = () => {
             search: searchInput,
             msg: result.MESSAGE,
             keyword: searchInput,
+            page: result.pagination,
           },
         }
       );
@@ -185,7 +219,9 @@ const Board = () => {
                   key={order.eng}
                   className={optionClass}
                   value={order.eng}
-                  onClick={() => onClickSetOrder(order.eng, order.kor)}
+                  onClick={() => {
+                    orderPosts(order.eng, order.kor);
+                  }}
                 >
                   {order.kor}
                 </div>
@@ -211,7 +247,7 @@ const Board = () => {
                     key={item.eng}
                     className={optionClass}
                     value={item.eng}
-                    onClick={() => onClickSetFilterBy(item.eng, item.kor)}
+                    onClick={() => onClickSetFilter(item.eng, item.kor)}
                   >
                     {item.kor}
                   </div>
@@ -222,14 +258,14 @@ const Board = () => {
           <input
             className={`${inputClass} w-[20vw] rounded-none`}
             onChange={(e) => setSearchInput(e.target.value)}
-            onKeyDown={SearchPosts}
+            onKeyDown={searchPosts}
             spellCheck={false}
             value={searchInput}
             type="search"
           />
           <button
             className={`${inputClass} rounded-l-none`}
-            onClick={SearchPosts}
+            onClick={searchPosts}
             disabled={searchInput.length > 0 ? false : true}
           >
             <MagnifyingGlassIcon className="inline-block h-6 w-6 text-slate-500" />
@@ -241,6 +277,7 @@ const Board = () => {
             className={btnClass}
             to={`/community/write`}
             state={{
+              username: userSession?.username,
               b_code: board.b_code,
               b_kor: board.b_kor,
               b_eng: board.b_eng,
@@ -265,6 +302,7 @@ const Board = () => {
         </Link>
       </div>
       <BoardList board={board} data={postList} />
+      <BoardPage board={board} pagination={page} />
     </main>
   );
 };

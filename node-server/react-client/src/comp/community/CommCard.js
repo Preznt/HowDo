@@ -12,7 +12,7 @@ const CommCard = ({ data }) => {
         <Link
           className="rank-item"
           key={item.p_code}
-          to={`/community/${item["board.b_eng"]}/${item.p_code}`}
+          to={`/community/${item["board.b_eng"]}/post/${item.p_code}`}
         >
           <div className="inline-block p-2">{item["board.b_kor"]}</div>
           <div className="inline-block p-2 float-right">
