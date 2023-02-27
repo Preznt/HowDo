@@ -77,7 +77,7 @@ const Board = () => {
   const [searchMsg, setSearchMsg] = useState(msg);
 
   useEffect(() => {
-    // 게시판이 바뀌거나, 검색화면에서 `모든 게시글 보기` 클릭
+    // 게시판이 바뀌거나, 검색화면에서 `모든 게시글 보기` 를 클릭했을 경우
     if (
       (keyValue !== "" &&
         boardCode !== "" &&
@@ -102,7 +102,7 @@ const Board = () => {
       const query = new URLSearchParams({
         bEng: board.b_eng,
         order: value,
-        pageNum: pageNum || 1,
+        pageNum: pageNum,
         listLimit,
         pageNavCount,
       }).toString();
@@ -113,7 +113,7 @@ const Board = () => {
         keyword: searchInput,
         filter: filterValue.eng,
         order: value,
-        pageNum: pageNum || 1,
+        pageNum: pageNum,
         listLimit,
         pageNavCount,
       }).toString();
@@ -123,25 +123,24 @@ const Board = () => {
     }
     setPostList([...result.data]);
     setSearchMsg(result.MESSAGE);
-
+    setShowOrder(false);
     const state = {
       data: result.data,
       board: result.board,
       order: { eng: value, kor: text },
       filter: filterValue,
-      search: searchInput,
       msg: result.MESSAGE,
       keyword: searchInput,
       page: result.pagination,
     };
-    setShowOrder(false);
+
     if (searchInput === "") {
       nav(`/community/${board.b_eng}/1?order=${value}`, {
         state: state,
       });
     } else {
       nav(
-        `/community/${board.b_eng}/search/1?keyword=${searchInput}&filter=${filterValue.eng}&order=${value}`,
+        `/community/${board.b_eng}/1?keyword=${searchInput}&filter=${filterValue.eng}&order=${value}`,
         {
           state: state,
         }
@@ -160,10 +159,10 @@ const Board = () => {
         keyword: searchInput,
         filter: filterValue.eng,
         order: orderValue.eng,
-        pageNum: pageNum || 1,
+        pageNum: pageNum,
         listLimit,
         pageNavCount,
-      });
+      }).toString();
       const result = await fetch(`/community/posts/search?${query}`).then(
         (data) => data.json()
       );
@@ -171,14 +170,13 @@ const Board = () => {
       setSearchMsg(result.MESSAGE);
       setShowFilter(false);
       nav(
-        `/community/${board.b_eng}/search/1?keyword=${searchInput}&filter=${filterValue.eng}&order=${orderValue.eng}`,
+        `/community/${board.b_eng}/1?keyword=${searchInput}&filter=${filterValue.eng}&order=${orderValue.eng}`,
         {
           state: {
             data: result.data,
             board: result.board,
             order: orderValue,
             filter: filterValue,
-            search: searchInput,
             msg: result.MESSAGE,
             keyword: searchInput,
             page: result.pagination,
@@ -295,14 +293,19 @@ const Board = () => {
         {searchMsg}
         <Link
           className="block text-center w-[10em] p-1 mx-auto mt-2 underline text-blue-500"
-          to={`/community/${board.b_eng}`}
+          to={`/community/${board.b_eng}/1`}
           replace
         >
           모든 게시글 보기
         </Link>
       </div>
       <BoardList board={board} data={postList} />
-      <BoardPage board={board} pagination={page} />
+      <BoardPage
+        board={board}
+        page={page}
+        curState={location?.state}
+        setPostList={setPostList}
+      />
     </main>
   );
 };

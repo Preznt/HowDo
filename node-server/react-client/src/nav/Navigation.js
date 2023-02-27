@@ -52,11 +52,6 @@ const router = createBrowserRouter([
             element: <Board />,
           },
           {
-            path: ":board/search/:pageNum",
-            element: <Board />,
-          },
-
-          {
             path: ":board/post/:post",
             loader: DetailLoader,
             element: <PostDetail />,

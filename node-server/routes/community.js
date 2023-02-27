@@ -169,7 +169,6 @@ router.get("/posts/get", async (req, res) => {
     const board = await BOARD.findOne({
       where: { b_eng: bEng },
     });
-
     const condition = {
       raw: true,
       attributes: [
@@ -332,6 +331,7 @@ router.get("/posts/search", async (req, res) => {
       where: { b_code: bCode },
     });
     const data = await POST.findAll({
+      raw: true,
       where: filterList[`${filter}`].where,
       include: filterList[`${filter}`].include,
       order: orderOption[`${order}`],
@@ -339,6 +339,7 @@ router.get("/posts/search", async (req, res) => {
       offset: pagination.offset,
     });
     const count = await POST.count({
+      raw: true,
       where: filterList[`${filter}`].where,
       include: filterList[`${filter}`].include,
       order: orderOption[`${order}`],
