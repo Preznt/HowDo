@@ -46,7 +46,7 @@ const SessionStore = sessionSequelize(session.Store);
 // session 클래스 설정
 const sessionStore = new SessionStore({
   db: DB.sequelize,
-  expiration: 1000 * 60 * 5,
+  expiration: 1000 * 60 * 10,
   checkExpirationInterval: 1000 * 60 * 10,
 });
 // app.use 로 세션 설정
@@ -55,11 +55,11 @@ app.use(
   session({
     key: "ProjectHowDo",
     secret: "ProjectHowDo",
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     store: sessionStore,
     cookie: {
-      maxAge: 1000 * 60 * 5,
+      maxAge: 1000 * 60 * 10,
     },
   })
 );

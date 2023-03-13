@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useRef, useEffect } from "react";
+
 import { User } from "../data/User";
 import { Login } from "../data/Login";
 import { UserSession } from "../data/UserSession";
@@ -15,13 +16,15 @@ export const UserContextProvider = ({ children }) => {
   const [modifierOpen, setModifierOpen] = useState(false);
   const [joinUser, setJoinUser] = useState(new User());
   const [login, setLogin] = useState(new Login());
+  const [overlap, setOverlap] = useState("");
   const [error, setError] = useState({});
   const [loginError, setLoginError] = useState({});
   const [userSession, setUserSession] = useState(new UserSession());
   const [modal, setModal] = useState({
-    open: false,
+    subReady: false,
+    cancel: false,
   });
-  const [cancel, setCancel] = useState({ open: false });
+  // const [cancel, setCancel] = useState({ });
 
   const usernameRef = useRef();
   const nicknameRef = useRef();
@@ -29,24 +32,14 @@ export const UserContextProvider = ({ children }) => {
   const rePasswordRef = useRef();
   const inputRef = { usernameRef, nicknameRef, passwordRef, rePasswordRef };
 
-  const onClickHandler = async () => {
-    const result = await fetchLogin(login);
-    if (result.CODE) {
-      setLoginError({ ...result });
-    }
-    setUserSession(result);
-    if (result.username) document.location.href = "/";
-    console.log(result);
-  };
-
   // 모달창 열고 닫는 함수
   const modalHandler = () => {
-    setModal({ ...modal, open: !modal.open });
-    console.log(userSession);
+    setModal({ ...modal, subReady: !modal.subReady });
+    // console.log(userSession);
   };
 
   const cancelHandler = () => {
-    setCancel({ ...cancel, open: !cancel.open });
+    setModal({ ...modal, cancel: !modal.cancel });
   };
 
   const logoutHandler = (e) => {
@@ -61,13 +54,13 @@ export const UserContextProvider = ({ children }) => {
   useEffect(() => {
     (async () => {
       const loginUser = await fetchUser();
-      if (loginUser) {
+      if (loginUser.username) {
         setUserSession(loginUser);
+        console.log("유저 컨텍스트", userSession);
       } else {
         setUserSession(new UserSession());
       }
     })();
-    console.log(userSession);
   }, []);
 
   const props = {
@@ -80,15 +73,17 @@ export const UserContextProvider = ({ children }) => {
     setLoginError,
     login,
     setLogin,
+    overlap,
+    setOverlap,
     userSession,
     setUserSession,
-    onClickHandler,
+    // onClickHandler,
     logoutHandler,
     modal,
     setModal,
     modalHandler,
-    cancel,
-    setCancel,
+    // cancel,
+    // setCancel,
     cancelHandler,
 
     creater,

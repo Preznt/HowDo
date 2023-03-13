@@ -2,7 +2,15 @@ import { useEffect } from "react";
 import { useUserContext } from "../../context/UserContextProvider";
 import { fetchJoin } from "../../service/auth.service";
 const Join = () => {
-  const { joinUser, setJoinUser, error, setError, inputRef } = useUserContext();
+  const {
+    joinUser,
+    setJoinUser,
+    error,
+    setError,
+    overlap,
+    setOverlap,
+    inputRef,
+  } = useUserContext();
 
   const onChangeHandler = async (e) => {
     const tagName = e.target.tagName;
@@ -19,10 +27,22 @@ const Join = () => {
   };
 
   useEffect(() => {
+    setJoinUser({});
+  }, []);
+
+  useEffect(() => {
     (async () => {
       const result = await fetchJoin(joinUser);
       if (result.CODE) {
         setError({ ...result });
+      }
+      if (result.CODE === "OVERLAP_USERNAME") {
+        setOverlap(joinUser.username);
+        console.log(overlap);
+      }
+      if (result.CODE === "OVERLAP_NICKNAME") {
+        setOverlap(joinUser.nickname);
+        console.log(overlap);
       }
       if (result === joinUser.username) {
         document.location.href = "/";
@@ -74,7 +94,8 @@ const Join = () => {
                       <p className="text-red-500 mb-2 text-center">
                         이메일을 입력해 주세요
                       </p>
-                    ) : error.CODE === "OVERLAP_USERNAME" ? (
+                    ) : error.CODE === "OVERLAP_USERNAME" &&
+                      joinUser.username === overlap ? (
                       <p className="text-red-500 mb-2 text-center">
                         이미 가입되어 있는 이메일입니다
                       </p>
@@ -95,11 +116,13 @@ const Join = () => {
                       onChange={onChangeHandler}
                       className="mt-1 p-4 w-1/2 m-auto block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                     />
-                    {error.CODE === "REQ_NICKNAME" ? (
+                    {error.CODE === "REQ_NICKNAME" &&
+                    joinUser.nickname === "" ? (
                       <p className="text-red-500 mb-2 text-center">
                         닉네임을 입력해 주세요
                       </p>
-                    ) : error.CODE === "OVERLAP_NICKNAME" ? (
+                    ) : error.CODE === "OVERLAP_NICKNAME" &&
+                      joinUser.nickname === overlap ? (
                       <p className="text-red-500 mb-2 text-center">
                         이미 존재하는 닉네임입니다
                       </p>

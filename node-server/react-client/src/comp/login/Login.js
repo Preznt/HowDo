@@ -1,10 +1,24 @@
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
 import { fetchLogin } from "../../service/auth.service";
 
 const Login = () => {
-  const { login, setLogin, loginError, onClickHandler } = useUserContext();
+  const { login, setLogin, loginError, setLoginError, setUserSession } =
+    useUserContext();
+
+  const nav = useNavigate();
+
+  const onClickHandler = async () => {
+    const result = await fetchLogin(login);
+    if (result.CODE) {
+      setLoginError({ ...result });
+    }
+    setUserSession(result);
+    if (result.username) nav("/");
+    console.log(result);
+  };
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
@@ -14,6 +28,10 @@ const Login = () => {
   const submitHandler = (e) => {
     e.preventDefault();
   };
+
+  useEffect(() => {
+    setLoginError({});
+  }, []);
 
   return (
     <>

@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { useUserContext } from "../../context/UserContextProvider";
 import { useVideoContentContext } from "../../context/VideoContentContextProvide";
 import Reply from "../community/Reply";
+import { usePayContext } from "../../context/PayContextProvider";
 const VideoDetail = () => {
   const {
     videoDetail,
@@ -16,6 +17,7 @@ const VideoDetail = () => {
     replyList,
   } = useVideoContentContext();
   const { userSession } = useUserContext();
+  const { payReadyBody } = usePayContext();
   const nav = useNavigate();
   const relationshipItems = relationship.filter((item) => {
     return item.v_code !== videoDetail.v_code;
@@ -141,9 +143,19 @@ const VideoDetail = () => {
         </aside>
       </div>
     );
+  } else if (!userSession.username) {
+    alert("로그인이 필요한 서비스입니다");
+    return <Navigate to="/user/login" />;
   } else if (videoDetail.v_price !== 0) {
     alert("결제가 필요한 동영상 입니다");
-    return <Navigate to="/" />;
+    payReadyBody(
+      videoDetail.username,
+      videoDetail.v_price,
+      videoDetail.v_title,
+      videoDetail.v_code,
+      videoDetail.v_src
+    );
+    return <Navigate to="/payReady" />;
   }
 };
 export default VideoDetail;
